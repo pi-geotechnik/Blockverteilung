@@ -177,55 +177,72 @@ elif einheit == "Masse in t (Dichte erforderlich)":
             except Exception as e:
                 st.error(f"Fehler bei der Verarbeitung der Daten: {e}")
 
+
 elif einheit == "Achsen beliebig vieler Blöcke in cm eingeben":
     # Eingabe der Dichte (für alle Blöcke gleich)
     st.subheader("Blockdichte eingeben")
     dichte_kg_m3 = st.number_input("Geben Sie die Dichte in kg/m³ ein:", min_value=0.0, value=2700.0)
     
     st.subheader("Blockachsen eingeben")
-    block_werte_m3 = []  # Liste zur Speicherung der m³-Werte jedes Blocks
     
-    # Anzahl der Blöcke pro Eingabesatz
-    max_blocks_per_input = 5
-    block_counter = 0  # Zähler für die Blöcke
-    
-    # Schleife für mehrere Eingabeblocks, die weiterlaufen kann, solange der Benutzer "Ja" sagt
-    while True:
-        # Eingabe von bis zu 5 Blöcken
-        for i in range(max_blocks_per_input):
-            block_counter += 1  # Zähler für den Block erhöhen
+    # Initialisiere session_state, wenn noch nicht vorhanden
+    if 'block_werte_m3' not in st.session_state:
+        st.session_state.block_werte_m3 = []  # Liste zur Speicherung der m³-Werte jedes Blocks
+    if 'block_counter' not in st.session_state:
+        st.session_state.block_counter = 0  # Zähler für die Blöcke
 
-            # Eingabe der Blockmaße in cm mit eindeutigen keys
-            länge_cm = st.number_input(f"Geben Sie die Länge des Blocks {block_counter} in cm ein:", min_value=0.0, key=f"länge_cm_{block_counter}")
-            breite_cm = st.number_input(f"Geben Sie die Breite des Blocks {block_counter} in cm ein:", min_value=0.0, key=f"breite_cm_{block_counter}")
-            höhe_cm = st.number_input(f"Geben Sie die Höhe des Blocks {block_counter} in cm ein:", min_value=0.0, key=f"höhe_cm_{block_counter}")
-            
-            if länge_cm > 0 and breite_cm > 0 and höhe_cm > 0:
-                # Berechnung des Volumens in m³ des Blocks
-                länge_m = länge_cm / 100
-                breite_m = breite_cm / 100
-                höhe_m = höhe_cm / 100
-                volumen_m3 = länge_m * breite_m * höhe_m
-                block_werte_m3.append(volumen_m3)
-                st.write(f"Das Volumen des Blocks {block_counter} beträgt {volumen_m3:.2f} m³.")
+    # Funktion zum Hinzufügen eines Blocks und Berechnen des Volumens
+    def add_block():
+        st.session_state.block_counter += 1  # Blockzähler erhöhen
+
+        # Eingabe der Blockmaße in cm mit eindeutigen keys
+        länge_cm = st.number_input(f"Geben Sie die Länge des Blocks {st.session_state.block_counter} in cm ein:", min_value=0.0, key=f"länge_cm_{st.session_state.block_counter}")
+        breite_cm = st.number_input(f"Geben Sie die Breite des Blocks {st.session_state.block_counter} in cm ein:", min_value=0.0, key=f"breite_cm_{st.session_state.block_counter}")
+        höhe_cm = st.number_input(f"Geben Sie die Höhe des Blocks {st.session_state.block_counter} in cm ein:", min_value=0.0, key=f"höhe_cm_{st.session_state.block_counter}")
+
+        if länge_cm > 0 and breite_cm > 0 and höhe_cm > 0:
+            # Berechnung des Volumens in m³ des Blocks
+            länge_m = länge_cm / 100
+            breite_m = breite_cm / 100
+            höhe_m = höhe_cm / 100
+            volumen_m3 = länge_m * breite_m * höhe_m
+            st.session_state.block_werte_m3.append(volumen_m3)
+            st.write(f"Das Volumen des Blocks {st.session_state.block_counter} beträgt {volumen_m3:.2f} m³.")
         
-        # Option für den Benutzer, mehr Blöcke einzugeben oder abzuschließen
-        weiter_block = st.radio(f"Möchten Sie weitere {max_blocks_per_input} Blöcke eingeben?", ("Ja", "Nein, ich bin fertig"), key=f"weiter_block_{block_counter}")
-        
-        if weiter_block == "Nein, ich bin fertig":
-            break  # Schleife abbrechen, wenn der Benutzer "Nein" wählt
-    
-    st.write("Alle Blöcke wurden erfolgreich eingegeben!")
-    st.write(f"Die Volumina der eingegebenen Blöcke: {block_werte_m3}")
-    
+        return st.session_state.block_counter
+
+    # Maximal 5 Blöcke pro Eingabe
+    max_blocks_per_input = 5
+
+    # Eingabe der ersten 5 Blöcke
+    while st.session_state.block_counter < max_blocks_per_input:
+        add_block()  # Block hinzufügen und Zähler aktualisieren
+
+        # Möglichkeit, sofort zu sagen, dass man fertig ist
+        fertig = st.radio(f"Möchten Sie mit Block {st.session_state.block_counter} fertig sein?", ("Ja", "Nein"), key=f"fertig_{st.session_state.block_counter}")
+        if fertig == "Ja":
+            break  # Beendet die Eingabe, wenn der Benutzer fertig ist
+
+    # Zeige die Volumina der eingegebenen Blöcke
+    st.write("Die Volumina der eingegebenen Blöcke: ", st.session_state.block_werte_m3)
+
+    # Option, ob mehr Blöcke eingegeben werden sollen
+    weiter_block = st.radio(f"Möchten Sie weitere {max_blocks_per_input} Blöcke eingeben?", ("Ja", "Nein, ich bin fertig"), key="weiter_block")
+
+    if weiter_block == "Ja":
+        # Der Code wird neu geladen, aber die Blöcke und der Zähler bleiben durch session_state erhalten
+        st.experimental_rerun()  # Der Code wird neu gestartet, um weitere 5 Blöcke einzugeben
+    else:
+        st.write("Sie haben die Eingabe beendet.")
+
     # Wenn es berechnete m³-Werte gibt, speichere sie in einer Datei
-    if block_werte_m3:
+    if st.session_state.block_werte_m3:
         # Speichern der m³-Werte in einer Datei
-        dateiname = speichere_m3_werte(block_werte_m3)
+        dateiname = speichere_m3_werte(st.session_state.block_werte_m3)
         st.success(f"Die m³-Werte der Blöcke wurden in der Datei '{dateiname}' gespeichert.")
         
         # Berechnung der dritten Wurzel (Längen in Metern)
-        m_längen = [berechne_dritte_wurzel(val) for val in block_werte_m3]
+        m_längen = [berechne_dritte_wurzel(val) for val in st.session_state.block_werte_m3]
         st.write("Die Längen in Metern (dritte Wurzel der m³-Werte):")
         st.write(m_längen)
         
@@ -234,7 +251,7 @@ elif einheit == "Achsen beliebig vieler Blöcke in cm eingeben":
         st.success(f"Die m-Werte der Blöcke wurden in der Datei '{dateiname}' gespeichert.")
 
         # Visualisierung der Histogramme nebeneinander
-        visualisiere_histogramm_m3_und_m(m_längen, block_werte_m3)
+        visualisiere_histogramm_m3_und_m(m_längen, st.session_state.block_werte_m3)
 
         # Berechnung und Anzeige der 95., 96., 97. und 98. Perzentile
         perzentile = [95, 96, 97, 98]
