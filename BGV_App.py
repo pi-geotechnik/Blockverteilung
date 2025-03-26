@@ -185,34 +185,36 @@ elif einheit == "Achsen beliebig vieler Blöcke in cm eingeben":
     st.subheader("Blockachsen eingeben")
     block_werte_m3 = []  # Liste zur Speicherung der m³-Werte jedes Blocks
     
-    # Anzahl der Blöcke, die eingegeben werden können
-    max_blocks = 5
+    # Anzahl der Blöcke pro Eingabesatz
+    max_blocks_per_input = 5
     block_counter = 0  # Zähler für die Blöcke
     
-    while block_counter < max_blocks:  # Bedingung geändert: block_counter < max_blocks
-        block_counter += 1  # Blockzähler erhöhen
-        
-        # Eingabe der Blockmaße in cm mit eindeutigen keys
-        länge_cm = st.number_input(f"Geben Sie die Länge des Blocks {block_counter} in cm ein:", min_value=0.0, key=f"länge_cm_{block_counter}")
-        breite_cm = st.number_input(f"Geben Sie die Breite des Blocks {block_counter} in cm ein:", min_value=0.0, key=f"breite_cm_{block_counter}")
-        höhe_cm = st.number_input(f"Geben Sie die Höhe des Blocks {block_counter} in cm ein:", min_value=0.0, key=f"höhe_cm_{block_counter}")
-        
-        if länge_cm > 0 and breite_cm > 0 and höhe_cm > 0:
-            # Berechnung des Volumens in m³ des Blocks
-            länge_m = länge_cm / 100
-            breite_m = breite_cm / 100
-            höhe_m = höhe_cm / 100
-            volumen_m3 = länge_m * breite_m * höhe_m
-            block_werte_m3.append(volumen_m3)
-            st.write(f"Das Volumen des Blocks {block_counter} beträgt {volumen_m3:.2f} m³.")
-        
-        # Option für den Benutzer, einen weiteren Block hinzuzufügen oder abzuschließen
-        if block_counter < max_blocks:  # Option nur anzeigen, wenn noch Blöcke eingegeben werden können
-            weiter_block = st.radio(f"Möchten Sie einen weiteren Block eingeben?", ("Ja", "Nein, ich bin fertig"), key=f"weiter_block_{block_counter}")
+    # Schleife für mehrere Eingabeblocks, die weiterlaufen kann, solange der Benutzer "Ja" sagt
+    while True:
+        # Eingabe von bis zu 5 Blöcken
+        for i in range(max_blocks_per_input):
+            block_counter += 1  # Zähler für den Block erhöhen
+
+            # Eingabe der Blockmaße in cm mit eindeutigen keys
+            länge_cm = st.number_input(f"Geben Sie die Länge des Blocks {block_counter} in cm ein:", min_value=0.0, key=f"länge_cm_{block_counter}")
+            breite_cm = st.number_input(f"Geben Sie die Breite des Blocks {block_counter} in cm ein:", min_value=0.0, key=f"breite_cm_{block_counter}")
+            höhe_cm = st.number_input(f"Geben Sie die Höhe des Blocks {block_counter} in cm ein:", min_value=0.0, key=f"höhe_cm_{block_counter}")
             
-            if weiter_block == "Nein, ich bin fertig":
-                break  # Beendet die Schleife, wenn der Benutzer fertig ist
-                
+            if länge_cm > 0 and breite_cm > 0 and höhe_cm > 0:
+                # Berechnung des Volumens in m³ des Blocks
+                länge_m = länge_cm / 100
+                breite_m = breite_cm / 100
+                höhe_m = höhe_cm / 100
+                volumen_m3 = länge_m * breite_m * höhe_m
+                block_werte_m3.append(volumen_m3)
+                st.write(f"Das Volumen des Blocks {block_counter} beträgt {volumen_m3:.2f} m³.")
+        
+        # Option für den Benutzer, mehr Blöcke einzugeben oder abzuschließen
+        weiter_block = st.radio(f"Möchten Sie weitere {max_blocks_per_input} Blöcke eingeben?", ("Ja", "Nein, ich bin fertig"), key=f"weiter_block_{block_counter}")
+        
+        if weiter_block == "Nein, ich bin fertig":
+            break  # Schleife abbrechen, wenn der Benutzer "Nein" wählt
+    
     st.write("Alle Blöcke wurden erfolgreich eingegeben!")
     st.write(f"Die Volumina der eingegebenen Blöcke: {block_werte_m3}")
     
