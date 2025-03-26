@@ -206,7 +206,7 @@ elif einheit == "Achsen beliebig vieler Blöcke in cm eingeben":
         
         # Option für den Benutzer, einen weiteren Block hinzuzufügen oder abzuschließen
         if block_counter < max_blocks:
-            weiter_block = st.radio(Möchten Sie einen weiteren Block eingeben?", ("Ja", "Nein, ich bin fertig"), key=f"weiter_block_{block_counter}")
+            weiter_block = st.radio(f"Möchten Sie einen weiteren Block eingeben?", ("Ja", "Nein, ich bin fertig"), key=f"weiter_block_{block_counter}")
             
             if weiter_block == "Nein, ich bin fertig":
                 break
