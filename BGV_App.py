@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd
 import math
 import os
+from PIL import Image
 
 # Funktion zur Berechnung der Masse in Tonnen aus m³ und Dichte
 def berechne_masse_in_tonnen(volumen_m3, dichte_kg_m3):
@@ -77,6 +78,11 @@ def berechne_perzentile(längen, perzentile):
 
 
 # Streamlit App
+
+# Zeige das Logo zu Beginn der App
+logo = Image.open("pi-geotechnik-1-RGB-192-30-65.png")  # Lade das Bild
+st.image(logo, caption="ZT GmbH", use_column_width=True)  # Zeige das Logo an
+
 st.title("Willkommen bei pi!")
 st.header("Blockgrößenverteilung")
 
@@ -182,8 +188,7 @@ elif einheit == "Achsen beliebig vieler Blöcke in cm eingeben":
     
     # Schleife, um mehrere Blockgrößen zu ermöglichen
     block_counter = 0  # Zähler für die Blöcke
-    while True:
-        block_counter += 1  # Zähler für den Block erhöhen
+    while block_counter <= max_blocks:  # Zähler für den Block erhöhen
         
         # Eingabe der Blockmaße in cm mit eindeutigen keys
         länge_cm = st.number_input(f"Geben Sie die Länge des Blocks {block_counter} in cm ein:", min_value=0.0, key=f"länge_cm_{block_counter}")
@@ -200,11 +205,15 @@ elif einheit == "Achsen beliebig vieler Blöcke in cm eingeben":
             st.write(f"Das Volumen des Blocks {block_counter} beträgt {volumen_m3:.2f} m³.")
         
         # Option für den Benutzer, einen weiteren Block hinzuzufügen oder abzuschließen
-        weiter_block = st.radio("Möchten Sie einen weiteren Block eingeben?", ("Ja", "Nein, ich bin fertig"), key=f"weiter_block_{block_counter}")
-        
-        if weiter_block == "Nein, ich bin fertig":
-            break
-        
+        if block_counter < max_blocks:
+            weiter:block = st.radio(Möchten Sie einen weiteren Block eingeben?", ("Ja", "Nein, ich bin fertig"), key=f"weiter_block_{block_counter}")
+            
+            if weiter_block == "Nein, ich bin fertig":
+                break
+                
+    st.write("Alle Blöcke wurden erfolgreich eingegeben!")
+    st.write(f"Die Volumina der eingegebenen Blöcke: {block_werte_m3}")
+    
     # Wenn es berechnete m³-Werte gibt, speichere sie in einer Datei
     if block_werte_m3:
         # Speichern der m³-Werte in einer Datei
