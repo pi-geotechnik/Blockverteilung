@@ -141,7 +141,7 @@ elif einheit == "Masse in t (Dichte erforderlich)":
         st.text_area("Inhalt der Datei:", text_tonnen, height=300)
         
         # Eingabe der Dichte in kg/m³ (Standardwert: 2700)
-        dichte_kg_m3 = st.number_input("Geben Sie die Dichte in kg/m³ ein:", min_value=0.0, value=2700.0)
+        dichte_kg_m3 = st.number_input("Geben Sie die Dichte in kg/m³ ein:", min_value=0, value=2700)
         
         if dichte_kg_m3 > 0:
             try:
@@ -180,7 +180,7 @@ elif einheit == "Masse in t (Dichte erforderlich)":
 
 elif einheit == "Achsen beliebig vieler Blöcke in cm eingeben":
     st.subheader("Blockdichte eingeben")
-    dichte_kg_m3 = st.number_input("Geben Sie die Dichte in kg/m³ ein:", min_value=0.0, value=2700.0)
+    dichte_kg_m3 = st.number_input("Geben Sie die Dichte in kg/m³ ein:", min_value=0, value=2700)
     
     st.subheader("Blockachsen eingeben")
 
