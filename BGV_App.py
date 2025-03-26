@@ -183,58 +183,75 @@ elif einheit == "Achsen beliebig vieler Blöcke in cm eingeben":
     dichte_kg_m3 = st.number_input("Geben Sie die Dichte in kg/m³ ein:", min_value=0.0, value=2700.0)
     
     st.subheader("Blockachsen eingeben")
-    
-    # Initialisiere session_state, wenn noch nicht vorhanden
-    if 'block_werte_m3' not in st.session_state:
+
+    # Initialisierung von session_state-Variablen
+    if "block_werte_m3" not in st.session_state:
         st.session_state.block_werte_m3 = []  # Liste zur Speicherung der m³-Werte jedes Blocks
-    if 'block_counter' not in st.session_state:
-        st.session_state.block_counter = 0  # Zähler für die Blöcke
-    if 'input_round' not in st.session_state:
-        st.session_state.input_round = 0  # Runde der Blockeingabe
+    if "block_counter" not in st.session_state:
+        st.session_state.block_counter = 1  # Startet bei 1
+    if "input_round" not in st.session_state:
+        st.session_state.input_round = 0  # Rundenzähler für Eingabegruppen
 
     # Anzahl der Blöcke pro Runde
     max_blocks_per_input = 5
+    aktuelle_runde_start = st.session_state.input_round * max_blocks_per_input + 1
+    aktuelle_runde_ende = aktuelle_runde_start + max_blocks_per_input
 
-    # Schleife für die Blockeingabe (nur für die aktuelle Eingaberunde)
-    for i in range(st.session_state.input_round * max_blocks_per_input, 
-                   (st.session_state.input_round + 1) * max_blocks_per_input):
-        
-        st.session_state.block_counter += 1  # Blockzähler erhöhen
+    # Schleife für genau 5 Blockeingaben
+    for i in range(aktuelle_runde_start, aktuelle_runde_ende):
+        st.write(f"### Block {i}")  # Nummerierung der Blöcke anzeigen
 
-        # Eingabe der Blockmaße in cm mit eindeutigen keys
-        länge_cm = st.number_input(f"Geben Sie die Länge des Blocks {st.session_state.block_counter} in cm ein:", 
-                                   min_value=0.0, key=f"länge_cm_{st.session_state.block_counter}")
-        breite_cm = st.number_input(f"Geben Sie die Breite des Blocks {st.session_state.block_counter} in cm ein:", 
-                                    min_value=0.0, key=f"breite_cm_{st.session_state.block_counter}")
-        höhe_cm = st.number_input(f"Geben Sie die Höhe des Blocks {st.session_state.block_counter} in cm ein:", 
-                                  min_value=0.0, key=f"höhe_cm_{st.session_state.block_counter}")
+        # Eingabe der Blockmaße in cm mit eindeutigen Keys
+        länge_cm = st.number_input(f"Länge (cm) von Block {i}:", min_value=0.0, key=f"länge_cm_{i}")
+        breite_cm = st.number_input(f"Breite (cm) von Block {i}:", min_value=0.0, key=f"breite_cm_{i}")
+        höhe_cm = st.number_input(f"Höhe (cm) von Block {i}:", min_value=0.0, key=f"höhe_cm_{i}")
 
         if länge_cm > 0 and breite_cm > 0 and höhe_cm > 0:
-            # Berechnung des Volumens in m³ des Blocks
+            # Berechnung des Volumens in m³
             länge_m = länge_cm / 100
             breite_m = breite_cm / 100
             höhe_m = höhe_cm / 100
             volumen_m3 = länge_m * breite_m * höhe_m
             st.session_state.block_werte_m3.append(volumen_m3)
-            st.write(f"Das Volumen des Blocks {st.session_state.block_counter} beträgt {volumen_m3:.2f} m³.")
-        
-        # Möglichkeit, sofort zu beenden
-        fertig = st.radio(f"Möchten Sie mit Block {st.session_state.block_counter} fertig sein?", 
-                          ("Ja", "Nein"), key=f"fertig_{st.session_state.block_counter}")
-        if fertig == "Ja":
-            break  # Beendet die Eingabe sofort
+            st.write(f"➡ Das Volumen von Block {i} beträgt **{volumen_m3:.2f} m³**.")
 
-    # Zeige die Volumina der eingegebenen Blöcke
-    st.write("Die Volumina der eingegebenen Blöcke: ", st.session_state.block_werte_m3)
+            # Möglichkeit, sofort zu beenden
+            fertig = st.radio(f"Möchten Sie nach Block {i} aufhören?", ("Nein", "Ja"), key=f"fertig_{i}")
+            if fertig == "Ja":
+                st.write("Eingabe beendet.")
+                st.stop()
 
-    # Option für die nächste Runde
-    if st.button("Weitere 5 Blöcke eingeben"):
-        st.session_state.input_round += 1  # Nächste Runde aktivieren
-        st.rerun()  # Erneutes Rendern der App ohne Datenverlust
+    # Zeige die eingegebenen Volumina
+    st.write("### Volumina der eingegebenen Blöcke:")
+    st.write(st.session_state.block_werte_m3)
 
-    if st.button("Eingabe abschließen"):
-        st.write("Sie haben die Eingabe beendet.")
+    # Buttons für weitere Eingaben oder Abschluss
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("Weitere 5 Blöcke eingeben"):
+            st.session_state.input_round += 1  # Erhöhe die Rundenanzahl
+            st.rerun()  # App neu rendern
 
+    with col2:
+        if st.button("Eingabe abschließen"):
+            st.write("Alle Blöcke wurden erfolgreich eingegeben!")
+
+            # **Erweiterung: Speichern der m³-Werte in einer Datei**
+            if st.session_state.block_werte_m3:
+                # Speichern der m³-Werte in einer Datei
+                dateiname = speichere_m3_werte(st.session_state.block_werte_m3)
+                st.success(f"Die m³-Werte der Blöcke wurden in der Datei '{dateiname}' gespeichert.")
+
+                # Berechnung der dritten Wurzel (Längen in Metern)
+                m_längen = [berechne_dritte_wurzel(val) for val in st.session_state.block_werte_m3]
+                st.write("### Längen in Metern (dritte Wurzel der m³-Werte):")
+                st.write(m_längen)
+
+                # Speichern der m-Werte in einer Datei
+                dateiname = speichere_m_werte(m_längen)
+                st.success(f"Die m-Werte der Blöcke wurden in der Datei '{dateiname}' gespeichert.")
+
+            st.stop()  # App beenden
 
 # Anpassung einer Wahrscheinlichkeitsfunktion
 
