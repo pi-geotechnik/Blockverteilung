@@ -81,7 +81,7 @@ def berechne_perzentile(längen, perzentile):
 
 # Zeige das Logo zu Beginn der App
 logo = Image.open("pi-geotechnik-1-RGB-192-30-65.png")  # Lade das Bild
-st.image(logo, caption="ZT GmbH", use_column_width=True)  # Zeige das Logo an
+st.image(logo, caption="ZT GmbH by A Preh & M Illeditsch", height=150)  #use_container_width=True # Zeige das Logo an
 
 st.title("Willkommen bei pi!")
 st.header("Blockgrößenverteilung")
@@ -90,7 +90,7 @@ st.header("Blockgrößenverteilung")
 einheit = st.selectbox("Wählen Sie die Einheit der Eingabedaten:", ["Volumen in m³", "Masse in t (Dichte erforderlich)", "Achsen beliebig vieler Blöcke in cm eingeben"])
 
 if einheit == "Volumen in m³":
-    st.header("Wählen Sie eine Datei mit Blockvolumina aus")
+    st.subheader("Wählen Sie eine Datei mit Blockvolumina aus")
     uploaded_file_m3 = st.file_uploader("Wählen Sie eine Textdatei mit m³-Werten aus", type=["txt"])
     
     if uploaded_file_m3 is not None:
@@ -131,7 +131,7 @@ if einheit == "Volumen in m³":
             st.error(f"Fehler bei der Verarbeitung der Daten: {e}")
 
 elif einheit == "Masse in t (Dichte erforderlich)":
-    st.header("Wählen Sie eine Datei mit Blockmassen aus")
+    st.subheader("Wählen Sie eine Datei mit Blockmassen aus")
     uploaded_file_tonnen = st.file_uploader("Wählen Sie eine Textdatei mit t-Werten aus", type=["txt"])
     
     if uploaded_file_tonnen is not None:
@@ -180,10 +180,10 @@ elif einheit == "Masse in t (Dichte erforderlich)":
 elif einheit == "Achsen beliebig vieler Blöcke in cm eingeben":
     # Eingabe der Dichte (für alle Blöcke gleich)
     
-    st.header("Blockdichte eingeben")
+    st.subheader("Blockdichte eingeben")
     dichte_kg_m3 = st.number_input("Geben Sie die Dichte in kg/m³ ein:", min_value=0.0, value=2700.0)
     
-    st.header("Blockachsen eingeben")
+    st.subheader("Blockachsen eingeben")
     block_werte_m3 = []  # Liste zur Speicherung der m³-Werte jedes Blocks
     
     # Schleife, um mehrere Blockgrößen zu ermöglichen
