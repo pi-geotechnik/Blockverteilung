@@ -187,6 +187,8 @@ elif einheit == "Achsen beliebig vieler Blöcke in cm eingeben":
     block_werte_m3 = []  # Liste zur Speicherung der m³-Werte jedes Blocks
     
     # Schleife, um mehrere Blockgrößen zu ermöglichen
+    # Anzahl der Blöcke, die eingegeben werden können
+    max_blocks = 5
     block_counter = 0  # Zähler für die Blöcke
     while block_counter <= max_blocks:  # Zähler für den Block erhöhen
         
