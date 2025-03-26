@@ -202,9 +202,9 @@ elif einheit == "Achsen beliebig vieler Blöcke in cm eingeben":
         st.write(f"### Block {i}")  # Nummerierung der Blöcke anzeigen
 
         # Eingabe der Blockmaße in cm mit eindeutigen Keys
-        länge_cm = st.number_input(f"Länge (cm) von Block {i}:", min_value=0.0, key=f"länge_cm_{i}")
-        breite_cm = st.number_input(f"Breite (cm) von Block {i}:", min_value=0.0, key=f"breite_cm_{i}")
-        höhe_cm = st.number_input(f"Höhe (cm) von Block {i}:", min_value=0.0, key=f"höhe_cm_{i}")
+        länge_cm = st.number_input(f"Länge (cm) von Block {i}:", min_value=1, step=1, key=f"länge_cm_{i}")
+        breite_cm = st.number_input(f"Breite (cm) von Block {i}:", min_value=1, step=1, key=f"breite_cm_{i}")
+        höhe_cm = st.number_input(f"Höhe (cm) von Block {i}:", min_value=1, step=1, key=f"höhe_cm_{i}")
 
         if länge_cm > 0 and breite_cm > 0 and höhe_cm > 0:
             # Berechnung des Volumens in m³
