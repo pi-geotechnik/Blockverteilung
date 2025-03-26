@@ -77,8 +77,8 @@ def berechne_perzentile(längen, perzentile):
 
 
 # Streamlit App
-st.title("Blockgrößenverteilung Berechnung")
-st.header("Willkommen bei pi!")
+st.title("Willkommen bei pi!")
+st.header("Blockgrößenverteilung")
 
 # Auswahl der Einheit
 einheit = st.selectbox("Wählen Sie die Einheit der Eingabedaten:", ["Volumen in m³", "Masse in t (Dichte erforderlich)", "Achsen beliebig vieler Blöcke in cm eingeben"])
