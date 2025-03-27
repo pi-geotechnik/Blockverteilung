@@ -71,10 +71,12 @@ if einheit in ["Volumen in m³", "Masse in t (Dichte erforderlich)"]:
         text = uploaded_file.read().decode("utf-8")
         st.text_area("Inhalt der Datei:", text, height=300)
         
-        # Den Speicherpfad korrekt aus der Datei bestimmen
-        speicherpfad = os.getcwd()  # Standardmäßig aktuelles Arbeitsverzeichnis
+        # **Neuer Speicherpfad**
+        speicherpfad = os.getcwd()  # Standard: aktuelles Arbeitsverzeichnis
         if uploaded_file.name:
-            speicherpfad = os.path.dirname(os.path.abspath(uploaded_file.name))  
+            speicherpfad = os.path.dirname(os.path.abspath(uploaded_file.name))
+        else:
+            speicherpfad = os.getcwd()  # Fallback auf das aktuelle Verzeichnis 
         
         try:
             werte = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
@@ -94,8 +96,8 @@ if einheit in ["Volumen in m³", "Masse in t (Dichte erforderlich)"]:
             st.write(m_achsen)
             
             # Speichern der Daten
-            speichere_werte("m3_werte.txt", werte, speicherpfad)
-            speichere_werte("m_werte.txt", m_achsen, speicherpfad)
+            dateipfad_m3 = speichere_werte("m3_werte.txt", werte, speicherpfad)
+            dateipfad_m = speichere_werte("m_werte.txt", m_achsen, speicherpfad)
             st.success(f"Dateien gespeichert unter:\n{dateipfad_m3}\n{dateipfad_m}")
             
             # Visualisierung der Histogramme
