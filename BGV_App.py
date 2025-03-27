@@ -231,8 +231,8 @@ if einheit == "Masse in t (Dichte erforderlich)":
             dichte_kg_m3 = st.number_input("Geben Sie die Dichte in kg/m³ ein:", min_value=0, value=2650, step=10)
             # Umrechnung von Tonnen in m³
             werte_m3_t = [val * 1000 / dichte_kg_m3 for val in werte_t]
-            st.write("Berechnete m³-Werte aus Tonnen:")
-            st.write(werte_m3_t)
+            # st.write("Berechnete m³-Werte aus Tonnen:")
+            # st.write(werte_m3_t)
 
             # Berechnung der dritten Wurzel (Achsen in Metern)
             m_achsen_t = [berechne_dritte_wurzel(val) for val in werte_m3_t]
@@ -256,7 +256,6 @@ st.subheader("Visualisierung der Wahrscheinlichkeitsdichte und der kumulativen W
 # Berechnung und Visualisierung immer ausführen, ohne Button
 if 'einheit' in st.session_state:
     if st.session_state.einheit == "Volumen in m³" and 'm_achsen' in st.session_state:
-        st.write("m³ is true")
         # Aufruf der Funktion zur Berechnung und Visualisierung mit m_achsen
         fig1 = berechne_perzentile_und_visualisierung(st.session_state.m_achsen)
         st.session_state.fig1 = fig1  # Speichern von fig1 im session_state
@@ -265,6 +264,8 @@ if 'einheit' in st.session_state:
         # Aufruf der Funktion zur Berechnung und Visualisierung mit m_achsen_t
         fig1 = berechne_perzentile_und_visualisierung(st.session_state.m_achsen_t)
         st.session_state.fig1 = fig1  # Speichern von fig1 im session_state
+    else:
+        st.write("t is not true")
 
 # Anzeige der gespeicherten Grafiken
 if 'fig1' in st.session_state:
