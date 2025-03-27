@@ -71,30 +71,34 @@ if einheit in ["Volumen in m³", "Masse in t (Dichte erforderlich)"]:
         text = uploaded_file.read().decode("utf-8")
         st.text_area("Inhalt der Datei:", text, height=300)
         
-        # Nutzung des temporären Speicherorts von Streamlit-Dateien
+        # Den Speicherpfad korrekt aus der Datei bestimmen
         speicherpfad = os.getcwd()  # Standardmäßig aktuelles Arbeitsverzeichnis
-        temp_speicherort = tempfile.NamedTemporaryFile(delete=False)
-        speicherpfad = os.path.dirname(temp_speicherort.name)
+        if uploaded_file.name:
+            speicherpfad = os.path.dirname(os.path.abspath(uploaded_file.name))  
         
         try:
             werte = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
             st.write("Die Werte in der Datei:")
             st.write(werte)
             
+            # Eingabe der Dichte bei t
             if einheit == "Masse in t (Dichte erforderlich)":
                 dichte_kg_m3 = st.number_input("Geben Sie die Dichte in kg/m³ ein:", min_value=0, value=2650, step=10)
                 werte = [val * 1000 / dichte_kg_m3 for val in werte]  # Umrechnung t → m³
                 st.write("Berechnete m³-Werte:")
                 st.write(werte)
             
+            # Berechnung der dritten Wurzel (Achsen in Metern)
             m_achsen = [berechne_dritte_wurzel(val) for val in werte]
             st.write("Achsen in Metern:")
             st.write(m_achsen)
             
+            # Speichern der Daten
             speichere_werte("m3_werte.txt", werte, speicherpfad)
             speichere_werte("m_werte.txt", m_achsen, speicherpfad)
-            st.success(f"Dateien gespeichert in '{speicherpfad}'")
+            st.success(f"Dateien gespeichert unter:\n{dateipfad_m3}\n{dateipfad_m}")
             
+            # Visualisierung der Histogramme
             visualisiere_histogramm_m3_und_m(m_achsen, werte)
             perzentile = berechne_perzentile(m_achsen, [95, 96, 97, 98])
             for p, perzentil in zip([95, 96, 97, 98], perzentile):
@@ -106,6 +110,7 @@ if einheit in ["Volumen in m³", "Masse in t (Dichte erforderlich)"]:
 elif einheit == "Achsen beliebig vieler Blöcke in cm eingeben":
     speicherpfad = st.text_input("Geben Sie den Speicherpfad für die Dateien an:", value=os.getcwd())
     
+    # Eingabe der Dichte
     st.subheader("Blockdichte eingeben")
     dichte_kg_m3 = st.number_input("Geben Sie die Dichte in kg/m³ ein:", min_value=0, value=2650, step=10)
     
