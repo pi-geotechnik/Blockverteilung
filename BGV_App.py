@@ -108,25 +108,25 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
         ax5.plot(X1, stats.genexpon.cdf(X1, a1, b1, c1, loc=loc1, scale=scale1), '#800020', lw=1.0, alpha=0.7, label='genexpon cdf')
 
     if 'lognorm' in ausgewählte_verteilungen:
-        shape1, loc1, scale1 = stats.lognorm.fit(m_achsen, floc=0)
-        X2 = np.linspace(stats.lognorm.ppf(0.001, shape1, loc=loc1, scale=scale1), 
-                         stats.lognorm.ppf(0.999, shape1, loc=loc1, scale=scale1), len(m_achsen))
-        ax4.plot(X2, stats.lognorm.pdf(X2, shape1, loc=loc1, scale=scale1), '#00008B', lw=1.0, alpha=0.7, label='lognorm pdf')
-        ax5.plot(X2, stats.lognorm.cdf(X2, shape1, loc=loc1, scale=scale1), '#00008B', lw=1.0, alpha=0.7, label='lognorm cdf')
+        shape2, loc2, scale2 = stats.lognorm.fit(m_achsen, floc=0)
+        X2 = np.linspace(stats.lognorm.ppf(0.001, shape2, loc=loc2, scale=scale2), 
+                         stats.lognorm.ppf(0.999, shape2, loc=loc2, scale=scale2), len(m_achsen))
+        ax4.plot(X2, stats.lognorm.pdf(X2, shape2, loc=loc2, scale=scale2), '#00008B', lw=1.0, alpha=0.7, label='lognorm pdf')
+        ax5.plot(X2, stats.lognorm.cdf(X2, shape2, loc=loc2, scale=scale2), '#00008B', lw=1.0, alpha=0.7, label='lognorm cdf')
 
     if 'expon' in ausgewählte_verteilungen:
-        loc2, scale2 = stats.expon.fit(m_achsen)
-        X3 = np.linspace(stats.expon.ppf(0.001, loc=loc2, scale=scale2), 
-                         stats.expon.ppf(0.999, loc=loc2, scale=scale2), len(m_achsen))
-        ax4.plot(X3, stats.expon.pdf(X3, loc=loc2, scale=scale2), '#333333', lw=1.0, alpha=0.7, label='expon pdf')
-        ax5.plot(X3, stats.expon.cdf(X3, loc=loc2, scale=scale2), '#333333', lw=1.0, alpha=0.7, label='expon cdf')
+        loc3, scale3 = stats.expon.fit(m_achsen)
+        X3 = np.linspace(stats.expon.ppf(0.001, loc=loc3, scale=scale3), 
+                         stats.expon.ppf(0.999, loc=loc3, scale=scale3), len(m_achsen))
+        ax4.plot(X3, stats.expon.pdf(X3, loc=loc3, scale=scale3), '#333333', lw=1.0, alpha=0.7, label='expon pdf')
+        ax5.plot(X3, stats.expon.cdf(X3, loc=loc3, scale=scale3), '#333333', lw=1.0, alpha=0.7, label='expon cdf')
 
     if 'powerlaw' in ausgewählte_verteilungen:
-        a3, loc3, scale3 = stats.powerlaw.fit(m_achsen)
-        X4 = np.linspace(stats.powerlaw.ppf(0.001, a3, loc=loc3, scale=scale3), 
-                         stats.powerlaw.ppf(0.999, a3, loc=loc3, scale=scale3), len(m_achsen))
-        ax4.plot(X4, stats.powerlaw.pdf(X4, a3, loc=loc3, scale=scale3), '#006400', lw=1.0, alpha=0.7, label='powerlaw pdf')
-        ax5.plot(X4, stats.powerlaw.cdf(X4, a3, loc=loc3, scale=scale3), '#006400', lw=1.0, alpha=0.7, label='powerlaw cdf')
+        a4, loc4, scale4 = stats.powerlaw.fit(m_achsen)
+        X4 = np.linspace(stats.powerlaw.ppf(0.001, a4, loc=loc4, scale=scale4), 
+                         stats.powerlaw.ppf(0.999, a4, loc=loc4, scale=scale4), len(m_achsen))
+        ax4.plot(X4, stats.powerlaw.pdf(X4, a4, loc=loc4, scale=scale4), '#006400', lw=1.0, alpha=0.7, label='powerlaw pdf')
+        ax5.plot(X4, stats.powerlaw.cdf(X4, a4, loc=loc4, scale=scale4), '#006400', lw=1.0, alpha=0.7, label='powerlaw cdf')
 
     # CDF für m_achsen (kumulative Verteilung)
     steps = np.linspace(0.01, 1.00, num=100)
@@ -144,7 +144,7 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
     ax5.set_ylabel('Kumulative Wahrscheinlichkeit F(a)', fontsize=12)
     
     # Parameter und Diagramm übergeben
-    return fig, a1, b1, c1, loc1, scale1, shape1, loc1_lognorm, scale1_lognorm, loc2, scale2, a3, loc3, scale3
+    return fig, a1, b1, c1, loc1, scale1, shape1, loc2, scale2, loc3, scale3, a4, loc4, scale4
     
 # Function to calculate percentiles for a distribution
 def calculate_percentiles(distribution, percentiles, *params):
@@ -265,7 +265,7 @@ if 'fig2' in st.session_state:
 params = passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen)
 
 # Extrahieren der Parameter
-_, a1, b1, c1, loc1, scale1, shape1, loc1_lognorm, scale1_lognorm, loc2, scale2, a3, loc3, scale3 = params
+_, a1, b1, c1, loc1, scale1, shape2, loc2, scale2, loc3, scale3, a4, loc4, scale4 = params
 
 # Define the percentiles you want to show
 Perc_steps_short = ['0', '25', '50', '75', '95', '96', '97', '98', '99', '100']
@@ -275,9 +275,9 @@ percentiles = [0, 25, 50, 75, 95, 96, 97, 98, 99, 100]
 if st.button('Tabelle mit Perzentilen anzeigen'):
     # Berechnung der Perzentilen für jede Verteilung
     L1s = calculate_percentiles(stats.genexpon, percentiles, a1, b1, c1, loc1, scale1)
-    L2s = calculate_percentiles(stats.lognorm, percentiles, shape1, loc1, scale1)
-    L3s = calculate_percentiles(stats.expon, percentiles, loc2, scale2)
-    L4s = calculate_percentiles(stats.powerlaw, percentiles, a3, loc3, scale3)
+    L2s = calculate_percentiles(stats.lognorm, percentiles, shape2, loc2, scale2)
+    L3s = calculate_percentiles(stats.expon, percentiles, loc3, scale3)
+    L4s = calculate_percentiles(stats.powerlaw, percentiles, a4, loc4, scale4)
 
     # Erstellen der DataFrame für die Tabelle
     df1 = pd.DataFrame({
