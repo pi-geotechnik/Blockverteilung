@@ -231,8 +231,11 @@ st.subheader("Visualisierung der Wahrscheinlichkeitsdichte und der kumulativen W
 
 # Button zur Berechnung und Visualisierung
 if st.button('Visualisieren'):
+    # Platzhalter für fig1
+    fig1_placeholder = st.empty()
     # Aufruf der Funktion zur Berechnung und Visualisierung
     berechne_perzentile_und_visualisierung(m_achsen)
+    fig1_placeholder.pyplot(fig)  # Plot für fig1
 
 
 # Anpassung einer Wahrscheinlichkeitsfunktion
@@ -245,9 +248,12 @@ ausgewählte_verteilungen = st.multiselect("Wählen Sie die Verteilungen zur Anp
 
 # Button zur Berechnung und Visualisierung
 if st.button('Anpassen'):
+    # Platzhalter für fig2
+    fig2_placeholder = st.empty()
     if ausgewählte_verteilungen:
         # Aufruf der Funktion zur Berechnung und Visualisierung mit den gewählten Verteilungen
         passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen)
+        fig2_placeholder.pyplot(fig)  # Plot für fig2
     else:
         st.warning("Bitte wählen Sie mindestens eine Verteilung aus.")
 
