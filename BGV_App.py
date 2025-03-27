@@ -59,7 +59,7 @@ def berechne_perzentile_und_visualisierung(m_achsen):
 
 
     # Visualisierung der Ergebnisse
-    fig, (ax1, ax2, ax3) = plt.subplots(nrows=3, ncols=1, figsize=(4, 8))
+    fig, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, figsize=(12, 4))
 
     # Histogramm der Wahrscheinlichkeitsdichte
     ax1.hist(m_achsen, density=True, bins='auto', histtype='stepfilled', color='tab:blue', alpha=0.3, label='upload pdf')
@@ -93,7 +93,7 @@ def berechne_perzentile_und_visualisierung(m_achsen):
     
 # Funktion zur Anpassung der Verteilungen und Visualisierung
 def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
-    fig, (ax4, ax5) = plt.subplots(nrows=2, ncols=1, figsize=(6, 18))
+    fig, (ax4, ax5) = plt.subplots(nrows=1, ncols=2, figsize=(12, 4))
 
     # Histogramm der m_achsen
     ax4.hist(m_achsen, color='tab:blue', density=True, bins='auto', histtype='stepfilled', alpha=0.3, 
