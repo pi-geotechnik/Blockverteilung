@@ -150,6 +150,7 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
     ax5.set_ylabel('Cumulative probability F(a) [%]', fontsize=12)
 
     # Diagramm anzeigen
+    st.pyplot(fig1)
     st.pyplot(fig2)
     
 # Streamlit App
