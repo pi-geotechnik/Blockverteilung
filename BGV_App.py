@@ -176,8 +176,11 @@ def berechne_perzentile_und_visualisierung(m_achsen):
 st.header("Blockgrößenverteilung")
 st.subheader("Visualisierung der Wahrscheinlichkeitsdichte und kumulativen Wahrscheinlichkeit")
 
-# Aufruf der Funktion zur Berechnung und Visualisierung
-berechne_perzentile_und_visualisierung(m_achsen)
+
+# Button zur Berechnung und Visualisierung
+if st.button('Berechne und Visualisiere die Perzentile'):
+    # Aufruf der Funktion zur Berechnung und Visualisierung
+    berechne_perzentile_und_visualisierung(m_achsen)
 
 
 
