@@ -43,7 +43,60 @@ def visualisiere_histogramm_m3_und_m(m_werte, m3_werte):
 def berechne_perzentile(Achsen, perzentile):
     return np.percentile(Achsen, perzentile)
     
+# Funktion zur Berechnung der Perzentile und Visualisierung
+def berechne_perzentile_und_visualisierung(m_achsen):
+    steps = np.linspace(0.01, 1.00, num=100)
 
+    Perc_steps = ['0','5','10','15','20','25','30','35','40','45','50','55','60','65','70','75','80','85','90','95','96','97','98','99','100']
+
+    # Berechnung der Perzentile
+    percentiles_sample_seite = np.quantile(m_achsen, steps)
+    Perc_sample_seite = percentiles_sample_seite[0], percentiles_sample_seite[4], percentiles_sample_seite[9], \
+                        percentiles_sample_seite[14], percentiles_sample_seite[19], percentiles_sample_seite[24], \
+                        percentiles_sample_seite[29], percentiles_sample_seite[34], percentiles_sample_seite[39], \
+                        percentiles_sample_seite[44], percentiles_sample_seite[49], percentiles_sample_seite[54], \
+                        percentiles_sample_seite[59], percentiles_sample_seite[64], percentiles_sample_seite[69], \
+                        percentiles_sample_seite[74], percentiles_sample_seite[79], percentiles_sample_seite[84], \
+                        percentiles_sample_seite[89], percentiles_sample_seite[94], percentiles_sample_seite[95], \
+                        percentiles_sample_seite[96], percentiles_sample_seite[97], percentiles_sample_seite[98], \
+                        percentiles_sample_seite[99]
+
+
+    # Visualisierung der Ergebnisse
+    fig, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, figsize=(18, 4))
+
+    # Histogramm der Wahrscheinlichkeitsdichte
+    ax1.hist(m_achsen, density=True, bins='auto', histtype='stepfilled', color='tab:blue', alpha=0.3, label='sample pdf')
+    
+    # CDF auf normaler Skala
+    ax2.plot(percentiles_sample_seite, steps, lw=2.0, color='tab:blue', alpha=0.7, label='sample cdf')
+    
+    # CDF auf Log-Skala
+    ax3.plot(percentiles_sample_seite, steps, lw=2.0, color='tab:blue', alpha=0.7, label='sample cdf')
+
+    # Achsenbeschriftungen
+    ax1.set_xlim(left=-0.2, right=None)
+    ax1.set_xlabel('Blockgröße a [m]', fontsize=14)
+    ax1.set_ylabel('Wahrscheinlichkeitsdichte f(a)', fontsize=14)
+
+    ax2.set_xlim(left=-0.2, right=None)
+    ax2.set_xlabel('Blockgröße a [m]', fontsize=14)
+    ax2.set_ylabel('Kumulative Wahrscheinlichkeit F(a)', fontsize=14)
+
+    ax3.set_xscale('log')
+    ax3.set_xlabel('Blockgröße a [m] (log Skala)', fontsize=14)
+    ax3.set_ylabel('Kumulative Wahrscheinlichkeit F(a)', fontsize=14)
+
+    # Legenden
+    ax1.legend(loc='best', frameon=False)
+    ax2.legend(loc='best', frameon=False)
+    ax3.legend(loc='best', frameon=False)
+
+    # Diagramm anzeigen
+    st.pyplot(fig)
+    
+
+    
 # Streamlit App
 
 # Zeige das Logo zu Beginn der App
@@ -119,69 +172,12 @@ if einheit == "Masse in t (Dichte erforderlich)":
 
 
 # Darstellung
-
-# Funktion zur Berechnung der Perzentile und Anpassung der Wahrscheinlichkeitsfunktion
-def berechne_perzentile_und_visualisierung(m_achsen):
-    steps = np.linspace(0.01, 1.00, num=100)
-
-    Perc_steps = ['0','5','10','15','20','25','30','35','40','45','50','55','60','65','70','75','80','85','90','95','96','97','98','99','100']
-
-    # Berechnung der Perzentile
-    percentiles_sample_seite = np.quantile(m_achsen, steps)
-    Perc_sample_seite = percentiles_sample_seite[0], percentiles_sample_seite[4], percentiles_sample_seite[9], \
-                        percentiles_sample_seite[14], percentiles_sample_seite[19], percentiles_sample_seite[24], \
-                        percentiles_sample_seite[29], percentiles_sample_seite[34], percentiles_sample_seite[39], \
-                        percentiles_sample_seite[44], percentiles_sample_seite[49], percentiles_sample_seite[54], \
-                        percentiles_sample_seite[59], percentiles_sample_seite[64], percentiles_sample_seite[69], \
-                        percentiles_sample_seite[74], percentiles_sample_seite[79], percentiles_sample_seite[84], \
-                        percentiles_sample_seite[89], percentiles_sample_seite[94], percentiles_sample_seite[95], \
-                        percentiles_sample_seite[96], percentiles_sample_seite[97], percentiles_sample_seite[98], \
-                        percentiles_sample_seite[99]
-
-
-    # Visualisierung der Ergebnisse
-    fig, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, figsize=(18, 4))
-
-    # Histogramm der Wahrscheinlichkeitsdichte
-    ax1.hist(m_achsen, density=True, bins='auto', histtype='stepfilled', color='tab:blue', alpha=0.3, label='sample pdf')
-    
-    # CDF auf normaler Skala
-    ax2.plot(percentiles_sample_seite, steps, lw=2.0, color='tab:blue', alpha=0.7, label='sample cdf')
-    
-    # CDF auf Log-Skala
-    ax3.plot(percentiles_sample_seite, steps, lw=2.0, color='tab:blue', alpha=0.7, label='sample cdf')
-
-    # Achsenbeschriftungen
-    ax1.set_xlim(left=-0.2, right=None)
-    ax1.set_xlabel('Blockgröße a [m]', fontsize=14)
-    ax1.set_ylabel('Wahrscheinlichkeitsdichte f(a)', fontsize=14)
-
-    ax2.set_xlim(left=-0.2, right=None)
-    ax2.set_xlabel('Blockgröße a [m]', fontsize=14)
-    ax2.set_ylabel('Kumulative Wahrscheinlichkeit F(a)', fontsize=14)
-
-    ax3.set_xscale('log')
-    ax3.set_xlabel('Blockgröße a [m] (log Skala)', fontsize=14)
-    ax3.set_ylabel('Kumulative Wahrscheinlichkeit F(a)', fontsize=14)
-
-    # Legenden
-    ax1.legend(loc='best', frameon=False)
-    ax2.legend(loc='best', frameon=False)
-    ax3.legend(loc='best', frameon=False)
-
-    # Diagramm anzeigen
-    st.pyplot(fig)
-
-# Streamlit App
-st.header("Blockgrößenverteilung")
 st.subheader("Visualisierung der Wahrscheinlichkeitsdichte und kumulativen Wahrscheinlichkeit")
-
 
 # Button zur Berechnung und Visualisierung
 if st.button('Berechne und Visualisiere die Perzentile'):
     # Aufruf der Funktion zur Berechnung und Visualisierung
     berechne_perzentile_und_visualisierung(m_achsen)
-
 
 
 # Anpassung einer Wahrscheinlichkeitsfunktion
