@@ -223,7 +223,7 @@ if einheit == "Volumen in m³":
             # Nun kann die heruntergeladene Datei genauso weiterverarbeitet werden wie eine hochgeladene Datei
             st.write("Die Beispiel-Datei wurde erfolgreich heruntergeladen.")
             
-         else:
+        else:
             st.error("Fehler beim Laden der Beispiel-Datei.")
     
     # Wenn der Benutzer "m³ hochladen" wählt
