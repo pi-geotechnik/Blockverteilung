@@ -187,6 +187,9 @@ st.image(logo, caption="https://pi-geo.at/", use_container_width=True)  # Zeige 
 st.title("Willkommen bei pi!")
 st.header("Blockgrößenverteilung")
 
+# URL der Beispiel-Datei auf GitHub
+example_file_url = "https://github.com/pi-geotechnik/Blockverteilung/raw/main/example_blocks_m3.txt" 
+
 # Auswahl der Einheit
 einheit = st.selectbox("Wählen Sie die Einheit der Eingabedaten:", ["Volumen in m³", "Masse in t (Dichte erforderlich)"])
 # Speichern der Auswahl im session_state
@@ -197,6 +200,14 @@ if einheit == "Volumen in m³":
     if uploaded_file is not None:
         text = uploaded_file.read().decode("utf-8")
         st.text_area("Inhalt der Datei:", text, height=300)
+        
+        # Wenn keine Datei hochgeladen wurde, zeige die Beispiel-Datei zum Herunterladen an
+        if uploaded_file is None:
+            st.write("Falls keine Datei hochgeladen wird, können Sie auch eine Beispiel-Datei herunterladen.")
+            st.markdown(f"[Beispiel-Datei herunterladen]({example_file_url})")
+        else:
+            # Datei wurde hochgeladen
+            st.write("Die hochgeladene Datei:", uploaded_file.name)
 
         try:
             # Text in Zahlen (m³) umwandeln
