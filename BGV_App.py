@@ -71,11 +71,11 @@ def berechne_perzentile_und_visualisierung(m_achsen):
     ax3.plot(percentiles_m_achsen, steps, lw=2.0, color='tab:blue', alpha=0.7, label='upload cdf')
 
     # Achsenbeschriftungen
-    ax1.set_xlim(left=-0.2, right=None)
+    ax1.set_xlim(left=None, right=None)
     ax1.set_xlabel('Blockachse a [m]', fontsize=14)
     ax1.set_ylabel('Wahrscheinlichkeitsdichte f(a)', fontsize=14)
 
-    ax2.set_xlim(left=-0.2, right=None)
+    ax2.set_xlim(left=None, right=None)
     ax2.set_xlabel('Blockachse a [m]', fontsize=14)
     ax2.set_ylabel('Kumulative Wahrscheinlichkeit F(a)', fontsize=14)
 
@@ -229,17 +229,17 @@ if einheit == "Masse in t (Dichte erforderlich)":
             dichte_kg_m3 = st.number_input("Geben Sie die Dichte in kg/m³ ein:", min_value=0, value=2650, step=10)
             # Umrechnung von Tonnen in m³
             werte_m3 = [val * 1000 / dichte_kg_m3 for val in werte]
-            st.write("Berechnete m³-Werte aus Tonnen:")
-            st.write(werte_m3)
+            #st.write("Berechnete m³-Werte aus Tonnen:")
+            #st.write(werte_m3)
 
             # Berechnung der dritten Wurzel (Achsen in Metern)
             m_achsen = [berechne_dritte_wurzel(val) for val in werte_m3]
-            st.write("Achsen in Metern:")
-            st.write(m_achsen)
+            #st.write("Achsen in Metern:")
+            #st.write(m_achsen)
 
             # Visualisierung der Histogramme
-            visualisiere_histogramm_m3_und_m(m_achsen, werte_m3)
-            upload_perz = berechne_perzentile(m_achsen, [0, 25, 50, 75, 95, 96, 97, 98, 99, 100])
+            #visualisiere_histogramm_m3_und_m(m_achsen, werte_m3)
+            #upload_perz = berechne_perzentile(m_achsen, [0, 25, 50, 75, 95, 96, 97, 98, 99, 100])
 
         except Exception as e:
             st.error(f"Fehler bei der Verarbeitung der Daten: {e}")  
