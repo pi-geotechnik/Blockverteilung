@@ -244,7 +244,7 @@ if einheit == "Masse in t (Dichte erforderlich)":
             upload_perz = berechne_perzentile(m_achsen_t, [0, 25, 50, 75, 95, 96, 97, 98, 99, 100])
             
             # Speichere m_achsen in session_state für spätere Verwendung
-            st.session_state.m_achsen = m_achsen_t
+            st.session_state.m_achsen_t = m_achsen_t
 
         except Exception as e:
             st.error(f"Fehler bei der Verarbeitung der Daten: {e}")  
