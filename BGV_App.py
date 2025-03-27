@@ -299,7 +299,13 @@ if 'm_achsen' in st.session_state:
                 L4s = calculate_percentiles(stats.powerlaw, percentiles, 
                                             st.session_state.a4, st.session_state.loc4, st.session_state.scale4)
                 
+                # Sicherstellen, dass alle Perzentile als numpy-Array vorliegen
                 upload_perz = np.array(upload_perz)
+                L1s = np.array(L1s)
+                L2s = np.array(L2s)
+                L3s = np.array(L3s)
+                L4s = np.array(L4s)
+
                 upload_perz3 = upload_perz**3
                 L1s3 = L1s**3
                 L2s3 = L2s**3
