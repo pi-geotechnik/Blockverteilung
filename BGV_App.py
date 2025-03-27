@@ -250,11 +250,11 @@ if einheit == "Masse in t (Dichte erforderlich)":
 
 # Darstellung
 st.subheader("Visualisierung der Wahrscheinlichkeitsdichte und der kumulativen Wahrscheinlichkeit")
-    
-# Button zur Berechnung und Visualisierung
-if st.button('Visualisieren'):
+
+# Berechnung und Visualisierung immer ausführen, ohne Button
+if 'm_achsen' in st.session_state:
     # Aufruf der Funktion zur Berechnung und Visualisierung
-    fig1 = berechne_perzentile_und_visualisierung(m_achsen)
+    fig1 = berechne_perzentile_und_visualisierung(st.session_state.m_achsen)
     st.session_state.fig1 = fig1  # Speichern von fig1 im session_state
 
 # Anzeige der gespeicherten Grafiken
@@ -275,53 +275,48 @@ if 'fig2' in st.session_state:
     st.pyplot(st.session_state.fig2)
 
 
-# Tabelle mit Perzentilen
+# Tabelle mit Perzentilen immer anzeigen, ohne Button
 st.subheader("Tabellenvergleich der Perzentilen")
-if 'm_achsen' in st.session_state:
-    st.write("m_achsen existiert!")
-    if st.button("Tabelle mit Perzentilen anzeigen"):
-        Perc_steps_short = ['0', '25', '50', '75', '95', '96', '97', '98', '99', '100']
-        percentiles = [0, 25, 50, 75, 95, 96, 97, 98, 99, 100]
-        
-        # Sicherstellen, dass alle notwendigen Parameter gespeichert sind
-        if all(param in st.session_state for param in ['a1', 'b1', 'c1', 'loc1', 'scale1', 'shape2', 'loc2', 'scale2', 'loc3', 'scale3', 'a4', 'loc4', 'scale4']):
-            st.write("params existieren!")
-            try:
-                # Berechnung der Perzentile für jede Verteilung
-                L1s = calculate_percentiles(stats.genexpon, percentiles, 
-                                            st.session_state.a1, st.session_state.b1, st.session_state.c1, 
-                                            st.session_state.loc1, st.session_state.scale1)
-                L2s = calculate_percentiles(stats.lognorm, percentiles, 
-                                            st.session_state.shape2, st.session_state.loc2, st.session_state.scale2)
-                L3s = calculate_percentiles(stats.expon, percentiles, 
-                                            st.session_state.loc3, st.session_state.scale3)
-                L4s = calculate_percentiles(stats.powerlaw, percentiles, 
-                                            st.session_state.a4, st.session_state.loc4, st.session_state.scale4)
-                
-                # Sicherstellen, dass alle Perzentile als numpy-Array vorliegen
-                upload_perz = np.array(upload_perz)
-                L1s = np.array(L1s)
-                L2s = np.array(L2s)
-                L3s = np.array(L3s)
-                L4s = np.array(L4s)
 
-                upload_perz3 = upload_perz**3
-                L1s3 = L1s**3
-                L2s3 = L2s**3
-                L3s3 = L3s**3
-                L4s3 = L4s**3
-                
-                df1 = pd.DataFrame({
-                    "percentile": Perc_steps_short,
-                    "upload [m³]": upload_perz3,
-                    "expon [m³]": L3s3,
-                    "genexpon [m³]": L1s3,
-                    "lognorm [m³]": L2s3,
-                    "powerlaw [m³]": L4s3
-                })
-                st.write(df1)
-            except Exception as e:
-                st.error(f"Fehler bei der Berechnung der Perzentile: {e}")
-        else:
-            st.write("params existieren nicht!")
-            st.info("Bitte führen Sie zuerst eine Anpassung der Wahrscheinlichkeitsfunktionen durch.")
+if 'm_achsen' in st.session_state:
+    Perc_steps_short = ['0', '25', '50', '75', '95', '96', '97', '98', '99', '100']
+    percentiles = [0, 25, 50, 75, 95, 96, 97, 98, 99, 100]
+
+    # Sicherstellen, dass alle notwendigen Parameter gespeichert sind
+    if all(param in st.session_state for param in ['a1', 'b1', 'c1', 'loc1', 'scale1', 'shape2', 'loc2', 'scale2', 'loc3', 'scale3', 'a4', 'loc4', 'scale4']):
+        try:
+            # Berechnung der Perzentile für jede Verteilung
+            L1s = calculate_percentiles(stats.genexpon, percentiles, 
+                                        st.session_state.a1, st.session_state.b1, st.session_state.c1, 
+                                        st.session_state.loc1, st.session_state.scale1)
+            L2s = calculate_percentiles(stats.lognorm, percentiles, 
+                                        st.session_state.shape2, st.session_state.loc2, st.session_state.scale2)
+            L3s = calculate_percentiles(stats.expon, percentiles, 
+                                        st.session_state.loc3, st.session_state.scale3)
+            L4s = calculate_percentiles(stats.powerlaw, percentiles, 
+                                        st.session_state.a4, st.session_state.loc4, st.session_state.scale4)
+            
+            # Sicherstellen, dass alle Perzentile als numpy-Array vorliegen
+            upload_perz = np.array(upload_perz)
+            L1s = np.array(L1s)
+            L2s = np.array(L2s)
+            L3s = np.array(L3s)
+            L4s = np.array(L4s)
+
+            upload_perz3 = upload_perz**3
+            L1s3 = L1s**3
+            L2s3 = L2s**3
+            L3s3 = L3s**3
+            L4s3 = L4s**3
+            
+            df1 = pd.DataFrame({
+                "percentile": Perc_steps_short,
+                "upload [m³]": upload_perz3,
+                "expon [m³]": L3s3,
+                "genexpon [m³]": L1s3,
+                "lognorm [m³]": L2s3,
+                "powerlaw [m³]": L4s3
+            })
+            st.write(df1)
+        except Exception as e:
+            st.error(f"Fehler bei der Berechnung der Perzentile: {e}")
