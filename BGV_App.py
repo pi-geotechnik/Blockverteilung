@@ -203,12 +203,12 @@ if einheit == "Volumen in m³":
             werte = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
             
             # Sortieren der Werte in aufsteigender Reihenfolge
-            werte.sort()
+            werte = werte.sort()
             # st.write("Die m³-Werte in der Datei:")
             # st.write(werte)
             
             # Anzahl der Werte ausgeben
-            st.write(f"Anzahl der m³-Werte: {len(werte)}")
+            st.write(f"Anzahl der Blöcke: {len(werte)}")
             
             # Berechnung der dritten Wurzel (Achsen in Metern)
             m_achsen = [berechne_dritte_wurzel(val) for val in werte]
@@ -240,12 +240,12 @@ if einheit == "Masse in t (Dichte erforderlich)":
             # st.write(werte)
             
             # Sortieren der Werte in aufsteigender Reihenfolge
-            tonnen.sort()
+            tonnen = tonnen.sort()
             # st.write("Die Tonnen-Werte in der Datei:")
             # st.write(tonnen)
             
             # Anzahl der Werte ausgeben
-            st.write(f"Anzahl der t-Werte: {len(tonnen)}")
+            st.write(f"Anzahl der Blöcke: {len(tonnen)}")
             
             # Eingabe der Dichte in kg/m³
             dichte_kg_m3 = st.number_input("Geben Sie die Dichte in kg/m³ ein:", min_value=0, value=2650, step=10)
