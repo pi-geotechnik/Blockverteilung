@@ -221,28 +221,28 @@ if einheit == "Masse in t (Dichte erforderlich)":
 
         try:
             # Text in Zahlen (Tonnen) umwandeln
-            werte = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
+            werte_t = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
             # st.write("Die Tonnen-Werte in der Datei:")
             # st.write(werte)
 
             # Eingabe der Dichte in kg/m³
             dichte_kg_m3 = st.number_input("Geben Sie die Dichte in kg/m³ ein:", min_value=0, value=2650, step=10)
             # Umrechnung von Tonnen in m³
-            werte_m3 = [val * 1000 / dichte_kg_m3 for val in werte]
+            werte_m3_t = [val * 1000 / dichte_kg_m3 for val in werte_t]
             # st.write("Berechnete m³-Werte aus Tonnen:")
             # st.write(werte_m3)
 
             # Berechnung der dritten Wurzel (Achsen in Metern)
-            m_achsen = [berechne_dritte_wurzel(val) for val in werte_m3]
-            # st.write("Achsen in Metern:")
-            # st.write(m_achsen)
+            m_achsen_t = [berechne_dritte_wurzel(val) for val in werte_m3_t]
+            st.write("Achsen in Metern:")
+            st.write(m_achsen_t)
 
             # Visualisierung der Histogramme
             # visualisiere_histogramm_m3_und_m(m_achsen, werte_m3)
-            upload_perz = berechne_perzentile(m_achsen, [0, 25, 50, 75, 95, 96, 97, 98, 99, 100])
+            upload_perz = berechne_perzentile(m_achsen_t, [0, 25, 50, 75, 95, 96, 97, 98, 99, 100])
             
             # Speichere m_achsen in session_state für spätere Verwendung
-            st.session_state.m_achsen = m_achsen
+            st.session_state.m_achsen = m_achsen_t
 
         except Exception as e:
             st.error(f"Fehler bei der Verarbeitung der Daten: {e}")  
