@@ -176,9 +176,6 @@ def berechne_perzentile_und_visualisierung(m_achsen):
 st.header("Blockgrößenverteilung")
 st.subheader("Visualisierung der Wahrscheinlichkeitsdichte und kumulativen Wahrscheinlichkeit")
 
-# Beispielhafte Eingabedaten
-m_achsen = np.random.lognormal(mean=0, sigma=1, size=1000)  # Beispielhafte Daten für die Blockgrößen
-
 # Aufruf der Funktion zur Berechnung und Visualisierung
 berechne_perzentile_und_visualisierung(m_achsen)
 
