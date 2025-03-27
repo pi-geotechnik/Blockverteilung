@@ -203,7 +203,7 @@ if einheit == "Volumen in m³":
             werte = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
             
             # Sortieren der Werte in aufsteigender Reihenfolge
-            werte = werte.sort()
+            werte.sort()
             # st.write("Die m³-Werte in der Datei:")
             # st.write(werte)
             
@@ -240,7 +240,7 @@ if einheit == "Masse in t (Dichte erforderlich)":
             # st.write(werte)
             
             # Sortieren der Werte in aufsteigender Reihenfolge
-            tonnen = tonnen.sort()
+            tonnen.sort()
             # st.write("Die Tonnen-Werte in der Datei:")
             # st.write(tonnen)
             
