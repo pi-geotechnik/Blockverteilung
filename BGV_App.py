@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 import math
 import scipy as sp
+from scipy import stats
 from scipy.stats import lognorm
 from scipy.stats import expon
 from scipy.stats import genexpon
@@ -229,7 +230,7 @@ if einheit == "Masse in t (Dichte erforderlich)":
 st.subheader("Visualisierung der Wahrscheinlichkeitsdichte und der kumulativen Wahrscheinlichkeit")
 
 # Button zur Berechnung und Visualisierung
-if st.button('Berechne und Visualisiere die Perzentile'):
+if st.button('Visualisieren'):
     # Aufruf der Funktion zur Berechnung und Visualisierung
     berechne_perzentile_und_visualisierung(m_achsen)
 
@@ -240,10 +241,10 @@ st.subheader("Anpassung und Visualisierung von Wahrscheinlichkeitsfunktionen")
 
 # Auswahl der Verteilungen durch Checkboxen
 verteilungen = ['genexpon', 'lognorm', 'expon', 'powerlaw']
-ausgewählte_verteilungen = st.multiselect("Wählen Sie die Verteilungen zur Anpassung aus:", verteilungen)
+ausgewählte_verteilungen = st.multiselect("Wählen Sie die Verteilungen zur Anpassung aus (mehrere möglich):", verteilungen)
 
 # Button zur Berechnung und Visualisierung
-if st.button('Berechne und Visualisiere'):
+if st.button('Anpassen'):
     if ausgewählte_verteilungen:
         # Aufruf der Funktion zur Berechnung und Visualisierung mit den gewählten Verteilungen
         passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen)
