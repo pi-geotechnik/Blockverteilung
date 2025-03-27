@@ -51,16 +51,16 @@ def berechne_perzentile_und_visualisierung(m_achsen):
     Perc_steps = ['0','5','10','15','20','25','30','35','40','45','50','55','60','65','70','75','80','85','90','95','96','97','98','99','100']
 
     # Berechnung der Perzentile
-    percentiles_sample_seite = np.quantile(m_achsen, steps)
-    Perc_sample_seite = percentiles_sample_seite[0], percentiles_sample_seite[4], percentiles_sample_seite[9], \
-                        percentiles_sample_seite[14], percentiles_sample_seite[19], percentiles_sample_seite[24], \
-                        percentiles_sample_seite[29], percentiles_sample_seite[34], percentiles_sample_seite[39], \
-                        percentiles_sample_seite[44], percentiles_sample_seite[49], percentiles_sample_seite[54], \
-                        percentiles_sample_seite[59], percentiles_sample_seite[64], percentiles_sample_seite[69], \
-                        percentiles_sample_seite[74], percentiles_sample_seite[79], percentiles_sample_seite[84], \
-                        percentiles_sample_seite[89], percentiles_sample_seite[94], percentiles_sample_seite[95], \
-                        percentiles_sample_seite[96], percentiles_sample_seite[97], percentiles_sample_seite[98], \
-                        percentiles_sample_seite[99]
+    percentiles_m_achsen = np.quantile(m_achsen, steps)
+    Perc_m_achsen = percentiles_m_achsen[0], percentiles_m_achsen[4], percentiles_m_achsen[9], \
+                        percentiles_m_achsen[14], percentiles_m_achsen[19], percentiles_m_achsen[24], \
+                        percentiles_m_achsen[29], percentiles_m_achsen[34], percentiles_m_achsen[39], \
+                        percentiles_m_achsen[44], percentiles_m_achsen[49], percentiles_m_achsen[54], \
+                        percentiles_m_achsen[59], percentiles_m_achsen[64], percentiles_m_achsen[69], \
+                        percentiles_m_achsen[74], percentiles_m_achsen[79], percentiles_m_achsen[84], \
+                        percentiles_m_achsen[89], percentiles_m_achsen[94], percentiles_m_achsen[95], \
+                        percentiles_m_achsen[96], percentiles_m_achsen[97], percentiles_m_achsen[98], \
+                        percentiles_m_achsen[99]
 
 
     # Visualisierung der Ergebnisse
@@ -70,10 +70,10 @@ def berechne_perzentile_und_visualisierung(m_achsen):
     ax1.hist(m_achsen, density=True, bins='auto', histtype='stepfilled', color='tab:blue', alpha=0.3, label='sample pdf')
     
     # CDF auf normaler Skala
-    ax2.plot(percentiles_sample_seite, steps, lw=2.0, color='tab:blue', alpha=0.7, label='sample cdf')
+    ax2.plot(percentiles_m_achsen, steps, lw=2.0, color='tab:blue', alpha=0.7, label='sample cdf')
     
     # CDF auf Log-Skala
-    ax3.plot(percentiles_sample_seite, steps, lw=2.0, color='tab:blue', alpha=0.7, label='sample cdf')
+    ax3.plot(percentiles_m_achsen, steps, lw=2.0, color='tab:blue', alpha=0.7, label='sample cdf')
 
     # Achsenbeschriftungen
     ax1.set_xlim(left=-0.2, right=None)
@@ -97,46 +97,46 @@ def berechne_perzentile_und_visualisierung(m_achsen):
     st.pyplot(fig)
     
 # Funktion zur Anpassung der Verteilungen und Visualisierung
-def passe_verteilungen_an_und_visualisiere(sample_seite, ausgewählte_verteilungen):
+def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
     fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(12, 4))
 
-    # Histogramm der sample_seite
-    ax1.hist(sample_seite, color='tab:blue', density=True, bins='auto', histtype='stepfilled', alpha=0.3, 
+    # Histogramm der m_achsen
+    ax1.hist(m_achsen, color='tab:blue', density=True, bins='auto', histtype='stepfilled', alpha=0.3, 
              label='Sample pdf')
 
     # Kumulative Verteilungen und CDF Berechnungen
     if 'genexpon' in ausgewählte_verteilungen:
-        a1, b1, c1, loc1, scale1 = stats.genexpon.fit(sample_seite)
+        a1, b1, c1, loc1, scale1 = stats.genexpon.fit(m_achsen)
         X1 = np.linspace(stats.genexpon.ppf(0.001, a1, b1, c1, loc=loc1, scale=scale1), 
-                         stats.genexpon.ppf(0.999, a1, b1, c1, loc=loc1, scale=scale1), len(sample_seite))
+                         stats.genexpon.ppf(0.999, a1, b1, c1, loc=loc1, scale=scale1), len(m_achsen))
         ax1.plot(X1, stats.genexpon.pdf(X1, a1, b1, c1, loc=loc1, scale=scale1), 'green', lw=1.0, alpha=0.7, label='genexpon pdf')
         ax2.plot(X1, stats.genexpon.cdf(X1, a1, b1, c1, loc=loc1, scale=scale1), 'green', lw=1.0, alpha=0.7, label='genexpon cdf')
 
     if 'lognorm' in ausgewählte_verteilungen:
-        shape1, loc1, scale1 = stats.lognorm.fit(sample_seite, floc=0)
+        shape1, loc1, scale1 = stats.lognorm.fit(m_achsen, floc=0)
         X2 = np.linspace(stats.lognorm.ppf(0.001, shape1, loc=loc1, scale=scale1), 
-                         stats.lognorm.ppf(0.999, shape1, loc=loc1, scale=scale1), len(sample_seite))
+                         stats.lognorm.ppf(0.999, shape1, loc=loc1, scale=scale1), len(m_achsen))
         ax1.plot(X2, stats.lognorm.pdf(X2, shape1, loc=loc1, scale=scale1), 'blue', lw=1.0, alpha=0.7, label='lognorm pdf')
         ax2.plot(X2, stats.lognorm.cdf(X2, shape1, loc=loc1, scale=scale1), 'blue', lw=1.0, alpha=0.7, label='lognorm cdf')
 
     if 'expon' in ausgewählte_verteilungen:
-        loc2, scale2 = stats.expon.fit(sample_seite)
+        loc2, scale2 = stats.expon.fit(m_achsen)
         X3 = np.linspace(stats.expon.ppf(0.001, loc=loc2, scale=scale2), 
-                         stats.expon.ppf(0.999, loc=loc2, scale=scale2), len(sample_seite))
+                         stats.expon.ppf(0.999, loc=loc2, scale=scale2), len(m_achsen))
         ax1.plot(X3, stats.expon.pdf(X3, loc=loc2, scale=scale2), 'maroon', lw=1.0, alpha=0.7, label='expon pdf')
         ax2.plot(X3, stats.expon.cdf(X3, loc=loc2, scale=scale2), 'maroon', lw=1.0, alpha=0.7, label='expon cdf')
 
     if 'powerlaw' in ausgewählte_verteilungen:
-        a3, loc3, scale3 = stats.powerlaw.fit(sample_seite)
+        a3, loc3, scale3 = stats.powerlaw.fit(m_achsen)
         X4 = np.linspace(stats.powerlaw.ppf(0.001, a3, loc=loc3, scale=scale3), 
-                         stats.powerlaw.ppf(0.999, a3, loc=loc3, scale=scale3), len(sample_seite))
+                         stats.powerlaw.ppf(0.999, a3, loc=loc3, scale=scale3), len(m_achsen))
         ax1.plot(X4, stats.powerlaw.pdf(X4, a3, loc=loc3, scale=scale3), 'blue', lw=1.0, alpha=0.7, label='powerlaw pdf')
         ax2.plot(X4, stats.powerlaw.cdf(X4, a3, loc=loc3, scale=scale3), 'blue', lw=1.0, alpha=0.7, label='powerlaw cdf')
 
-    # CDF für sample_seite (kumulative Verteilung)
+    # CDF für m_achsen (kumulative Verteilung)
     steps = np.linspace(0.01, 1.00, num=100)
-    percentiles_sample_seite = np.quantile(sample_seite, steps)
-    ax2.plot(percentiles_sample_seite, steps, lw=8.0, color='tab:blue', alpha=0.3, label='sample cdf')
+    percentiles_m_achsen = np.quantile(m_achsen, steps)
+    ax2.plot(percentiles_m_achsen, steps, lw=8.0, color='tab:blue', alpha=0.3, label='sample cdf')
 
     # Achsen für das Diagramm
     ax1.legend(loc='best', frameon=False)
@@ -246,7 +246,7 @@ ausgewählte_verteilungen = st.multiselect("Wählen Sie die Verteilungen zur Anp
 if st.button('Berechne und Visualisiere'):
     if ausgewählte_verteilungen:
         # Aufruf der Funktion zur Berechnung und Visualisierung mit den gewählten Verteilungen
-        passe_verteilungen_an_und_visualisiere(sample_seite, ausgewählte_verteilungen)
+        passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen)
     else:
         st.warning("Bitte wählen Sie mindestens eine Verteilung aus.")
 
