@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd
 import math
 import os
+import tempfile
 from PIL import Image
 
 # Funktion zur Berechnung der Masse in Tonnen aus m³ und Dichte
