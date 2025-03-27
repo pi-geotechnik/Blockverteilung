@@ -157,6 +157,7 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
 
     # Achsen für das Diagramm
     ax4.legend(loc='best', frameon=False)
+    ax4.set_ylim(bottom=None, top=6.0)
     ax4.set_xlabel('Blockachse a [m]', fontsize=12)
     ax4.set_ylabel('Wahrscheinlichkeitsdichte f(a)', fontsize=12)
     
