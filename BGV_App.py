@@ -206,6 +206,8 @@ if einheit == "Volumen in m³":
         ("Liste mit m³ hochladen", "Beispiel-Datei mit m³ verwenden")
     )
     
+    uploaded_file = None
+    
     # Wenn der Benutzer die m³ Beispiel-Datei verwenden möchte
     if file_option == "Beispiel-Datei mir m³ verwenden":
         st.write("Sie haben die Beispiel-Datei für m³ ausgewählt. Diese wird nun als hochgeladene Datei behandelt.")
@@ -226,35 +228,36 @@ if einheit == "Volumen in m³":
     
     # Wenn der Benutzer "m³ hochladen" wählt
     elif file_option == "Liste mit m³ hochladen":
-        uploaded_file = st.file_uploader("Wählen Sie eine m³-Datei zum Hochladen", type=["csv", "xlsx", "txt"])
-        
+        uploaded_file = st.file_uploader("Wählen Sie eine m³-Datei zum Hochladen", type=["txt"])
+    
+    # Überprüfen, ob eine Datei hochgeladen wurde
     if uploaded_file is not None:
         text = uploaded_file.read().decode("utf-8")
         st.text_area("Inhalt der Datei:", text, height=300)
      
-    try:
-        # Text in Zahlen (m³) umwandeln
-        werte = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
-        
-        # Sortieren der Werte in aufsteigender Reihenfolge
-        werte.sort()
+        try:
+            # Text in Zahlen (m³) umwandeln
+            werte = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
             
-        # Anzahl der Werte ausgeben
-        st.write(f"Anzahl der Blöcke: {len(werte)}")
+            # Sortieren der Werte in aufsteigender Reihenfolge
+            werte.sort()
             
-        # Berechnung der dritten Wurzel (Achsen in Metern)
-        m_achsen = [berechne_dritte_wurzel(val) for val in werte]
-        # st.write("Achsen in Metern:")
-        # st.write(m_achsen)
-        # Visualisierung der Histogramme
-        # visualisiere_histogramm_m3_und_m(m_achsen, werte)
-        upload_perz = berechne_perzentile(m_achsen, [0, 25, 50, 75, 95, 96, 97, 98, 99, 100])
+            # Anzahl der Werte ausgeben
+            st.write(f"Anzahl der Blöcke: {len(werte)}")
             
-        # Speichere m_achsen in session_state für spätere Verwendung
-        st.session_state.m_achsen = m_achsen
+            # Berechnung der dritten Wurzel (Achsen in Metern)
+            m_achsen = [berechne_dritte_wurzel(val) for val in werte]
+            # st.write("Achsen in Metern:")
+            # st.write(m_achsen)
+            # Visualisierung der Histogramme
+            # visualisiere_histogramm_m3_und_m(m_achsen, werte)
+            upload_perz = berechne_perzentile(m_achsen, [0, 25, 50, 75, 95, 96, 97, 98, 99, 100])
             
-    except Exception as e:
-        st.error(f"Fehler bei der Verarbeitung der Daten: {e}")
+            # Speichere m_achsen in session_state für spätere Verwendung
+            st.session_state.m_achsen = m_achsen
+            
+        except Exception as e:
+            st.error(f"Fehler bei der Verarbeitung der Daten: {e}")
 
 
 # Datei-Upload für Masse in t (Dichte erforderlich)
