@@ -94,8 +94,8 @@ def berechne_perzentile_und_visualisierung(m_achsen):
     ax2.legend(loc='best', frameon=False)
     ax3.legend(loc='best', frameon=False)
 
-    # Diagramm zeigen
-    st.pyplot(fig)
+    # Diagramm übergeben
+    return(fig)
     
 # Funktion zur Anpassung der Verteilungen und Visualisierung
 def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
@@ -149,9 +149,11 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
     ax5.set_xlabel('Blockachse a [m] (log)', fontsize=12)
     ax5.set_ylabel('Kumulative Wahrscheinlichkeit F(a)', fontsize=12)
 
-    # Diagramm zeigen
-    st.pyplot(fig)
+    # Diagramm übergeben
+    return(fig)
     
+
+
 # Streamlit App
 
 # Zeige das Logo zu Beginn der App
@@ -232,7 +234,8 @@ st.subheader("Visualisierung der Wahrscheinlichkeitsdichte und der kumulativen W
 # Button zur Berechnung und Visualisierung
 if st.button('Visualisieren'):
     # Aufruf der Funktion zur Berechnung und Visualisierung
-    berechne_perzentile_und_visualisierung(m_achsen)
+    fig1 = berechne_perzentile_und_visualisierung(m_achsen)
+    st.pyplot(fig1)
 
 # Anpassung einer Wahrscheinlichkeitsfunktion
 st.subheader("Anpassung und Visualisierung von Wahrscheinlichkeitsfunktionen")
@@ -246,7 +249,8 @@ if st.button('Anpassen und Visualisieren'):
     # Platzhalter für fig2
     if ausgewählte_verteilungen:
         # Aufruf der Funktion zur Berechnung und Visualisierung mit den gewählten Verteilungen
-        passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen)
+        fig2 = passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen)
+        st.pyplot(fig2)
     else:
         st.warning("Bitte wählen Sie mindestens eine Verteilung aus.")
 
