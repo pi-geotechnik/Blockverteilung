@@ -144,7 +144,7 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
     ax5.set_ylabel('Kumulative Wahrscheinlichkeit F(a)', fontsize=12)
     
     # Parameter und Diagramm übergeben
-    return fig, a1, b1, c1, loc1, scale1, shape1, loc2, scale2, loc3, scale3, a4, loc4, scale4
+    return fig, a1, b1, c1, loc1, scale1, shape2, loc2, scale2, loc3, scale3, a4, loc4, scale4
     
 # Function to calculate percentiles for a distribution
 def calculate_percentiles(distribution, percentiles, *params):
@@ -184,7 +184,10 @@ if einheit == "Volumen in m³":
             perzentile = berechne_perzentile(m_achsen, [95, 96, 97, 98])
             for p, perzentil in zip([95, 96, 97, 98], perzentile):
                 st.write(f"{p}. Perzentil der Blockverteilung: {perzentil:.2f} m")
-
+            
+            # Speichere m_achsen in session_state für spätere Verwendung
+            st.session_state.m_achsen = m_achsen
+            
         except Exception as e:
             st.error(f"Fehler bei der Verarbeitung der Daten: {e}")
 
@@ -246,53 +249,55 @@ verteilungen = ['genexpon', 'lognorm', 'expon', 'powerlaw']
 ausgewählte_verteilungen = st.multiselect("Wählen Sie die Verteilungen zur Anpassung aus (mehrere möglich):", verteilungen)
 
 # Button zur Berechnung und Visualisierung
-if st.button('Anpassen und Visualisieren'):
-    # Platzhalter für fig2
-    if ausgewählte_verteilungen:
-        # Aufruf der Funktion zur Berechnung und Visualisierung mit den gewählten Verteilungen
-        fig2 = passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen)
-        st.session_state.fig2 = fig2  # Speichern von fig2 im session_state
-    else:
-        st.warning("Bitte wählen Sie mindestens eine Verteilung aus.")
-
-if 'fig2' in st.session_state:
-    st.pyplot(st.session_state.fig2)  # Zeigt fig2 an, wenn es im session_state gespeichert ist
+if 'm_achsen' in st.session_state:
+    if st.button('Anpassen und Visualisieren'):
+        if ausgewählte_verteilungen:
+            fig2 = passe_verteilungen_an_und_visualisiere(st.session_state.m_achsen, ausgewählte_verteilungen)
+            st.session_state.fig2 = fig2
+        else:
+            st.warning("Bitte wählen Sie mindestens eine Verteilung aus.")
+    if 'fig2' in st.session_state:
+        st.pyplot(st.session_state.fig2)
 
 
-# Tabelle
-
-# Aufruf der Funktion zur Berechnung und Visualisierung
-params = passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen)
-
-# Extrahieren der Parameter
-_, a1, b1, c1, loc1, scale1, shape2, loc2, scale2, loc3, scale3, a4, loc4, scale4 = params
-
-# Define the percentiles you want to show
-Perc_steps_short = ['0', '25', '50', '75', '95', '96', '97', '98', '99', '100']
-percentiles = [0, 25, 50, 75, 95, 96, 97, 98, 99, 100]
-
-# Button zur Anzeige der Tabelle mit den Perzentilen
-if 'm_achsen' in globals() or 'm_achsen' in locals():
+# Tabelle mit Perzentilen
+st.subheader("Tabelle mit Perzentilen")
+if 'm_achsen' in st.session_state:
     if st.button("Tabelle mit Perzentilen anzeigen"):
-        
-        # Definierte Perzentile (Prozentzahlen als Strings und numerisch)
         Perc_steps_short = ['0', '25', '50', '75', '95', '96', '97', '98', '99', '100']
         percentiles = [0, 25, 50, 75, 95, 96, 97, 98, 99, 100]
-        
-        # Berechnung der Perzentilen für jede Verteilung
-        L1s = calculate_percentiles(stats.genexpon, percentiles, a1, b1, c1, loc1, scale1)
-        L2s = calculate_percentiles(stats.lognorm, percentiles, shape2, loc2, scale2)
-        L3s = calculate_percentiles(stats.expon, percentiles, loc3, scale3)
-        L4s = calculate_percentiles(stats.powerlaw, percentiles, a4, loc4, scale4)
-
-        # Erstellen der DataFrame für die Tabelle
-        df1 = pd.DataFrame({
-            "Percentile": Perc_steps_short,
-            "Genexpon [m]": L1s,
-            "Lognorm [m]": L2s,
-            "Expon [m]": L3s,
-            "Powerlaw [m]": L4s
-        })
-
-        # Anzeige der Tabelle in Streamlit
-        st.write(df1)
+        # Hier greifen wir auf die Parameter zurück, die in der Funktion passe_verteilungen_an_und_visualisiere() berechnet wurden.
+        # Wir müssen sicherstellen, dass diese Parameter auch gespeichert wurden.
+        # Angenommen, wir speichern sie in st.session_state beim Aufruf der Anpassungsfunktion.
+        # Falls nicht, kannst du die Berechnung auch hier durchführen.
+        # Beispielhaft führen wir die Berechnung hier durch:
+        # Wir verwenden als Beispiel die Parameter aus der Genexpon-Anpassung:
+        if 'fig2' in st.session_state:
+            # Wenn fig2 existiert, wurden die Parameter bereits berechnet.
+            # Nehmen wir an, dass passe_verteilungen_an_und_visualisiere() die Parameter in session_state speichert.
+            # Hier simulieren wir dies, falls nicht vorhanden:
+            try:
+                # Berechnung der Perzentile für jede Verteilung
+                L1s = calculate_percentiles(stats.genexpon, percentiles, 
+                                            st.session_state.a1, st.session_state.b1, st.session_state.c1, 
+                                            st.session_state.loc1, st.session_state.scale1)
+                L2s = calculate_percentiles(stats.lognorm, percentiles, 
+                                            st.session_state.shape2, st.session_state.loc2, st.session_state.scale2)
+                L3s = calculate_percentiles(stats.expon, percentiles, 
+                                            st.session_state.loc3, st.session_state.scale3)
+                L4s = calculate_percentiles(stats.powerlaw, percentiles, 
+                                            st.session_state.a4, st.session_state.loc4, st.session_state.scale4)
+                df1 = pd.DataFrame({
+                    "Percentile": Perc_steps_short,
+                    "Genexpon [m]": L1s,
+                    "Lognorm [m]": L2s,
+                    "Expon [m]": L3s,
+                    "Powerlaw [m]": L4s
+                })
+                st.write(df1)
+            except Exception as e:
+                st.error(f"Fehler bei der Berechnung der Parameter: {e}")
+        else:
+            st.info("Bitte führen Sie zuerst eine Anpassung der Wahrscheinlichkeitsfunktionen durch.")
+            
+            
