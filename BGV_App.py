@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 import math
 import scipy as sp
+from scipy.stats import lognorm
 from scipy.stats import expon
 from scipy.stats import genexpon
 from scipy.stats import powerlaw
@@ -95,7 +96,60 @@ def berechne_perzentile_und_visualisierung(m_achsen):
     # Diagramm anzeigen
     st.pyplot(fig)
     
+# Funktion zur Anpassung der Verteilungen und Visualisierung
+def passe_verteilungen_an_und_visualisiere(sample_seite, ausgewählte_verteilungen):
+    fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(12, 4))
 
+    # Histogramm der sample_seite
+    ax1.hist(sample_seite, color='tab:blue', density=True, bins='auto', histtype='stepfilled', alpha=0.3, 
+             label='Sample pdf')
+
+    # Kumulative Verteilungen und CDF Berechnungen
+    if 'genexpon' in ausgewählte_verteilungen:
+        a1, b1, c1, loc1, scale1 = stats.genexpon.fit(sample_seite)
+        X1 = np.linspace(stats.genexpon.ppf(0.001, a1, b1, c1, loc=loc1, scale=scale1), 
+                         stats.genexpon.ppf(0.999, a1, b1, c1, loc=loc1, scale=scale1), len(sample_seite))
+        ax1.plot(X1, stats.genexpon.pdf(X1, a1, b1, c1, loc=loc1, scale=scale1), 'green', lw=1.0, alpha=0.7, label='genexpon pdf')
+        ax2.plot(X1, stats.genexpon.cdf(X1, a1, b1, c1, loc=loc1, scale=scale1), 'green', lw=1.0, alpha=0.7, label='genexpon cdf')
+
+    if 'lognorm' in ausgewählte_verteilungen:
+        shape1, loc1, scale1 = stats.lognorm.fit(sample_seite, floc=0)
+        X2 = np.linspace(stats.lognorm.ppf(0.001, shape1, loc=loc1, scale=scale1), 
+                         stats.lognorm.ppf(0.999, shape1, loc=loc1, scale=scale1), len(sample_seite))
+        ax1.plot(X2, stats.lognorm.pdf(X2, shape1, loc=loc1, scale=scale1), 'blue', lw=1.0, alpha=0.7, label='lognorm pdf')
+        ax2.plot(X2, stats.lognorm.cdf(X2, shape1, loc=loc1, scale=scale1), 'blue', lw=1.0, alpha=0.7, label='lognorm cdf')
+
+    if 'expon' in ausgewählte_verteilungen:
+        loc2, scale2 = stats.expon.fit(sample_seite)
+        X3 = np.linspace(stats.expon.ppf(0.001, loc=loc2, scale=scale2), 
+                         stats.expon.ppf(0.999, loc=loc2, scale=scale2), len(sample_seite))
+        ax1.plot(X3, stats.expon.pdf(X3, loc=loc2, scale=scale2), 'maroon', lw=1.0, alpha=0.7, label='expon pdf')
+        ax2.plot(X3, stats.expon.cdf(X3, loc=loc2, scale=scale2), 'maroon', lw=1.0, alpha=0.7, label='expon cdf')
+
+    if 'powerlaw' in ausgewählte_verteilungen:
+        a3, loc3, scale3 = stats.powerlaw.fit(sample_seite)
+        X4 = np.linspace(stats.powerlaw.ppf(0.001, a3, loc=loc3, scale=scale3), 
+                         stats.powerlaw.ppf(0.999, a3, loc=loc3, scale=scale3), len(sample_seite))
+        ax1.plot(X4, stats.powerlaw.pdf(X4, a3, loc=loc3, scale=scale3), 'blue', lw=1.0, alpha=0.7, label='powerlaw pdf')
+        ax2.plot(X4, stats.powerlaw.cdf(X4, a3, loc=loc3, scale=scale3), 'blue', lw=1.0, alpha=0.7, label='powerlaw cdf')
+
+    # CDF für sample_seite (kumulative Verteilung)
+    steps = np.linspace(0.01, 1.00, num=100)
+    percentiles_sample_seite = np.quantile(sample_seite, steps)
+    ax2.plot(percentiles_sample_seite, steps, lw=8.0, color='tab:blue', alpha=0.3, label='sample cdf')
+
+    # Achsen für das Diagramm
+    ax1.legend(loc='best', frameon=False)
+    ax1.set_xlabel('Block size a [m]', fontsize=12)
+    ax1.set_ylabel('Probability density f(a)', fontsize=12)
+    
+    ax2.legend(loc='best', frameon=False)
+    ax2.set_xscale('log')
+    ax2.set_xlabel('Block size a [m] (log scale)', fontsize=12)
+    ax2.set_ylabel('Cumulative probability F(a) [%]', fontsize=12)
+
+    # Diagramm anzeigen
+    st.pyplot(fig)
     
 # Streamlit App
 
@@ -182,3 +236,19 @@ if st.button('Berechne und Visualisiere die Perzentile'):
 
 # Anpassung einer Wahrscheinlichkeitsfunktion
 
+st.subheader("Anpassung und Visualisierung von Wahrscheinlichkeitsfunktionen")
+
+# Auswahl der Verteilungen durch Checkboxen
+verteilungen = ['genexpon', 'lognorm', 'expon', 'powerlaw']
+ausgewählte_verteilungen = st.multiselect("Wählen Sie die Verteilungen zur Anpassung aus:", verteilungen)
+
+# Button zur Berechnung und Visualisierung
+if st.button('Berechne und Visualisiere'):
+    if ausgewählte_verteilungen:
+        # Aufruf der Funktion zur Berechnung und Visualisierung mit den gewählten Verteilungen
+        passe_verteilungen_an_und_visualisiere(sample_seite, ausgewählte_verteilungen)
+    else:
+        st.warning("Bitte wählen Sie mindestens eine Verteilung aus.")
+
+
+# asdf
