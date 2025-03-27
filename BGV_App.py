@@ -202,9 +202,7 @@ if einheit == "Volumen in m³":
 
             # Visualisierung der Histogramme
             visualisiere_histogramm_m3_und_m(m_achsen, werte)
-            perzentile = berechne_perzentile(m_achsen, [95, 96, 97, 98])
-            for p, perzentil in zip([95, 96, 97, 98], perzentile):
-                st.write(f"{p}. Perzentil der Blockverteilung: {perzentil:.2f} m")
+            upload_perz = berechne_perzentile(m_achsen, [0, 25, 50, 75, 95, 96, 97, 98, 99, 100])
             
             # Speichere m_achsen in session_state für spätere Verwendung
             st.session_state.m_achsen = m_achsen
@@ -303,6 +301,7 @@ if 'm_achsen' in st.session_state:
                                             st.session_state.a4, st.session_state.loc4, st.session_state.scale4)
                 df1 = pd.DataFrame({
                     "Percentile": Perc_steps_short,
+                    "Upload [m]": upload_perz,
                     "Genexpon [m]": L1s,
                     "Lognorm [m]": L2s,
                     "Expon [m]": L3s,
