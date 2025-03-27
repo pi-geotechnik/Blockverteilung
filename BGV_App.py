@@ -86,8 +86,10 @@ if einheit == "Volumen in m³":
             if not original_folder:  
                 original_folder = os.getcwd()  # Falls kein Pfad ermittelt werden kann, Standardverzeichnis verwenden
 
+            # Speicherpfade für beide Dateien
             speicherpfad_m3 = os.path.join(original_folder, "m3_werte.txt")
-
+            speicherpfad_m = os.path.join(original_folder, "m_werte.txt")
+                    
             # Datei m3_werte.txt speichern
             with open(speicherpfad_m3, "w") as f:
                 for wert in m3_werte:
