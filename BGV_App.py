@@ -185,61 +185,56 @@ elif einheit == "Achsen beliebig vieler Blöcke in cm eingeben":
     
     st.subheader("Blockachsen eingeben")
 
-    # Initialisierung von session_state-Variablen
+    # Initialisierung von Session-State-Variablen, falls sie noch nicht existieren
     if "block_werte_m3" not in st.session_state:
-        st.session_state.block_werte_m3 = []  # Liste zur Speicherung der m³-Werte jedes Blocks
+        st.session_state.block_werte_m3 = []  # Liste zur Speicherung der Blockvolumina
     if "block_counter" not in st.session_state:
-        st.session_state.block_counter = 1  # Startet bei 1
-    if "input_round" not in st.session_state:
-        st.session_state.input_round = 0  # Rundenzähler für Eingabegruppen
+        st.session_state.block_counter = 1  # Zählt die eingegebenen Blöcke
 
-    # Anzahl der Blöcke pro Runde
-    max_blocks_per_input = 5
-    aktuelle_runde_start = st.session_state.input_round * max_blocks_per_input + 1
-    aktuelle_runde_ende = aktuelle_runde_start + max_blocks_per_input
-
-    # Schleife für genau 5 Blockeingaben
-    for i in range(aktuelle_runde_start, aktuelle_runde_ende):
-        st.write(f"### Block {i}")
-        
-        länge_cm = st.number_input(f"Länge (cm) von Block {i}:", min_value=1, value=10, step=1, key=f"länge_cm_{i}")
-        breite_cm = st.number_input(f"Breite (cm) von Block {i}:", min_value=1, value=10, step=1, key=f"breite_cm_{i}")
-        höhe_cm = st.number_input(f"Höhe (cm) von Block {i}:", min_value=1, value=10, step=1, key=f"höhe_cm_{i}")
-
-        if länge_cm > 0 and breite_cm > 0 and höhe_cm > 0:
-            länge_m = länge_cm / 100
-            breite_m = breite_cm / 100
-            höhe_m = höhe_cm / 100
-            volumen_m3 = länge_m * breite_m * höhe_m
-            st.session_state.block_werte_m3.append(volumen_m3)
-            st.write(f"➡ Das Volumen von Block {i} beträgt **{volumen_m3:.2f} m³**.")
+    # Eingabe der drei Achsen (Länge, Breite, Höhe) in cm
+    länge_cm = st.number_input("Länge (cm):", min_value=1, value=10, step=1)
+    breite_cm = st.number_input("Breite (cm):", min_value=1, value=10, step=1)
+    höhe_cm = st.number_input("Höhe (cm):", min_value=1, value=10, step=1)
     
-        st.write("### Volumina der eingegebenen Blöcke:")
-        st.write(st.session_state.block_werte_m3)
+    # Button zum Speichern der Blockgröße
+    if st.button("Block speichern"):
+        länge_m = länge_cm / 100  # Umrechnung von cm in m
+        breite_m = breite_cm / 100
+        höhe_m = höhe_cm / 100
+        volumen_m3 = länge_m * breite_m * höhe_m  # Berechnung des Volumens in m³
+        st.session_state.block_werte_m3.append(volumen_m3)  # Speicherung in der Liste
+        st.session_state.block_counter += 1  # Erhöhe den Zähler
+        st.success(f"Block {st.session_state.block_counter - 1} gespeichert: {volumen_m3:.2f} m³")
+        st.rerun()  # Aktualisiere die App
     
-        speicherpfad = st.text_input("Geben Sie den Pfad an, in dem die Dateien gespeichert werden sollen:")
-
-        if speicherpfad:
-            if not os.path.exists(speicherpfad):
-                st.error("Der angegebene Pfad existiert nicht. Bitte prüfen Sie die Eingabe.")
-            else:
-                if st.session_state.block_werte_m3:
-                    dateiname = speichere_werte("block_volumen.txt", st.session_state.block_werte_m3, speicherpfad)
-                    st.success(f"Die m³-Werte der Blöcke wurden in der Datei '{dateiname}' gespeichert.")
-                    m_längen = [wert ** (1/3) for wert in st.session_state.block_werte_m3]
-                    st.write("### Längen in Metern (dritte Wurzel der m³-Werte):")
-                    st.write(m_längen)
-                    dateiname = speichere_werte("block_längen.txt", m_längen, speicherpfad)
-                    st.success(f"Die m-Werte der Blöcke wurden in der Datei '{dateiname}' gespeichert.")
-                    visualisiere_histogramm_m3_und_m(m_längen, st.session_state.block_werte_m3)
-                    perzentile = berechne_perzentile(m_längen, [95, 96, 97, 98])
-                    for p, perzentil in zip([95, 96, 97, 98], perzentile):
-                        st.write(f"{p} Perzentil der Blockverteilung: {perzentil:.2f} m")
+    # Anzeige der eingegebenen Blockvolumina
+    st.write("### Eingegebene Blockvolumina:")
+    st.write(st.session_state.block_werte_m3)
     
-        if st.button("Weitere 5 Blöcke eingeben"):
-            st.session_state.input_round += 1
-            st.rerun()
-
+    # Abschließen der Eingabe und Daten speichern
+    if len(st.session_state.block_werte_m3) > 0 and st.button("Eingabe abschließen und speichern"):
+        speicherpfad = st.text_input("Geben Sie den Speicherpfad für die Dateien an:", value=".")
+        if speicherpfad and os.path.exists(speicherpfad):
+            # Speichern der Volumendaten
+            dateiname = speichere_werte("block_volumen.txt", st.session_state.block_werte_m3, speicherpfad)
+            st.success(f"Die m³-Werte wurden in '{dateiname}' gespeichert.")
+            
+            # Berechnung der dritten Wurzel (Längen in Metern)
+            m_längen = [wert ** (1/3) for wert in st.session_state.block_werte_m3]
+            st.write("### Längen in Metern (dritte Wurzel der m³-Werte):")
+            st.write(m_längen)
+            
+            # Speichern der Längendaten
+            dateiname = speichere_werte("block_längen.txt", m_längen, speicherpfad)
+            st.success(f"Die m-Werte wurden in '{dateiname}' gespeichert.")
+            
+            # Visualisierung der Histogramme
+            visualisiere_histogramm_m3_und_m(m_längen, st.session_state.block_werte_m3)
+            
+            # Berechnung und Ausgabe der Perzentile
+            perzentile = berechne_perzentile(m_längen, [95, 96, 97, 98])
+            for p, perzentil in zip([95, 96, 97, 98], perzentile):
+                st.write(f"{p} Perzentil der Blockverteilung: {perzentil:.2f} m")
 
 
 # Anpassung einer Wahrscheinlichkeitsfunktion
