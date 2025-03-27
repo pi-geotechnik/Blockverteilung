@@ -147,8 +147,8 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
     return(fig)
     
 # Function to calculate percentiles for a distribution
-def calculate_percentiles(dist, percentiles, *params):
-    return [dist.ppf(p / 100, *params) for p in percentiles]
+def calculate_percentiles(distribution, percentiles, *params):
+    return [distribution.ppf(p / 100, *params) for p in percentiles]
 
 # Streamlit App
 
@@ -265,20 +265,22 @@ if 'fig2' in st.session_state:
 Perc_steps_short = ['0', '25', '50', '75', '95', '96', '97', '98', '99', '100']
 percentiles = [0, 25, 50, 75, 95, 96, 97, 98, 99, 100]
 
-# Calculate percentiles for each distribution
-L1s = calculate_percentiles(stats.genexpon, percentiles, a1, b1, c1, loc1, scale1)
-L2s = calculate_percentiles(stats.lognorm, percentiles, shape1, loc1, scale1)
-L3s = calculate_percentiles(stats.expon, percentiles, loc2, scale2)
-L4s = calculate_percentiles(stats.powerlaw, percentiles, a3, loc3, scale3)
+# Button zur Anzeige der Tabelle mit den Perzentilen
+if st.button('Tabelle mit Perzentilen anzeigen'):
+    # Berechnung der Perzentilen für jede Verteilung
+    L1s = calculate_percentiles(stats.genexpon, percentiles, a1, b1, c1, loc1, scale1)
+    L2s = calculate_percentiles(stats.lognorm, percentiles, shape1, loc1, scale1)
+    L3s = calculate_percentiles(stats.expon, percentiles, loc2, scale2)
+    L4s = calculate_percentiles(stats.powerlaw, percentiles, a3, loc3, scale3)
 
-# Create the DataFrame
-df1 = pd.DataFrame({
-    "Percentile": Perc_steps_short,
-    "Genexpon [m]": L1s,
-    "Lognorm [m]": L2s,
-    "Expon [m]": L3s,
-    "Powerlaw [m]": L4s
-})
+    # Erstellen der DataFrame für die Tabelle
+    df1 = pd.DataFrame({
+        "Percentile": Perc_steps_short,
+        "Genexpon [m]": L1s,
+        "Lognorm [m]": L2s,
+        "Expon [m]": L3s,
+        "Powerlaw [m]": L4s
+    })
 
-# Display the DataFrame in Streamlit
-st.write(df1)
+    # Anzeige der Tabelle in Streamlit
+    st.write(df1)
