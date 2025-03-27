@@ -59,7 +59,7 @@ def berechne_perzentile_und_visualisierung(m_achsen):
 
 
     # Visualisierung der Ergebnisse
-    fig, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, figsize=(18, 4))
+    fig, (ax1, ax2, ax3) = plt.subplots(nrows=3, ncols=1, figsize=(18, 4))
 
     # Histogramm der Wahrscheinlichkeitsdichte
     ax1.hist(m_achsen, density=True, bins='auto', histtype='stepfilled', color='tab:blue', alpha=0.3, label='upload pdf')
@@ -93,7 +93,7 @@ def berechne_perzentile_und_visualisierung(m_achsen):
     
 # Funktion zur Anpassung der Verteilungen und Visualisierung
 def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
-    fig, (ax4, ax5) = plt.subplots(nrows=1, ncols=2, figsize=(12, 4))
+    fig, (ax4, ax5) = plt.subplots(nrows=2, ncols=1, figsize=(12, 4))
 
     # Histogramm der m_achsen
     ax4.hist(m_achsen, color='tab:blue', density=True, bins='auto', histtype='stepfilled', alpha=0.3, 
@@ -193,16 +193,16 @@ if einheit == "Volumen in m³":
         try:
             # Text in Zahlen (m³) umwandeln
             werte = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
-            st.write("Die m³-Werte in der Datei:")
-            st.write(werte)
+            # st.write("Die m³-Werte in der Datei:")
+            # st.write(werte)
 
             # Berechnung der dritten Wurzel (Achsen in Metern)
             m_achsen = [berechne_dritte_wurzel(val) for val in werte]
-            st.write("Achsen in Metern:")
-            st.write(m_achsen)
+            # st.write("Achsen in Metern:")
+            # st.write(m_achsen)
 
             # Visualisierung der Histogramme
-            visualisiere_histogramm_m3_und_m(m_achsen, werte)
+            # visualisiere_histogramm_m3_und_m(m_achsen, werte)
             upload_perz = berechne_perzentile(m_achsen, [0, 25, 50, 75, 95, 96, 97, 98, 99, 100])
             
             # Speichere m_achsen in session_state für spätere Verwendung
@@ -222,8 +222,8 @@ if einheit == "Masse in t (Dichte erforderlich)":
         try:
             # Text in Zahlen (Tonnen) umwandeln
             werte = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
-            st.write("Die Tonnen-Werte in der Datei:")
-            st.write(werte)
+            # st.write("Die Tonnen-Werte in der Datei:")
+            # st.write(werte)
 
             # Eingabe der Dichte in kg/m³
             dichte_kg_m3 = st.number_input("Geben Sie die Dichte in kg/m³ ein:", min_value=0, value=2650, step=10)
@@ -239,7 +239,10 @@ if einheit == "Masse in t (Dichte erforderlich)":
 
             # Visualisierung der Histogramme
             # visualisiere_histogramm_m3_und_m(m_achsen, werte_m3)
-            # upload_perz = berechne_perzentile(m_achsen, [0, 25, 50, 75, 95, 96, 97, 98, 99, 100])
+            upload_perz = berechne_perzentile(m_achsen, [0, 25, 50, 75, 95, 96, 97, 98, 99, 100])
+            
+            # Speichere m_achsen in session_state für spätere Verwendung
+            st.session_state.m_achsen = m_achsen
 
         except Exception as e:
             st.error(f"Fehler bei der Verarbeitung der Daten: {e}")  
@@ -279,7 +282,7 @@ if 'm_achsen' in st.session_state:
 
 
 # Tabelle mit Perzentilen
-st.subheader("Tabelle mit Perzentilen")
+st.subheader("Tabellenvergleich der Perzentilen")
 if 'm_achsen' in st.session_state:
     if st.button("Tabelle mit Perzentilen anzeigen"):
         Perc_steps_short = ['0', '25', '50', '75', '95', '96', '97', '98', '99', '100']
