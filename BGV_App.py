@@ -235,7 +235,7 @@ st.subheader("Visualisierung der Wahrscheinlichkeitsdichte und der kumulativen W
 if st.button('Visualisieren'):
     # Aufruf der Funktion zur Berechnung und Visualisierung
     fig1 = berechne_perzentile_und_visualisierung(m_achsen)
-    st.pyplot(fig1)
+    st.session_state.fig1 = fig1  # Speichern von fig1 im session_state
 
 # Anpassung einer Wahrscheinlichkeitsfunktion
 st.subheader("Anpassung und Visualisierung von Wahrscheinlichkeitsfunktionen")
@@ -250,9 +250,17 @@ if st.button('Anpassen und Visualisieren'):
     if ausgewählte_verteilungen:
         # Aufruf der Funktion zur Berechnung und Visualisierung mit den gewählten Verteilungen
         fig2 = passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen)
-        st.pyplot(fig2)
+        st.session_state.fig2 = fig2  # Speichern von fig2 im session_state
     else:
         st.warning("Bitte wählen Sie mindestens eine Verteilung aus.")
 
+# Anzeige der gespeicherten Grafiken
+if 'fig1' in st.session_state:
+    st.pyplot(st.session_state.fig1)  # Zeigt fig1 an, wenn es im session_state gespeichert ist
+
+if 'fig2' in st.session_state:
+    st.pyplot(st.session_state.fig2)  # Zeigt fig2 an, wenn es im session_state gespeichert ist
+    
+    
 
 # asdf
