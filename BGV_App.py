@@ -183,6 +183,8 @@ st.header("Blockgrößenverteilung")
 
 # Auswahl der Einheit
 einheit = st.selectbox("Wählen Sie die Einheit der Eingabedaten:", ["Volumen in m³", "Masse in t (Dichte erforderlich)"])
+# Speichern der Auswahl im session_state
+st.session_state.einheit = einheit  # Speichert die ausgewählte Einheit
 
 if einheit == "Volumen in m³":
     uploaded_file = st.file_uploader("Wählen Sie eine Textdatei mit m³-Werten aus", type=["txt"])
