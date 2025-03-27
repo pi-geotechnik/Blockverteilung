@@ -70,9 +70,10 @@ if einheit in ["Volumen in m³", "Masse in t (Dichte erforderlich)"]:
         text = uploaded_file.read().decode("utf-8")
         st.text_area("Inhalt der Datei:", text, height=300)
         
+        # Nutzung des temporären Speicherorts von Streamlit-Dateien
         speicherpfad = os.getcwd()  # Standardmäßig aktuelles Arbeitsverzeichnis
-        if uploaded_file.name:
-            speicherpfad = os.path.dirname(uploaded_file.name)  # Speicherort der Eingabedatei
+        temp_speicherort = tempfile.NamedTemporaryFile(delete=False)
+        speicherpfad = os.path.dirname(temp_speicherort.name)
         
         try:
             werte = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
