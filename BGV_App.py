@@ -16,79 +16,39 @@ from PIL import Image
 
 # Funktion zur Berechnung der Masse in Tonnen aus m³ und Dichte
 def berechne_masse_in_tonnen(volumen_m3, dichte_kg_m3):
-    # Masse in kg
-    masse_kg = volumen_m3 * dichte_kg_m3
-    # Umrechnung in Tonnen
-    masse_tonnen = masse_kg / 1000
-    return masse_tonnen
+    return (volumen_m3 * dichte_kg_m3) / 1000
 
-# Funktion zum Speichern der berechneten m³-Werte in einer .txt-Datei
-def speichere_m3_werte(m3_werte):
-    # Dateiname mit dem aktuellen Datum und Uhrzeit
-    dateiname = "berechnete_m3_werte.txt"
-    
-    with open(dateiname, "w") as f:
-        for wert in m3_werte:
-            f.write(f"{wert:.2f}\n")  # Nur die m³-Werte, mit 2 Nachkommastellen
-    return dateiname
-
-# Funktion zur Berechnung der dritten Wurzel von m³ (Umrechnung zu m)
+# Funktion zur Berechnung der dritten Wurzel von m³
 def berechne_dritte_wurzel(v):
     return round(v ** (1/3), 2)
 
-# Funktion zum Speichern der m³-Werte in einer Datei
-def speichere_m3_werte(m3_werte):
-    dateiname = "m3_werte.txt"
-    with open(dateiname, 'w') as f:
-        for wert in m3_werte:
+# Funktion zum Speichern von Werten in einer Datei
+def speichere_werte(dateiname, werte, speicherpfad="."):
+    pfad = os.path.join(speicherpfad, dateiname)
+    with open(pfad, "w") as f:
+        for wert in werte:
             f.write(f"{wert}\n")
-    return dateiname
+    return pfad
 
-# Funktion zum Speichern der m-Werte in einer Datei
-def speichere_m_werte(m_werte):
-    dateiname = "m_werte.txt"
-    with open(dateiname, 'w') as f:
-        for wert in m_werte:
-            f.write(f"{wert}\n")
-    return dateiname
-
+# Funktion zur Visualisierung von Histogrammen
 def visualisiere_histogramm_m3_und_m(m_werte, m3_werte):
-    # Erstellen der Subplots
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
-    # Histogramm für Volumen (m³)
     ax1.hist(m3_werte, bins=20, color='lightgreen', edgecolor='black')
     ax1.set_title("Histogramm der Volumina (m³)")
     ax1.set_xlabel("Blockvolumen (m³)")
     ax1.set_ylabel("Häufigkeit")
-    # Histogramm für Achsen (m)
+    
     ax2.hist(m_werte, bins=20, color='skyblue', edgecolor='black')
     ax2.set_title("Histogramm der Achsen (m)")
     ax2.set_xlabel("Blockachse (m)")
     ax2.set_ylabel("Häufigkeit")
-    # Layout anpassen und anzeigen
+    
     plt.tight_layout()
     st.pyplot(fig)
 
+# Funktion zur Berechnung der Perzentile
 def berechne_perzentile(längen, perzentile):
-    # Zuerst die Längen in m³ umrechnen, indem wir sie hoch drei nehmen
-    m3_werte = [länge ** 3 for länge in längen]  # Umrechnung jedes einzelnen Längenwerts in m³
-    # Berechnung der Perzentile der Volumina (m³)
-    return np.percentile(m3_werte, perzentile)
-
-# Hilfsfunktionen zum Speichern für die Variante "Blockachsen eingeben"
-def speichere_m3_werte(m3_werte, speicherpfad):
-    dateiname = os.path.join(speicherpfad, "m3_werte.txt")
-    with open(dateiname, "w") as f:
-        for wert in m3_werte:
-            f.write(f"{wert}\n")
-    return dateiname
-
-def speichere_m_werte(m_längen, speicherpfad):
-    dateiname = os.path.join(speicherpfad, "m_werte.txt")
-    with open(dateiname, "w") as f:
-        for wert in m_längen:
-            f.write(f"{wert}\n")
-    return dateiname
+    return np.percentile(längen, perzentile)
     
 
 # Streamlit App
@@ -240,70 +200,46 @@ elif einheit == "Achsen beliebig vieler Blöcke in cm eingeben":
 
     # Schleife für genau 5 Blockeingaben
     for i in range(aktuelle_runde_start, aktuelle_runde_ende):
-        st.write(f"### Block {i}")  # Nummerierung der Blöcke anzeigen
-
-        # Eingabe der Blockmaße in cm mit eindeutigen Keys
+        st.write(f"### Block {i}")
+        
         länge_cm = st.number_input(f"Länge (cm) von Block {i}:", min_value=1, value=10, step=1, key=f"länge_cm_{i}")
         breite_cm = st.number_input(f"Breite (cm) von Block {i}:", min_value=1, value=10, step=1, key=f"breite_cm_{i}")
         höhe_cm = st.number_input(f"Höhe (cm) von Block {i}:", min_value=1, value=10, step=1, key=f"höhe_cm_{i}")
 
         if länge_cm > 0 and breite_cm > 0 and höhe_cm > 0:
-            # Berechnung des Volumens in m³
             länge_m = länge_cm / 100
             breite_m = breite_cm / 100
             höhe_m = höhe_cm / 100
             volumen_m3 = länge_m * breite_m * höhe_m
             st.session_state.block_werte_m3.append(volumen_m3)
             st.write(f"➡ Das Volumen von Block {i} beträgt **{volumen_m3:.2f} m³**.")
+    
+        st.write("### Volumina der eingegebenen Blöcke:")
+        st.write(st.session_state.block_werte_m3)
+    
+        speicherpfad = st.text_input("Geben Sie den Pfad an, in dem die Dateien gespeichert werden sollen:")
 
-            # Möglichkeit, sofort zu beenden
-            fertig = st.radio(f"Möchten Sie nach Block {i} aufhören?", ("Nein", "Ja"), key=f"fertig_{i}")
-            if fertig == "Ja":
-                st.write("Eingabe beendet.")
-                st.stop()
-
-    # Zeige die eingegebenen Volumina
-    st.write("### Volumina der eingegebenen Blöcke:")
-    st.write(st.session_state.block_werte_m3)
-
-    # Eingabe des Speicherpfads
-    speicherpfad = st.text_input("Geben Sie den Pfad an, in dem die Dateien gespeichert werden sollen:")
-
-    # Buttons für weitere Eingaben oder Abschluss
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("Weitere 5 Blöcke eingeben"):
-            st.session_state.input_round += 1  # Erhöhe die Rundenanzahl
-            st.rerun()  # App neu rendern
-
-    # Wenn der Speicherpfad angegeben ist
         if speicherpfad:
             if not os.path.exists(speicherpfad):
                 st.error("Der angegebene Pfad existiert nicht. Bitte prüfen Sie die Eingabe.")
             else:
-                # Wenn m³-Werte vorhanden sind, speichern
                 if st.session_state.block_werte_m3:
-                    # Speichern der m³-Werte in einer Datei
-                    dateiname = speichere_m3_werte(st.session_state.block_werte_m3, speicherpfad)
+                    dateiname = speichere_werte("block_volumen.txt", st.session_state.block_werte_m3, speicherpfad)
                     st.success(f"Die m³-Werte der Blöcke wurden in der Datei '{dateiname}' gespeichert.")
-
-                    # Berechnung der dritten Wurzel (Längen in Metern)
                     m_längen = [wert ** (1/3) for wert in st.session_state.block_werte_m3]
                     st.write("### Längen in Metern (dritte Wurzel der m³-Werte):")
                     st.write(m_längen)
-
-                    # Speichern der m-Werte in einer Datei
-                    dateiname = speichere_m_werte(m_längen, speicherpfad)
+                    dateiname = speichere_werte("block_längen.txt", m_längen, speicherpfad)
                     st.success(f"Die m-Werte der Blöcke wurden in der Datei '{dateiname}' gespeichert.")
-                    
-                    # Visualisierung der Histogramme nebeneinander
                     visualisiere_histogramm_m3_und_m(m_längen, st.session_state.block_werte_m3)
+                    perzentile = berechne_perzentile(m_längen, [95, 96, 97, 98])
+                    for p, perzentil in zip([95, 96, 97, 98], perzentile):
+                        st.write(f"{p} Perzentil der Blockverteilung: {perzentil:.2f} m")
+    
+        if st.button("Weitere 5 Blöcke eingeben"):
+            st.session_state.input_round += 1
+            st.rerun()
 
-                    # Berechnung und Anzeige der 95., 96., 97. und 98. Perzentile
-                    perzentile = [95, 96, 97, 98]
-                    perzentile_werte = berechne_perzentile(m_längen, perzentile)
-                    for p, perzentil in zip(perzentile, perzentile_werte):
-                        st.write(f"{p} Perzentil der Blockverteilung: {perzentil:.2f} m³")
 
 
 # Anpassung einer Wahrscheinlichkeitsfunktion
