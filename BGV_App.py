@@ -254,10 +254,12 @@ st.subheader("Visualisierung der Wahrscheinlichkeitsdichte und der kumulativen W
 # Berechnung und Visualisierung immer ausführen, ohne Button
 if 'einheit' in st.session_state:
     if st.session_state.einheit == "Volumen in m³" and 'm_achsen' in st.session_state:
+        st.write("m³ is true")
         # Aufruf der Funktion zur Berechnung und Visualisierung mit m_achsen
         fig1 = berechne_perzentile_und_visualisierung(st.session_state.m_achsen)
         st.session_state.fig1 = fig1  # Speichern von fig1 im session_state
     elif st.session_state.einheit == "Masse in t (Dichte erforderlich)" and 'm_achsen_t' in st.session_state:
+        st.write("t is true")
         # Aufruf der Funktion zur Berechnung und Visualisierung mit m_achsen_t
         fig1 = berechne_perzentile_und_visualisierung(st.session_state.m_achsen_t)
         st.session_state.fig1 = fig1  # Speichern von fig1 im session_state
