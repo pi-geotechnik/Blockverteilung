@@ -229,8 +229,8 @@ if einheit == "Masse in t (Dichte erforderlich)":
             dichte_kg_m3 = st.number_input("Geben Sie die Dichte in kg/m³ ein:", min_value=0, value=2650, step=10)
             # Umrechnung von Tonnen in m³
             werte_m3_t = [val * 1000 / dichte_kg_m3 for val in werte_t]
-            # st.write("Berechnete m³-Werte aus Tonnen:")
-            # st.write(werte_m3)
+            st.write("Berechnete m³-Werte aus Tonnen:")
+            st.write(werte_m3)
 
             # Berechnung der dritten Wurzel (Achsen in Metern)
             m_achsen_t = [berechne_dritte_wurzel(val) for val in werte_m3_t]
