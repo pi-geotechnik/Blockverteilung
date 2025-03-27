@@ -234,8 +234,8 @@ if einheit == "Masse in t (Dichte erforderlich)":
 
             # Berechnung der dritten Wurzel (Achsen in Metern)
             m_achsen_t = [berechne_dritte_wurzel(val) for val in werte_m3_t]
-            st.write("Achsen in Metern:")
-            st.write(m_achsen_t)
+            # st.write("Achsen in Metern:")
+            # st.write(m_achsen_t)
 
             # Visualisierung der Histogramme
             # visualisiere_histogramm_m3_und_m(m_achsen, werte_m3)
@@ -252,10 +252,15 @@ if einheit == "Masse in t (Dichte erforderlich)":
 st.subheader("Visualisierung der Wahrscheinlichkeitsdichte und der kumulativen Wahrscheinlichkeit")
 
 # Berechnung und Visualisierung immer ausführen, ohne Button
-if 'm_achsen' in st.session_state:
-    # Aufruf der Funktion zur Berechnung und Visualisierung
-    fig1 = berechne_perzentile_und_visualisierung(st.session_state.m_achsen)
-    st.session_state.fig1 = fig1  # Speichern von fig1 im session_state
+if 'einheit' in st.session_state:
+    if st.session_state.einheit == "Volumen in m³" and 'm_achsen' in st.session_state:
+        # Aufruf der Funktion zur Berechnung und Visualisierung mit m_achsen
+        fig1 = berechne_perzentile_und_visualisierung(st.session_state.m_achsen)
+        st.session_state.fig1 = fig1  # Speichern von fig1 im session_state
+    elif st.session_state.einheit == "Masse in t (Dichte erforderlich)" and 'm_achsen_t' in st.session_state:
+        # Aufruf der Funktion zur Berechnung und Visualisierung mit m_achsen_t
+        fig1 = berechne_perzentile_und_visualisierung(st.session_state.m_achsen_t)
+        st.session_state.fig1 = fig1  # Speichern von fig1 im session_state
 
 # Anzeige der gespeicherten Grafiken
 if 'fig1' in st.session_state:
