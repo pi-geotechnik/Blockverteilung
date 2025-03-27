@@ -203,7 +203,7 @@ st.session_state.einheit = einheit  # Speichert die ausgewählte Einheit
 if einheit == "Volumen in m³":
     file_option = st.radio(
         "Wählen Sie eine Option:",
-        ("Liste mit m³ hochladen", "Beispiel-Datei mit m³ verwenden")
+        ("Liste mit m³ hochladen", "Beispiel-Datei mit m³ verwenden (kommt bald)")
     )
     
     uploaded_file = None
