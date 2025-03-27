@@ -223,28 +223,28 @@ if einheit == "Masse in t (Dichte erforderlich)":
 
         try:
             # Text in Zahlen (Tonnen) umwandeln
-            werte_t = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
+            tonnen = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
             # st.write("Die Tonnen-Werte in der Datei:")
             # st.write(werte)
 
             # Eingabe der Dichte in kg/m³
             dichte_kg_m3 = st.number_input("Geben Sie die Dichte in kg/m³ ein:", min_value=0, value=2650, step=10)
             # Umrechnung von Tonnen in m³
-            werte_m3_t = [val * 1000 / dichte_kg_m3 for val in werte_t]
+            werte_m3 = [val * 1000 / dichte_kg_m3 for val in tonnen]
             # st.write("Berechnete m³-Werte aus Tonnen:")
             # st.write(werte_m3_t)
 
             # Berechnung der dritten Wurzel (Achsen in Metern)
-            m_achsen_t = [berechne_dritte_wurzel(val) for val in werte_m3_t]
-            # st.write("Achsen in Metern:")
-            # st.write(m_achsen_t)
+            m_achsen = [berechne_dritte_wurzel(val) for val in werte_m3]
+            st.write("Achsen in Metern:")
+            st.write(m_achsen)
 
             # Visualisierung der Histogramme
             # visualisiere_histogramm_m3_und_m(m_achsen, werte_m3)
-            upload_perz = berechne_perzentile(m_achsen_t, [0, 25, 50, 75, 95, 96, 97, 98, 99, 100])
+            upload_perz = berechne_perzentile(m_achsen, [0, 25, 50, 75, 95, 96, 97, 98, 99, 100])
             
             # Speichere m_achsen in session_state für spätere Verwendung
-            st.session_state.m_achsen_t = m_achsen_t
+            st.session_state.m_achsen = m_achsen
 
         except Exception as e:
             st.error(f"Fehler bei der Verarbeitung der Daten: {e}")  
@@ -259,10 +259,9 @@ if 'einheit' in st.session_state:
         # Aufruf der Funktion zur Berechnung und Visualisierung mit m_achsen
         fig1 = berechne_perzentile_und_visualisierung(st.session_state.m_achsen)
         st.session_state.fig1 = fig1  # Speichern von fig1 im session_state
-    elif st.session_state.einheit == "Masse in t (Dichte erforderlich)" and 'm_achsen_t' in st.session_state:
-        st.write("t is true")
-        # Aufruf der Funktion zur Berechnung und Visualisierung mit m_achsen_t
-        fig1 = berechne_perzentile_und_visualisierung(st.session_state.m_achsen_t)
+    elif st.session_state.einheit == "Masse in t (Dichte erforderlich)" and 'm_achsen' in st.session_state:
+        # Aufruf der Funktion zur Berechnung und Visualisierung mit m_achsen
+        fig1 = berechne_perzentile_und_visualisierung(st.session_state.m_achsen)
         st.session_state.fig1 = fig1  # Speichern von fig1 im session_state
 
 # Anzeige der gespeicherten Grafiken
@@ -278,9 +277,9 @@ if 'einheit' in st.session_state:
     if st.session_state.einheit == "Volumen in m³" and 'm_achsen' in st.session_state:
         fig2 = passe_verteilungen_an_und_visualisiere(st.session_state.m_achsen, ['genexpon', 'lognorm', 'expon', 'powerlaw'])
         st.session_state.fig2 = fig2
-    elif st.session_state.einheit == "Masse in t (Dichte erforderlich)" and 'm_achsen_t' in st.session_state:
-        # Aufruf der Funktion zur Berechnung und Visualisierung mit m_achsen_t
-        fig2 = passe_verteilungen_an_und_visualisiere(st.session_state.m_achsen_t, ['genexpon', 'lognorm', 'expon', 'powerlaw'])
+    elif st.session_state.einheit == "Masse in t (Dichte erforderlich)" and 'm_achsen' in st.session_state:
+        # Aufruf der Funktion zur Berechnung und Visualisierung mit m_achsen
+        fig2 = passe_verteilungen_an_und_visualisiere(st.session_state.m_achsen, ['genexpon', 'lognorm', 'expon', 'powerlaw'])
         st.session_state.fig2 = fig2  # Speichern von fig2 im session_state
 
 # Visualisierung der berechneten Verteilungen
