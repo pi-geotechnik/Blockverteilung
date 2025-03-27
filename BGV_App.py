@@ -30,12 +30,12 @@ def visualisiere_histogramm_m3_und_m(m_werte, m3_werte):
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
     ax1.hist(m3_werte, bins=20, color='lightgreen', edgecolor='black')
     ax1.set_title("Histogramm der Volumina (m³)")
-    ax1.set_xlabel("Blockvolumen (m³)")
+    ax1.set_xlabel("Blockvolumen [m³]")
     ax1.set_ylabel("Häufigkeit")
     
     ax2.hist(m_werte, bins=20, color='skyblue', edgecolor='black')
-    ax2.set_title("Histogramm der Achsen (m)")
-    ax2.set_xlabel("Blockachse (m)")
+    ax2.set_title("Histogramm der Achsen [m]")
+    ax2.set_xlabel("Blockachse [m]")
     ax2.set_ylabel("Häufigkeit")
     
     plt.tight_layout()
@@ -65,7 +65,7 @@ def berechne_perzentile_und_visualisierung(m_achsen):
 
 
     # Visualisierung der Ergebnisse
-    fig1, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, figsize=(18, 4))
+    fig, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, figsize=(18, 4))
 
     # Histogramm der Wahrscheinlichkeitsdichte
     ax1.hist(m_achsen, density=True, bins='auto', histtype='stepfilled', color='tab:blue', alpha=0.3, label='upload pdf')
@@ -86,7 +86,7 @@ def berechne_perzentile_und_visualisierung(m_achsen):
     ax2.set_ylabel('Kumulative Wahrscheinlichkeit F(a)', fontsize=14)
 
     ax3.set_xscale('log')
-    ax3.set_xlabel('Blockachse a [m] (log Skala)', fontsize=14)
+    ax3.set_xlabel('Blockachse a [m] (log)', fontsize=14)
     ax3.set_ylabel('Kumulative Wahrscheinlichkeit F(a)', fontsize=14)
 
     # Legenden
@@ -95,11 +95,11 @@ def berechne_perzentile_und_visualisierung(m_achsen):
     ax3.legend(loc='best', frameon=False)
 
     # Diagramm zeigen
-    st.pyplot(fig1)
+    st.pyplot(fig)
     
 # Funktion zur Anpassung der Verteilungen und Visualisierung
 def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
-    fig2, (ax4, ax5) = plt.subplots(nrows=1, ncols=2, figsize=(12, 4))
+    fig, (ax4, ax5) = plt.subplots(nrows=1, ncols=2, figsize=(12, 4))
 
     # Histogramm der m_achsen
     ax4.hist(m_achsen, color='tab:blue', density=True, bins='auto', histtype='stepfilled', alpha=0.3, 
@@ -150,7 +150,7 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
     ax5.set_ylabel('Kumulative Wahrscheinlichkeit F(a)', fontsize=12)
 
     # Diagramm zeigen
-    st.pyplot(fig2)
+    st.pyplot(fig)
     
 # Streamlit App
 
