@@ -284,12 +284,14 @@ if 'm_achsen' in st.session_state:
 # Tabelle mit Perzentilen
 st.subheader("Tabellenvergleich der Perzentilen")
 if 'm_achsen' in st.session_state:
+    st.write("m_achsen existiert!")
     if st.button("Tabelle mit Perzentilen anzeigen"):
         Perc_steps_short = ['0', '25', '50', '75', '95', '96', '97', '98', '99', '100']
         percentiles = [0, 25, 50, 75, 95, 96, 97, 98, 99, 100]
         
         # Sicherstellen, dass alle notwendigen Parameter gespeichert sind
         if all(param in st.session_state for param in ['a1', 'b1', 'c1', 'loc1', 'scale1', 'shape2', 'loc2', 'scale2', 'loc3', 'scale3', 'a4', 'loc4', 'scale4']):
+            st.write("params existieren!")
             try:
                 # Berechnung der Perzentile für jede Verteilung
                 L1s = calculate_percentiles(stats.genexpon, percentiles, 
@@ -327,4 +329,5 @@ if 'm_achsen' in st.session_state:
             except Exception as e:
                 st.error(f"Fehler bei der Berechnung der Perzentile: {e}")
         else:
+            st.write("params existieren nicht!")
             st.info("Bitte führen Sie zuerst eine Anpassung der Wahrscheinlichkeitsfunktionen durch.")
