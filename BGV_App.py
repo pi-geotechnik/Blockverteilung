@@ -23,14 +23,6 @@ def berechne_masse_in_tonnen(volumen_m3, dichte_kg_m3):
 def berechne_dritte_wurzel(v):
     return round(v ** (1/3), 2)
 
-# Funktion zum Speichern von Werten in einer Datei
-def speichere_werte(dateiname, werte, speicherpfad):
-    pfad = os.path.join(speicherpfad, dateiname)
-    with open(pfad, "w") as f:
-        for wert in werte:
-            f.write(f"{wert}\n")
-    return pfad
-
 # Funktion zur Visualisierung von Histogrammen
 def visualisiere_histogramm_m3_und_m(m_werte, m3_werte):
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
@@ -93,14 +85,6 @@ if einheit in ["Volumen in m³", "Masse in t (Dichte erforderlich)"]:
             perzentile = berechne_perzentile(m_achsen, [95, 96, 97, 98])
             for p, perzentil in zip([95, 96, 97, 98], perzentile):
                 st.write(f"{p}. Perzentil der Blockverteilung: {perzentil:.2f} m")
-                
-            # Speicherpfad-Abfrage 
-            speicherpfad = st.text_input("Geben Sie den Speicherpfad für die Dateien an:", value=os.getcwd())
-            
-            # Speichern der Daten
-            dateipfad_m3 = speichere_werte("m3_werte.txt", werte, speicherpfad)
-            dateipfad_m = speichere_werte("m_werte.txt", m_achsen, speicherpfad)
-            st.success(f"Dateien gespeichert unter:\n{dateipfad_m3}\n{dateipfad_m}")
 
         except Exception as e:
             st.error(f"Fehler bei der Verarbeitung der Daten: {e}")
