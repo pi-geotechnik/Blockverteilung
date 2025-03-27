@@ -235,7 +235,7 @@ if st.button('Visualisieren'):
     fig1_placeholder = st.empty()
     # Aufruf der Funktion zur Berechnung und Visualisierung
     berechne_perzentile_und_visualisierung(m_achsen)
-    fig1_placeholder.pyplot(fig)  # Plot für fig1
+    fig1_placeholder.pyplot(fig1)  # Plot für fig1
 
 
 # Anpassung einer Wahrscheinlichkeitsfunktion
@@ -253,7 +253,7 @@ if st.button('Anpassen'):
     if ausgewählte_verteilungen:
         # Aufruf der Funktion zur Berechnung und Visualisierung mit den gewählten Verteilungen
         passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen)
-        fig2_placeholder.pyplot(fig)  # Plot für fig2
+        fig2_placeholder.pyplot(fig2)  # Plot für fig2
     else:
         st.warning("Bitte wählen Sie mindestens eine Verteilung aus.")
 
