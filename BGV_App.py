@@ -222,8 +222,8 @@ if einheit == "Volumen in m³":
             
             # Nun kann die heruntergeladene Datei genauso weiterverarbeitet werden wie eine hochgeladene Datei
             st.write("Die Beispiel-Datei wurde erfolgreich heruntergeladen.")
-
-        else:
+            
+         else:
             st.error("Fehler beim Laden der Beispiel-Datei.")
     
     # Wenn der Benutzer "m³ hochladen" wählt
@@ -233,12 +233,15 @@ if einheit == "Volumen in m³":
     # Überprüfen, ob eine Datei hochgeladen wurde
     if uploaded_file is not None:
         text = uploaded_file.read().decode("utf-8")
-        st.text_area("Inhalt der Datei:", text, height=300)
+        st.text_area("Inhalt der Datei:", text, height=200)
      
         try:
             # Text in Zahlen (m³) umwandeln
-            werte = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
-            
+            werte_liste = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
+              
+            # Filtere nur Werte mit genau drei Dezimalstellen und entferne 0.00-Werte
+            werte = [wert for wert in werte_liste if wert >= 0.000]
+                       
             # Sortieren der Werte in aufsteigender Reihenfolge
             werte.sort()
             
@@ -265,7 +268,7 @@ if einheit == "Masse in t (Dichte erforderlich)":
     uploaded_file = st.file_uploader("Wählen Sie eine Textdatei mit t-Werten aus", type=["txt"])
     if uploaded_file is not None:
         text = uploaded_file.read().decode("utf-8")
-        st.text_area("Inhalt der Datei:", text, height=300)
+        st.text_area("Inhalt der Datei:", text, height=200)
 
         try:
             # Text in Zahlen (Tonnen) umwandeln
