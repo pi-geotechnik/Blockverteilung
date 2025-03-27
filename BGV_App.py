@@ -68,25 +68,25 @@ def berechne_perzentile_und_visualisierung(m_achsen):
     fig1, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, figsize=(18, 4))
 
     # Histogramm der Wahrscheinlichkeitsdichte
-    ax1.hist(m_achsen, density=True, bins='auto', histtype='stepfilled', color='tab:blue', alpha=0.3, label='sample pdf')
+    ax1.hist(m_achsen, density=True, bins='auto', histtype='stepfilled', color='tab:blue', alpha=0.3, label='upload pdf')
     
     # CDF auf normaler Skala
-    ax2.plot(percentiles_m_achsen, steps, lw=2.0, color='tab:blue', alpha=0.7, label='sample cdf')
+    ax2.plot(percentiles_m_achsen, steps, lw=2.0, color='tab:blue', alpha=0.7, label='upload cdf')
     
     # CDF auf Log-Skala
-    ax3.plot(percentiles_m_achsen, steps, lw=2.0, color='tab:blue', alpha=0.7, label='sample cdf')
+    ax3.plot(percentiles_m_achsen, steps, lw=2.0, color='tab:blue', alpha=0.7, label='upload cdf')
 
     # Achsenbeschriftungen
     ax1.set_xlim(left=-0.2, right=None)
-    ax1.set_xlabel('Blockgröße a [m]', fontsize=14)
+    ax1.set_xlabel('Blockachse a [m]', fontsize=14)
     ax1.set_ylabel('Wahrscheinlichkeitsdichte f(a)', fontsize=14)
 
     ax2.set_xlim(left=-0.2, right=None)
-    ax2.set_xlabel('Blockgröße a [m]', fontsize=14)
+    ax2.set_xlabel('Blockachse a [m]', fontsize=14)
     ax2.set_ylabel('Kumulative Wahrscheinlichkeit F(a)', fontsize=14)
 
     ax3.set_xscale('log')
-    ax3.set_xlabel('Blockgröße a [m] (log Skala)', fontsize=14)
+    ax3.set_xlabel('Blockachse a [m] (log Skala)', fontsize=14)
     ax3.set_ylabel('Kumulative Wahrscheinlichkeit F(a)', fontsize=14)
 
     # Legenden
@@ -141,13 +141,13 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
 
     # Achsen für das Diagramm
     ax4.legend(loc='best', frameon=False)
-    ax4.set_xlabel('Block size a [m]', fontsize=12)
-    ax4.set_ylabel('Probability density f(a)', fontsize=12)
+    ax4.set_xlabel('Blockachse a [m]', fontsize=12)
+    ax4.set_ylabel('Wahrscheinlichkeitsdichte f(a)', fontsize=12)
     
     ax5.legend(loc='best', frameon=False)
     ax5.set_xscale('log')
-    ax5.set_xlabel('Block size a [m] (log scale)', fontsize=12)
-    ax5.set_ylabel('Cumulative probability F(a) [%]', fontsize=12)
+    ax5.set_xlabel('Blockachse a [m] (log)', fontsize=12)
+    ax5.set_ylabel('Kumulative Wahrscheinlichkeit F(a)', fontsize=12)
 
     # Diagramm zeigen
     st.pyplot(fig2)
@@ -242,7 +242,7 @@ verteilungen = ['genexpon', 'lognorm', 'expon', 'powerlaw']
 ausgewählte_verteilungen = st.multiselect("Wählen Sie die Verteilungen zur Anpassung aus (mehrere möglich):", verteilungen)
 
 # Button zur Berechnung und Visualisierung
-if st.button('Anpassen'):
+if st.button('Anpassen und Visualisieren'):
     # Platzhalter für fig2
     if ausgewählte_verteilungen:
         # Aufruf der Funktion zur Berechnung und Visualisierung mit den gewählten Verteilungen
