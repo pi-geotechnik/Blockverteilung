@@ -252,7 +252,8 @@ ausgewählte_verteilungen = st.multiselect("Wählen Sie die Verteilungen zur Anp
 if 'm_achsen' in st.session_state:
     if st.button('Anpassen und Visualisieren'):
         if ausgewählte_verteilungen:
-            fig2 = passe_verteilungen_an_und_visualisiere(st.session_state.m_achsen, ausgewählte_verteilungen)
+            results = passe_verteilungen_an_und_visualisiere(st.session_state.m_achsen, ausgewählte_verteilungen)
+            fig2 = results[0]
             st.session_state.fig2 = fig2
         else:
             st.warning("Bitte wählen Sie mindestens eine Verteilung aus.")
