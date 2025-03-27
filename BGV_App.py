@@ -45,6 +45,22 @@ def visualisiere_histogramm_m3_und_m(m_werte, m3_werte):
 def berechne_perzentile(Achsen, perzentile):
     return np.percentile(Achsen, perzentile)
     
+# Funktion 1: fig1
+def plot_fig1():
+    fig1, ax1 = plt.subplots(figsize=(8, 4))
+    ax1.plot(np.random.rand(10), label="random data")
+    ax1.set_title('Figure 1')
+    ax1.legend()
+    return fig1
+
+# Funktion 2: fig2
+def plot_fig2():
+    fig2, ax2 = plt.subplots(figsize=(8, 4))
+    ax2.plot(np.random.rand(10), label="more random data")
+    ax2.set_title('Figure 2')
+    ax2.legend()
+    return fig2
+
 # Funktion zur Berechnung der Perzentile und Visualisierung
 def berechne_perzentile_und_visualisierung(m_achsen):
     steps = np.linspace(0.01, 1.00, num=100)
@@ -95,6 +111,7 @@ def berechne_perzentile_und_visualisierung(m_achsen):
     ax3.legend(loc='best', frameon=False)
 
     # Diagramm anzeigen
+    fig1 = plot_fig1()
     st.pyplot(fig1)
     
 # Funktion zur Anpassung der Verteilungen und Visualisierung
@@ -150,6 +167,7 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
     ax2.set_ylabel('Cumulative probability F(a) [%]', fontsize=12)
 
     # Diagramm anzeigen
+    fig2 = plot_fig2()
     st.pyplot(fig2)
     
 # Streamlit App
