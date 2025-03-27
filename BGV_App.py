@@ -45,22 +45,6 @@ def visualisiere_histogramm_m3_und_m(m_werte, m3_werte):
 def berechne_perzentile(Achsen, perzentile):
     return np.percentile(Achsen, perzentile)
     
-# Funktion 1: fig1
-def plot_fig1():
-    fig1, ax1 = plt.subplots(figsize=(8, 4))
-    ax1.plot(np.random.rand(10), label="random data")
-    ax1.set_title('Figure 1')
-    ax1.legend()
-    return fig1
-
-# Funktion 2: fig2
-def plot_fig2():
-    fig2, ax2 = plt.subplots(figsize=(8, 4))
-    ax2.plot(np.random.rand(10), label="more random data")
-    ax2.set_title('Figure 2')
-    ax2.legend()
-    return fig2
-
 # Funktion zur Berechnung der Perzentile und Visualisierung
 def berechne_perzentile_und_visualisierung(m_achsen):
     steps = np.linspace(0.01, 1.00, num=100)
@@ -111,15 +95,14 @@ def berechne_perzentile_und_visualisierung(m_achsen):
     ax3.legend(loc='best', frameon=False)
 
     # Diagramm anzeigen
-    fig1 = plot_fig1()
     st.pyplot(fig1)
     
 # Funktion zur Anpassung der Verteilungen und Visualisierung
 def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
-    fig2, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(12, 4))
+    fig2, (ax4, ax5) = plt.subplots(nrows=1, ncols=2, figsize=(12, 4))
 
     # Histogramm der m_achsen
-    ax1.hist(m_achsen, color='tab:blue', density=True, bins='auto', histtype='stepfilled', alpha=0.3, 
+    ax4.hist(m_achsen, color='tab:blue', density=True, bins='auto', histtype='stepfilled', alpha=0.3, 
              label='Sample pdf')
 
     # Kumulative Verteilungen und CDF Berechnungen
@@ -127,47 +110,46 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
         a1, b1, c1, loc1, scale1 = stats.genexpon.fit(m_achsen)
         X1 = np.linspace(stats.genexpon.ppf(0.001, a1, b1, c1, loc=loc1, scale=scale1), 
                          stats.genexpon.ppf(0.999, a1, b1, c1, loc=loc1, scale=scale1), len(m_achsen))
-        ax1.plot(X1, stats.genexpon.pdf(X1, a1, b1, c1, loc=loc1, scale=scale1), '#800020', lw=1.0, alpha=0.7, label='genexpon pdf')
-        ax2.plot(X1, stats.genexpon.cdf(X1, a1, b1, c1, loc=loc1, scale=scale1), '#800020', lw=1.0, alpha=0.7, label='genexpon cdf')
+        ax4.plot(X1, stats.genexpon.pdf(X1, a1, b1, c1, loc=loc1, scale=scale1), '#800020', lw=1.0, alpha=0.7, label='genexpon pdf')
+        ax5.plot(X1, stats.genexpon.cdf(X1, a1, b1, c1, loc=loc1, scale=scale1), '#800020', lw=1.0, alpha=0.7, label='genexpon cdf')
 
     if 'lognorm' in ausgewählte_verteilungen:
         shape1, loc1, scale1 = stats.lognorm.fit(m_achsen, floc=0)
         X2 = np.linspace(stats.lognorm.ppf(0.001, shape1, loc=loc1, scale=scale1), 
                          stats.lognorm.ppf(0.999, shape1, loc=loc1, scale=scale1), len(m_achsen))
-        ax1.plot(X2, stats.lognorm.pdf(X2, shape1, loc=loc1, scale=scale1), '#00008B', lw=1.0, alpha=0.7, label='lognorm pdf')
-        ax2.plot(X2, stats.lognorm.cdf(X2, shape1, loc=loc1, scale=scale1), '#00008B', lw=1.0, alpha=0.7, label='lognorm cdf')
+        ax4.plot(X2, stats.lognorm.pdf(X2, shape1, loc=loc1, scale=scale1), '#00008B', lw=1.0, alpha=0.7, label='lognorm pdf')
+        ax5.plot(X2, stats.lognorm.cdf(X2, shape1, loc=loc1, scale=scale1), '#00008B', lw=1.0, alpha=0.7, label='lognorm cdf')
 
     if 'expon' in ausgewählte_verteilungen:
         loc2, scale2 = stats.expon.fit(m_achsen)
         X3 = np.linspace(stats.expon.ppf(0.001, loc=loc2, scale=scale2), 
                          stats.expon.ppf(0.999, loc=loc2, scale=scale2), len(m_achsen))
-        ax1.plot(X3, stats.expon.pdf(X3, loc=loc2, scale=scale2), '#333333', lw=1.0, alpha=0.7, label='expon pdf')
-        ax2.plot(X3, stats.expon.cdf(X3, loc=loc2, scale=scale2), '#333333', lw=1.0, alpha=0.7, label='expon cdf')
+        ax4.plot(X3, stats.expon.pdf(X3, loc=loc2, scale=scale2), '#333333', lw=1.0, alpha=0.7, label='expon pdf')
+        ax5.plot(X3, stats.expon.cdf(X3, loc=loc2, scale=scale2), '#333333', lw=1.0, alpha=0.7, label='expon cdf')
 
     if 'powerlaw' in ausgewählte_verteilungen:
         a3, loc3, scale3 = stats.powerlaw.fit(m_achsen)
         X4 = np.linspace(stats.powerlaw.ppf(0.001, a3, loc=loc3, scale=scale3), 
                          stats.powerlaw.ppf(0.999, a3, loc=loc3, scale=scale3), len(m_achsen))
-        ax1.plot(X4, stats.powerlaw.pdf(X4, a3, loc=loc3, scale=scale3), '#006400', lw=1.0, alpha=0.7, label='powerlaw pdf')
-        ax2.plot(X4, stats.powerlaw.cdf(X4, a3, loc=loc3, scale=scale3), '#006400', lw=1.0, alpha=0.7, label='powerlaw cdf')
+        ax4.plot(X4, stats.powerlaw.pdf(X4, a3, loc=loc3, scale=scale3), '#006400', lw=1.0, alpha=0.7, label='powerlaw pdf')
+        ax5.plot(X4, stats.powerlaw.cdf(X4, a3, loc=loc3, scale=scale3), '#006400', lw=1.0, alpha=0.7, label='powerlaw cdf')
 
     # CDF für m_achsen (kumulative Verteilung)
     steps = np.linspace(0.01, 1.00, num=100)
     percentiles_m_achsen = np.quantile(m_achsen, steps)
-    ax2.plot(percentiles_m_achsen, steps, lw=8.0, color='tab:blue', alpha=0.3, label='sample cdf')
+    ax5.plot(percentiles_m_achsen, steps, lw=8.0, color='tab:blue', alpha=0.3, label='sample cdf')
 
     # Achsen für das Diagramm
-    ax1.legend(loc='best', frameon=False)
-    ax1.set_xlabel('Block size a [m]', fontsize=12)
-    ax1.set_ylabel('Probability density f(a)', fontsize=12)
+    ax4.legend(loc='best', frameon=False)
+    ax4.set_xlabel('Block size a [m]', fontsize=12)
+    ax4.set_ylabel('Probability density f(a)', fontsize=12)
     
-    ax2.legend(loc='best', frameon=False)
-    ax2.set_xscale('log')
-    ax2.set_xlabel('Block size a [m] (log scale)', fontsize=12)
-    ax2.set_ylabel('Cumulative probability F(a) [%]', fontsize=12)
+    ax5.legend(loc='best', frameon=False)
+    ax5.set_xscale('log')
+    ax5.set_xlabel('Block size a [m] (log scale)', fontsize=12)
+    ax5.set_ylabel('Cumulative probability F(a) [%]', fontsize=12)
 
     # Diagramm anzeigen
-    fig2 = plot_fig2()
     st.pyplot(fig2)
     
 # Streamlit App
