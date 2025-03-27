@@ -182,7 +182,7 @@ def calculate_percentiles(distribution, percentiles, *params):
 
 # Zeige das Logo zu Beginn der App
 logo = Image.open("pi-geotechnik-1-RGB-192-30-65.png")  # Lade das Bild
-st.image(logo, caption="by A Preh & M Illeditsch", use_container_width=True)  # Zeige das Logo an
+st.image(logo, caption="https://pi-geo.at/", use_container_width=True)  # Zeige das Logo an
 
 st.title("Willkommen bei pi!")
 st.header("Blockgrößenverteilung")
