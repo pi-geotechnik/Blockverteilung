@@ -23,7 +23,7 @@ def berechne_dritte_wurzel(v):
     return round(v ** (1/3), 2)
 
 # Funktion zum Speichern von Werten in einer Datei
-def speichere_werte(dateiname, werte, speicherpfad="."):
+def speichere_werte(dateiname, werte, speicherpfad):
     pfad = os.path.join(speicherpfad, dateiname)
     with open(pfad, "w") as f:
         for wert in werte:
@@ -47,8 +47,8 @@ def visualisiere_histogramm_m3_und_m(m_werte, m3_werte):
     st.pyplot(fig)
 
 # Funktion zur Berechnung der Perzentile
-def berechne_perzentile(längen, perzentile):
-    return np.percentile(längen, perzentile)
+def berechne_perzentile(Achsen, perzentile):
+    return np.percentile(Achsen, perzentile)
     
 
 # Streamlit App
@@ -63,125 +63,47 @@ st.header("Blockgrößenverteilung")
 # Auswahl der Einheit
 einheit = st.selectbox("Wählen Sie die Einheit der Eingabedaten:", ["Volumen in m³", "Masse in t (Dichte erforderlich)", "Achsen beliebig vieler Blöcke in cm eingeben"])
 
-if einheit == "Volumen in m³":
-    st.subheader("Wählen Sie eine Datei mit Blockvolumina aus")
-    uploaded_file_m3 = st.file_uploader("Wählen Sie eine Textdatei mit m³-Werten aus", type=["txt"])
-    
-    if uploaded_file_m3 is not None:
-        # Datei auslesen
-        text_m3 = uploaded_file_m3.read().decode("utf-8")
-        # Inhalt anzeigen
-        st.text_area("Inhalt der Datei:", text_m3, height=300)
+# Datei-Upload für m³ oder t
+if einheit in ["Volumen in m³", "Masse in t (Dichte erforderlich)"]:
+    uploaded_file = st.file_uploader("Wählen Sie eine Textdatei aus", type=["txt"])
+    if uploaded_file is not None:
+        text = uploaded_file.read().decode("utf-8")
+        st.text_area("Inhalt der Datei:", text, height=300)
+        
+        speicherpfad = os.getcwd()  # Standardmäßig aktuelles Arbeitsverzeichnis
+        if uploaded_file.name:
+            speicherpfad = os.path.dirname(uploaded_file.name)  # Speicherort der Eingabedatei
         
         try:
-            # Text in Zahlen (m³) umwandeln
-            m3_werte = [float(val.strip()) for val in text_m3.splitlines() if val.strip().replace(".", "", 1).isdigit()]
-            st.write("Die m³-Werte in der Datei:")
-            st.write(m3_werte)
+            werte = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
+            st.write("Die Werte in der Datei:")
+            st.write(werte)
             
-            # Speicherpfad ermitteln
-            original_filename = uploaded_file_m3.name  # Ursprünglicher Dateiname
-            original_folder = os.path.dirname(original_filename)  # Verzeichnis extrahieren
-
-            if not original_folder:  
-                original_folder = os.getcwd()  # Falls kein Pfad ermittelt werden kann, Standardverzeichnis verwenden
-
-            # Speicherpfade für beide Dateien
-            speicherpfad_m3 = os.path.join(original_folder, "m3_werte.txt")
-            speicherpfad_m = os.path.join(original_folder, "m_werte.txt")
-                    
-            # Datei m3_werte.txt speichern
-            with open(speicherpfad_m3, "w") as f:
-                for wert in m3_werte:
-                    f.write(f"{wert}\n")
+            if einheit == "Masse in t (Dichte erforderlich)":
+                dichte_kg_m3 = st.number_input("Geben Sie die Dichte in kg/m³ ein:", min_value=0, value=2650, step=10)
+                werte = [val * 1000 / dichte_kg_m3 for val in werte]  # Umrechnung t → m³
+                st.write("Berechnete m³-Werte:")
+                st.write(werte)
             
-            # Berechnung der dritten Wurzel (Längen in Metern)
-            m_längen = [berechne_dritte_wurzel(val) for val in m3_werte]
-            st.write("Die Längen in Metern (dritte Wurzel der m³-Werte):")
-            st.write(m_längen)
+            m_achsen = [berechne_dritte_wurzel(val) for val in werte]
+            st.write("Achsen in Metern:")
+            st.write(m_achsen)
             
-            # Datei m_werte.txt speichern
-            with open(speicherpfad_m, "w") as f:
-                for wert in m_längen:
-                    f.write(f"{wert}\n")
-            st.success(f"Die m-Werte wurden in der Datei '{speicherpfad_m}' gespeichert.")
-
-            # Visualisierung der Histogramme nebeneinander
-            visualisiere_histogramm_m3_und_m(m_längen, m3_werte)
+            speichere_werte("m3_werte.txt", werte, speicherpfad)
+            speichere_werte("m_werte.txt", m_achsen, speicherpfad)
+            st.success(f"Dateien gespeichert in '{speicherpfad}'")
             
-            # Berechnung und Anzeige der 95., 96., 97. und 98. Perzentile
-            perzentile = [95, 96, 97, 98]
-            perzentile_werte = berechne_perzentile(m_längen, perzentile)
-            for p, perzentil in zip(perzentile, perzentile_werte):
-                st.write(f"{p} Perzentil der Blockverteilung: {perzentil:.2f} m³")
-        
+            visualisiere_histogramm_m3_und_m(m_achsen, werte)
+            perzentile = berechne_perzentile(m_achsen, [95, 96, 97, 98])
+            for p, perzentil in zip([95, 96, 97, 98], perzentile):
+                st.write(f"{p}. Perzentil der Blockverteilung: {perzentil:.2f} m")
         except Exception as e:
             st.error(f"Fehler bei der Verarbeitung der Daten: {e}")
 
-elif einheit == "Masse in t (Dichte erforderlich)":
-    st.subheader("Wählen Sie eine Datei mit Blockmassen aus")
-    uploaded_file_tonnen = st.file_uploader("Wählen Sie eine Textdatei mit t-Werten aus", type=["txt"])
-    
-    if uploaded_file_tonnen is not None:
-        # Datei auslesen
-        text_tonnen = uploaded_file_tonnen.read().decode("utf-8")
-        # Inhalt anzeigen
-        st.text_area("Inhalt der Datei:", text_tonnen, height=300)
-        
-        # Eingabe der Dichte in kg/m³ (Standardwert: 2650)
-        dichte_kg_m3 = st.number_input("Geben Sie die Dichte in kg/m³ ein:", min_value=0, value=2650, step=10)
-        
-        if dichte_kg_m3 > 0:
-            try:
-                # Text in Zahlen (Tonnen) umwandeln und in m³ umrechnen
-                tonnen_werte = [float(val.strip()) for val in text_tonnen.splitlines() if val.strip().replace(".", "", 1).isdigit()]
-                m3_werte = [val * 1000 / dichte_kg_m3 for val in tonnen_werte]
-                
-                st.write("Berechnete m³-Werte aus Tonnen:")
-                st.write(m3_werte)
-                
-                # Speicherpfad ermitteln
-                original_filename = uploaded_file_tonnen.name  # Ursprünglicher Dateiname
-                original_folder = os.path.dirname(original_filename)  # Verzeichnis extrahieren
-
-                if not original_folder:
-                    original_folder = os.getcwd()  # Falls kein Pfad ermittelt werden kann, Standardverzeichnis verwenden
-
-                # Speicherpfade für beide Dateien
-                speicherpfad_m3 = os.path.join(original_folder, "m3_werte.txt")
-                speicherpfad_m = os.path.join(original_folder, "m_werte.txt")
-
-                # Datei m3_werte.txt speichern
-                with open(speicherpfad_m3, "w") as f:
-                    for wert in m3_werte:
-                        f.write(f"{wert}\n")
-                st.success(f"Die m³-Werte wurden in der Datei '{speicherpfad_m3}' gespeichert.")
-
-                # Berechnung der dritten Wurzel (Längen in Metern)
-                m_längen = [berechne_dritte_wurzel(val) for val in m3_werte]
-                st.write("Die Längen in Metern (dritte Wurzel der m³-Werte):")
-                st.write(m_längen)
-
-                # Datei m_werte.txt speichern
-                with open(speicherpfad_m, "w") as f:
-                    for wert in m_längen:
-                        f.write(f"{wert}\n")
-                st.success(f"Die m-Werte wurden in der Datei '{speicherpfad_m}' gespeichert.")
-                
-                # Visualisierung der Histogramme nebeneinander
-                visualisiere_histogramm_m3_und_m(m_längen, m3_werte)
-            
-                # Berechnung und Anzeige der 95., 96., 97. und 98. Perzentile
-                perzentile = [95, 96, 97, 98]
-                perzentile_werte = berechne_perzentile(m_längen, perzentile)
-                for p, perzentil in zip(perzentile, perzentile_werte):
-                    st.write(f"{p} Perzentil der Blockverteilung: {perzentil:.2f} m³")
-                
-            except Exception as e:
-                st.error(f"Fehler bei der Verarbeitung der Daten: {e}")
-
-
+# Manuelle Eingabe von Blockachsen
 elif einheit == "Achsen beliebig vieler Blöcke in cm eingeben":
+    speicherpfad = st.text_input("Geben Sie den Speicherpfad für die Dateien an:", value=os.getcwd())
+    
     st.subheader("Blockdichte eingeben")
     dichte_kg_m3 = st.number_input("Geben Sie die Dichte in kg/m³ ein:", min_value=0, value=2650, step=10)
     
@@ -215,28 +137,26 @@ elif einheit == "Achsen beliebig vieler Blöcke in cm eingeben":
     
     # Abschließen der Eingabe und Daten speichern
     if len(st.session_state.block_werte_m3) > 0 and st.button("Eingabe abschließen und speichern"):
-        speicherpfad = st.text_input("Geben Sie den Speicherpfad für die Dateien an:", value=".")
-        if speicherpfad and os.path.exists(speicherpfad):
-            # Speichern der Volumendaten
-            dateiname = speichere_werte("block_volumen.txt", st.session_state.block_werte_m3, speicherpfad)
-            st.success(f"Die m³-Werte wurden in '{dateiname}' gespeichert.")
+        # Speichern der Volumendaten
+        speichere_werte("block_volumen.txt", st.session_state.block_werte_m3, speicherpfad)
+        st.success(f"Die m3-Werte wurden in '{speicherpfad}' gespeichert.")
+        
+        # Berechnung der dritten Wurzel (Achsen in Metern)
+        m_achsen = [wert ** (1/3) for wert in st.session_state.block_werte_m3]
+        st.write("### Achsen in Metern (dritte Wurzel der m³-Werte):")
+        st.write(m_achsen)
             
-            # Berechnung der dritten Wurzel (Längen in Metern)
-            m_längen = [wert ** (1/3) for wert in st.session_state.block_werte_m3]
-            st.write("### Längen in Metern (dritte Wurzel der m³-Werte):")
-            st.write(m_längen)
+        # Speichern der Achsendaten
+        speichere_werte("block_achsen.txt", m_achsen, speicherpfad)
+        st.success(f"Die m-Werte wurden in '{speicherpfad}' gespeichert.")
             
-            # Speichern der Längendaten
-            dateiname = speichere_werte("block_längen.txt", m_längen, speicherpfad)
-            st.success(f"Die m-Werte wurden in '{dateiname}' gespeichert.")
+        # Visualisierung der Histogramme
+        visualisiere_histogramm_m3_und_m(m_achsen, st.session_state.block_werte_m3)
             
-            # Visualisierung der Histogramme
-            visualisiere_histogramm_m3_und_m(m_längen, st.session_state.block_werte_m3)
-            
-            # Berechnung und Ausgabe der Perzentile
-            perzentile = berechne_perzentile(m_längen, [95, 96, 97, 98])
-            for p, perzentil in zip([95, 96, 97, 98], perzentile):
-                st.write(f"{p} Perzentil der Blockverteilung: {perzentil:.2f} m")
+        # Berechnung und Ausgabe der Perzentile
+        perzentile = berechne_perzentile(m_achsen, [95, 96, 97, 98])
+        for p, perzentil in zip([95, 96, 97, 98], perzentile):
+            st.write(f"{p}. Perzentil der Blockverteilung: {perzentil:.2f} m")
 
 
 # Anpassung einer Wahrscheinlichkeitsfunktion
