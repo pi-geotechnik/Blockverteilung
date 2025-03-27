@@ -98,8 +98,25 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
     # Histogramm der m_achsen
     ax4.hist(m_achsen, color='tab:blue', density=True, bins='auto', histtype='stepfilled', alpha=0.3, 
              label='upload pdf')
-
+        
+    # CDF für m_achsen (kumulative Verteilung)
+    steps = np.linspace(0.01, 1.00, num=100)
+    percentiles_m_achsen = np.quantile(m_achsen, steps)
+    ax5.plot(percentiles_m_achsen, steps, lw=8.0, color='tab:blue', alpha=0.3, label='upload cdf')
+    
     # Kumulative Verteilungen und CDF Berechnungen
+        
+    if 'expon' in ausgewählte_verteilungen:
+        loc3, scale3 = stats.expon.fit(m_achsen)
+        X3 = np.linspace(stats.expon.ppf(0.001, loc=loc3, scale=scale3), 
+                         stats.expon.ppf(0.999, loc=loc3, scale=scale3), len(m_achsen))
+        ax4.plot(X3, stats.expon.pdf(X3, loc=loc3, scale=scale3), '#333333', lw=1.0, alpha=0.7, label='expon pdf')
+        ax5.plot(X3, stats.expon.cdf(X3, loc=loc3, scale=scale3), '#333333', lw=1.0, alpha=0.7, label='expon cdf')
+        
+        # Speichern der Parameter in session_state
+        st.session_state.loc3 = loc3
+        st.session_state.scale3 = scale3
+
     if 'genexpon' in ausgewählte_verteilungen:
         a1, b1, c1, loc1, scale1 = stats.genexpon.fit(m_achsen)
         X1 = np.linspace(stats.genexpon.ppf(0.001, a1, b1, c1, loc=loc1, scale=scale1), 
@@ -126,17 +143,6 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
         st.session_state.loc2 = loc2
         st.session_state.scale2 = scale2
         
-    if 'expon' in ausgewählte_verteilungen:
-        loc3, scale3 = stats.expon.fit(m_achsen)
-        X3 = np.linspace(stats.expon.ppf(0.001, loc=loc3, scale=scale3), 
-                         stats.expon.ppf(0.999, loc=loc3, scale=scale3), len(m_achsen))
-        ax4.plot(X3, stats.expon.pdf(X3, loc=loc3, scale=scale3), '#333333', lw=1.0, alpha=0.7, label='expon pdf')
-        ax5.plot(X3, stats.expon.cdf(X3, loc=loc3, scale=scale3), '#333333', lw=1.0, alpha=0.7, label='expon cdf')
-        
-        # Speichern der Parameter in session_state
-        st.session_state.loc3 = loc3
-        st.session_state.scale3 = scale3
-        
     if 'powerlaw' in ausgewählte_verteilungen:
         a4, loc4, scale4 = stats.powerlaw.fit(m_achsen)
         X4 = np.linspace(stats.powerlaw.ppf(0.001, a4, loc=loc4, scale=scale4), 
@@ -148,11 +154,6 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
         st.session_state.a4 = a4
         st.session_state.loc4 = loc4
         st.session_state.scale4 = scale4
-        
-    # CDF für m_achsen (kumulative Verteilung)
-    steps = np.linspace(0.01, 1.00, num=100)
-    percentiles_m_achsen = np.quantile(m_achsen, steps)
-    ax5.plot(percentiles_m_achsen, steps, lw=8.0, color='tab:blue', alpha=0.3, label='upload cdf')
 
     # Achsen für das Diagramm
     ax4.legend(loc='best', frameon=False)
