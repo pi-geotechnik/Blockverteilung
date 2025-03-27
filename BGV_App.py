@@ -172,7 +172,7 @@ if einheit == "Masse in t (Dichte erforderlich)":
 
 
 # Darstellung
-st.subheader("Visualisierung der Wahrscheinlichkeitsdichte und kumulativen Wahrscheinlichkeit")
+st.subheader("Visualisierung der Wahrscheinlichkeitsdichte und der kumulativen Wahrscheinlichkeit")
 
 # Button zur Berechnung und Visualisierung
 if st.button('Berechne und Visualisiere die Perzentile'):
