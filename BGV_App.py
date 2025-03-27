@@ -237,6 +237,10 @@ if st.button('Visualisieren'):
     fig1 = berechne_perzentile_und_visualisierung(m_achsen)
     st.session_state.fig1 = fig1  # Speichern von fig1 im session_state
 
+# Anzeige der gespeicherten Grafiken
+if 'fig1' in st.session_state:
+    st.pyplot(st.session_state.fig1)  # Zeigt fig1 an, wenn es im session_state gespeichert ist
+    
 # Anpassung einer Wahrscheinlichkeitsfunktion
 st.subheader("Anpassung und Visualisierung von Wahrscheinlichkeitsfunktionen")
 
@@ -253,10 +257,6 @@ if st.button('Anpassen und Visualisieren'):
         st.session_state.fig2 = fig2  # Speichern von fig2 im session_state
     else:
         st.warning("Bitte wählen Sie mindestens eine Verteilung aus.")
-
-# Anzeige der gespeicherten Grafiken
-if 'fig1' in st.session_state:
-    st.pyplot(st.session_state.fig1)  # Zeigt fig1 an, wenn es im session_state gespeichert ist
 
 if 'fig2' in st.session_state:
     st.pyplot(st.session_state.fig2)  # Zeigt fig2 an, wenn es im session_state gespeichert ist
