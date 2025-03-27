@@ -299,6 +299,7 @@ if 'm_achsen' in st.session_state:
                 L4s = calculate_percentiles(stats.powerlaw, percentiles, 
                                             st.session_state.a4, st.session_state.loc4, st.session_state.scale4)
                 
+                upload_perz = np.array(upload_perz)
                 upload_perz3 = upload_perz**3
                 L1s3 = L1s**3
                 L2s3 = L2s**3
