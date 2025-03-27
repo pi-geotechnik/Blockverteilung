@@ -107,6 +107,13 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
         ax4.plot(X1, stats.genexpon.pdf(X1, a1, b1, c1, loc=loc1, scale=scale1), '#800020', lw=1.0, alpha=0.7, label='genexpon pdf')
         ax5.plot(X1, stats.genexpon.cdf(X1, a1, b1, c1, loc=loc1, scale=scale1), '#800020', lw=1.0, alpha=0.7, label='genexpon cdf')
 
+        # Speichern der Parameter in session_state
+        st.session_state.a1 = a1
+        st.session_state.b1 = b1
+        st.session_state.c1 = c1
+        st.session_state.loc1 = loc1
+        st.session_state.scale1 = scale1
+                
     if 'lognorm' in ausgewählte_verteilungen:
         shape2, loc2, scale2 = stats.lognorm.fit(m_achsen, floc=0)
         X2 = np.linspace(stats.lognorm.ppf(0.001, shape2, loc=loc2, scale=scale2), 
@@ -114,13 +121,22 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
         ax4.plot(X2, stats.lognorm.pdf(X2, shape2, loc=loc2, scale=scale2), '#00008B', lw=1.0, alpha=0.7, label='lognorm pdf')
         ax5.plot(X2, stats.lognorm.cdf(X2, shape2, loc=loc2, scale=scale2), '#00008B', lw=1.0, alpha=0.7, label='lognorm cdf')
 
+        # Speichern der Parameter in session_state
+        st.session_state.shape2 = shape2
+        st.session_state.loc2 = loc2
+        st.session_state.scale2 = scale2
+        
     if 'expon' in ausgewählte_verteilungen:
         loc3, scale3 = stats.expon.fit(m_achsen)
         X3 = np.linspace(stats.expon.ppf(0.001, loc=loc3, scale=scale3), 
                          stats.expon.ppf(0.999, loc=loc3, scale=scale3), len(m_achsen))
         ax4.plot(X3, stats.expon.pdf(X3, loc=loc3, scale=scale3), '#333333', lw=1.0, alpha=0.7, label='expon pdf')
         ax5.plot(X3, stats.expon.cdf(X3, loc=loc3, scale=scale3), '#333333', lw=1.0, alpha=0.7, label='expon cdf')
-
+        
+        # Speichern der Parameter in session_state
+        st.session_state.loc3 = loc3
+        st.session_state.scale3 = scale3
+        
     if 'powerlaw' in ausgewählte_verteilungen:
         a4, loc4, scale4 = stats.powerlaw.fit(m_achsen)
         X4 = np.linspace(stats.powerlaw.ppf(0.001, a4, loc=loc4, scale=scale4), 
@@ -128,6 +144,11 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
         ax4.plot(X4, stats.powerlaw.pdf(X4, a4, loc=loc4, scale=scale4), '#006400', lw=1.0, alpha=0.7, label='powerlaw pdf')
         ax5.plot(X4, stats.powerlaw.cdf(X4, a4, loc=loc4, scale=scale4), '#006400', lw=1.0, alpha=0.7, label='powerlaw cdf')
 
+        # Speichern der Parameter in session_state
+        st.session_state.a4 = a4
+        st.session_state.loc4 = loc4
+        st.session_state.scale4 = scale4
+        
     # CDF für m_achsen (kumulative Verteilung)
     steps = np.linspace(0.01, 1.00, num=100)
     percentiles_m_achsen = np.quantile(m_achsen, steps)
@@ -144,7 +165,7 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
     ax5.set_ylabel('Kumulative Wahrscheinlichkeit F(a)', fontsize=12)
     
     # Parameter und Diagramm übergeben
-    return fig, a1, b1, c1, loc1, scale1, shape2, loc2, scale2, loc3, scale3, a4, loc4, scale4
+    return fig
     
 # Function to calculate percentiles for a distribution
 def calculate_percentiles(distribution, percentiles, *params):
@@ -252,8 +273,7 @@ ausgewählte_verteilungen = st.multiselect("Wählen Sie die Verteilungen zur Anp
 if 'm_achsen' in st.session_state:
     if st.button('Anpassen und Visualisieren'):
         if ausgewählte_verteilungen:
-            results = passe_verteilungen_an_und_visualisiere(st.session_state.m_achsen, ausgewählte_verteilungen)
-            fig2 = results[0]  # Direkt auf das erste Element zugreifen, ohne [0] erneut zu verwenden
+            fig2 = passe_verteilungen_an_und_visualisiere(st.session_state.m_achsen, ausgewählte_verteilungen)
             st.session_state.fig2 = fig2
         else:
             st.warning("Bitte wählen Sie mindestens eine Verteilung aus.")
@@ -267,16 +287,9 @@ if 'm_achsen' in st.session_state:
     if st.button("Tabelle mit Perzentilen anzeigen"):
         Perc_steps_short = ['0', '25', '50', '75', '95', '96', '97', '98', '99', '100']
         percentiles = [0, 25, 50, 75, 95, 96, 97, 98, 99, 100]
-        # Hier greifen wir auf die Parameter zurück, die in der Funktion passe_verteilungen_an_und_visualisiere() berechnet wurden.
-        # Wir müssen sicherstellen, dass diese Parameter auch gespeichert wurden.
-        # Angenommen, wir speichern sie in st.session_state beim Aufruf der Anpassungsfunktion.
-        # Falls nicht, kannst du die Berechnung auch hier durchführen.
-        # Beispielhaft führen wir die Berechnung hier durch:
-        # Wir verwenden als Beispiel die Parameter aus der Genexpon-Anpassung:
-        if 'fig2' in st.session_state:
-            # Wenn fig2 existiert, wurden die Parameter bereits berechnet.
-            # Nehmen wir an, dass passe_verteilungen_an_und_visualisiere() die Parameter in session_state speichert.
-            # Hier simulieren wir dies, falls nicht vorhanden:
+        
+        # Sicherstellen, dass alle notwendigen Parameter gespeichert sind
+        if all(param in st.session_state for param in ['a1', 'b1', 'c1', 'loc1', 'scale1', 'shape2', 'loc2', 'scale2', 'loc3', 'scale3', 'a4', 'loc4', 'scale4']):
             try:
                 # Berechnung der Perzentile für jede Verteilung
                 L1s = calculate_percentiles(stats.genexpon, percentiles, 
@@ -297,8 +310,6 @@ if 'm_achsen' in st.session_state:
                 })
                 st.write(df1)
             except Exception as e:
-                st.error(f"Fehler bei der Berechnung der Parameter: {e}")
+                st.error(f"Fehler bei der Berechnung der Perzentile: {e}")
         else:
             st.info("Bitte führen Sie zuerst eine Anpassung der Wahrscheinlichkeitsfunktionen durch.")
-            
-            
