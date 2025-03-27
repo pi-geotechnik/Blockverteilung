@@ -65,7 +65,7 @@ def berechne_perzentile_und_visualisierung(m_achsen):
 
 
     # Visualisierung der Ergebnisse
-    fig, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, figsize=(18, 4))
+    fig1, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, figsize=(18, 4))
 
     # Histogramm der Wahrscheinlichkeitsdichte
     ax1.hist(m_achsen, density=True, bins='auto', histtype='stepfilled', color='tab:blue', alpha=0.3, label='sample pdf')
@@ -95,11 +95,11 @@ def berechne_perzentile_und_visualisierung(m_achsen):
     ax3.legend(loc='best', frameon=False)
 
     # Diagramm anzeigen
-    st.pyplot(fig)
+    st.pyplot(fig1)
     
 # Funktion zur Anpassung der Verteilungen und Visualisierung
 def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
-    fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(12, 4))
+    fig2, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(12, 4))
 
     # Histogramm der m_achsen
     ax1.hist(m_achsen, color='tab:blue', density=True, bins='auto', histtype='stepfilled', alpha=0.3, 
@@ -150,7 +150,7 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
     ax2.set_ylabel('Cumulative probability F(a) [%]', fontsize=12)
 
     # Diagramm anzeigen
-    st.pyplot(fig)
+    st.pyplot(fig2)
     
 # Streamlit App
 
