@@ -154,10 +154,15 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
         st.session_state.a4 = a4
         st.session_state.loc4 = loc4
         st.session_state.scale4 = scale4
+    
+    # Berechne das Histogramm (counts und bins)
+    counts, bins = np.histogram(m_achsen, bins='auto', density=True)
+        # Finde den maximalen Wert des Histogramms
+    max_y_value = max(counts)
 
     # Achsen für das Diagramm
     ax4.legend(loc='best', frameon=False)
-    ax4.set_ylim(bottom=None, top=6.0)
+    ax4.set_ylim(0, max_y_value * 1.1)
     ax4.set_xlabel('Blockachse a [m]', fontsize=12)
     ax4.set_ylabel('Wahrscheinlichkeitsdichte f(a)', fontsize=12)
     
