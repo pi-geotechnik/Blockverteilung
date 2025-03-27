@@ -56,30 +56,23 @@ st.header("Blockgrößenverteilung")
 # Auswahl der Einheit
 einheit = st.selectbox("Wählen Sie die Einheit der Eingabedaten:", ["Volumen in m³", "Masse in t (Dichte erforderlich)"])
 
-# Datei-Upload für m³ oder t
-if einheit in ["Volumen in m³", "Masse in t (Dichte erforderlich)"]:
-    uploaded_file = st.file_uploader("Wählen Sie eine Textdatei aus", type=["txt"])
+if einheit == "Volumen in m³":
+    uploaded_file = st.file_uploader("Wählen Sie eine Textdatei mit m³-Werten aus", type=["txt"])
     if uploaded_file is not None:
         text = uploaded_file.read().decode("utf-8")
         st.text_area("Inhalt der Datei:", text, height=300)
-        
+
         try:
+            # Text in Zahlen (m³) umwandeln
             werte = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
-            st.write("Die Werte in der Datei:")
+            st.write("Die m³-Werte in der Datei:")
             st.write(werte)
-            
-            # Eingabe der Dichte bei t
-            if einheit == "Masse in t (Dichte erforderlich)":
-                dichte_kg_m3 = st.number_input("Geben Sie die Dichte in kg/m³ ein:", min_value=0, value=2650, step=10)
-                werte = [val * 1000 / dichte_kg_m3 for val in werte]  # Umrechnung t → m³
-                st.write("Berechnete m³-Werte:")
-                st.write(werte)
-            
+
             # Berechnung der dritten Wurzel (Achsen in Metern)
             m_achsen = [berechne_dritte_wurzel(val) for val in werte]
             st.write("Achsen in Metern:")
             st.write(m_achsen)
-            
+
             # Visualisierung der Histogramme
             visualisiere_histogramm_m3_und_m(m_achsen, werte)
             perzentile = berechne_perzentile(m_achsen, [95, 96, 97, 98])
@@ -88,6 +81,41 @@ if einheit in ["Volumen in m³", "Masse in t (Dichte erforderlich)"]:
 
         except Exception as e:
             st.error(f"Fehler bei der Verarbeitung der Daten: {e}")
+
+
+# Datei-Upload für Masse in t (Dichte erforderlich)
+if einheit == "Masse in t (Dichte erforderlich)":
+    uploaded_file = st.file_uploader("Wählen Sie eine Textdatei mit t-Werten aus", type=["txt"])
+    if uploaded_file is not None:
+        text = uploaded_file.read().decode("utf-8")
+        st.text_area("Inhalt der Datei:", text, height=300)
+
+        try:
+            # Text in Zahlen (Tonnen) umwandeln
+            werte = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
+            st.write("Die Tonnen-Werte in der Datei:")
+            st.write(werte)
+
+            # Eingabe der Dichte in kg/m³
+            dichte_kg_m3 = st.number_input("Geben Sie die Dichte in kg/m³ ein:", min_value=0, value=2650, step=10)
+            # Umrechnung von Tonnen in m³
+            werte_m3 = [val * 1000 / dichte_kg_m3 for val in werte]
+            st.write("Berechnete m³-Werte aus Tonnen:")
+            st.write(werte_m3)
+
+            # Berechnung der dritten Wurzel (Achsen in Metern)
+            m_achsen = [berechne_dritte_wurzel(val) for val in werte_m3]
+            st.write("Achsen in Metern:")
+            st.write(m_achsen)
+
+            # Visualisierung der Histogramme
+            visualisiere_histogramm_m3_und_m(m_achsen, werte_m3)
+            perzentile = berechne_perzentile(m_achsen, [95, 96, 97, 98])
+            for p, perzentil in zip([95, 96, 97, 98], perzentile):
+                st.write(f"{p}. Perzentil der Blockverteilung: {perzentil:.2f} m")
+
+        except Exception as e:
+            st.error(f"Fehler bei der Verarbeitung der Daten: {e}")  
 
 
 
