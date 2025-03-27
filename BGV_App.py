@@ -298,13 +298,20 @@ if 'm_achsen' in st.session_state:
                                             st.session_state.loc3, st.session_state.scale3)
                 L4s = calculate_percentiles(stats.powerlaw, percentiles, 
                                             st.session_state.a4, st.session_state.loc4, st.session_state.scale4)
+                
+                upload_perz3 = upload_perz**3
+                L1s3 = L1s**3
+                L2s3 = L2s**3
+                L3s3 = L3s**3
+                L4s3 = L4s**3
+                
                 df1 = pd.DataFrame({
                     "percentile": Perc_steps_short,
-                    "upload [m]": upload_perz,
-                    "expon [m]": L3s,
-                    "genexpon [m]": L1s,
-                    "lognorm [m]": L2s,
-                    "powerlaw [m]": L4s
+                    "upload [m³]": upload_perz,
+                    "expon [m³]": L3s,
+                    "genexpon [m³]": L1s,
+                    "lognorm [m³]": L2s,
+                    "powerlaw [m³]": L4s
                 })
                 st.write(df1)
             except Exception as e:
