@@ -94,8 +94,8 @@ def berechne_perzentile_und_visualisierung(m_achsen):
     ax2.legend(loc='best', frameon=False)
     ax3.legend(loc='best', frameon=False)
 
-    # Diagramm anzeigen
-    #st.pyplot(fig1)
+    # Diagramm übergeben
+    return fig1
     
 # Funktion zur Anpassung der Verteilungen und Visualisierung
 def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
@@ -149,8 +149,8 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
     ax5.set_xlabel('Block size a [m] (log scale)', fontsize=12)
     ax5.set_ylabel('Cumulative probability F(a) [%]', fontsize=12)
 
-    # Diagramm anzeigen
-    #st.pyplot(fig2)
+    # Diagramm übergeben
+    return fig2
     
 # Streamlit App
 
