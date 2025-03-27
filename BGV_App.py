@@ -8,13 +8,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import math
-import scipy as sp
 from scipy import stats
-from scipy.stats import lognorm
-from scipy.stats import expon
-from scipy.stats import genexpon
-from scipy.stats import powerlaw
 from PIL import Image # für das Logo
 
 # Funktion zur Berechnung der Masse in Tonnen aus m³ und Dichte
@@ -152,7 +146,9 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
     # Diagramm übergeben
     return(fig)
     
-
+# Function to calculate percentiles for a distribution
+def calculate_percentiles(dist, percentiles, *params):
+    return [dist.ppf(p / 100, *params) for p in percentiles]
 
 # Streamlit App
 
@@ -240,7 +236,8 @@ if st.button('Visualisieren'):
 # Anzeige der gespeicherten Grafiken
 if 'fig1' in st.session_state:
     st.pyplot(st.session_state.fig1)  # Zeigt fig1 an, wenn es im session_state gespeichert ist
-    
+
+
 # Anpassung einer Wahrscheinlichkeitsfunktion
 st.subheader("Anpassung und Visualisierung von Wahrscheinlichkeitsfunktionen")
 
@@ -260,7 +257,28 @@ if st.button('Anpassen und Visualisieren'):
 
 if 'fig2' in st.session_state:
     st.pyplot(st.session_state.fig2)  # Zeigt fig2 an, wenn es im session_state gespeichert ist
-    
-    
 
-# asdf
+
+# Tabelle
+
+# Define the percentiles you want to show
+Perc_steps_short = ['0', '25', '50', '75', '95', '96', '97', '98', '99', '100']
+percentiles = [0, 25, 50, 75, 95, 96, 97, 98, 99, 100]
+
+# Calculate percentiles for each distribution
+L1s = calculate_percentiles(stats.genexpon, percentiles, a1, b1, c1, loc1, scale1)
+L2s = calculate_percentiles(stats.lognorm, percentiles, shape1, loc1, scale1)
+L3s = calculate_percentiles(stats.expon, percentiles, loc2, scale2)
+L4s = calculate_percentiles(stats.powerlaw, percentiles, a3, loc3, scale3)
+
+# Create the DataFrame
+df1 = pd.DataFrame({
+    "Percentile": Perc_steps_short,
+    "Genexpon [m]": L1s,
+    "Lognorm [m]": L2s,
+    "Expon [m]": L3s,
+    "Powerlaw [m]": L4s
+})
+
+# Display the DataFrame in Streamlit
+st.write(df1)
