@@ -265,20 +265,14 @@ if 'fig1' in st.session_state:
 # Anpassung einer Wahrscheinlichkeitsfunktion
 st.subheader("Anpassung und Visualisierung von Wahrscheinlichkeitsfunktionen")
 
-# Auswahl der Verteilungen durch Checkboxen
-verteilungen = ['genexpon', 'lognorm', 'expon', 'powerlaw']
-ausgewählte_verteilungen = st.multiselect("Wählen Sie die Verteilungen zur Anpassung aus (mehrere möglich):", verteilungen)
-
-# Button zur Berechnung und Visualisierung
+# Alle Verteilungen werden automatisch berechnet und visualisiert
 if 'm_achsen' in st.session_state:
-    if st.button('Anpassen und Visualisieren'):
-        if ausgewählte_verteilungen:
-            fig2 = passe_verteilungen_an_und_visualisiere(st.session_state.m_achsen, ausgewählte_verteilungen)
-            st.session_state.fig2 = fig2
-        else:
-            st.warning("Bitte wählen Sie mindestens eine Verteilung aus.")
-    if 'fig2' in st.session_state:
-        st.pyplot(st.session_state.fig2)
+    fig2 = passe_verteilungen_an_und_visualisiere(st.session_state.m_achsen, ['genexpon', 'lognorm', 'expon', 'powerlaw'])
+    st.session_state.fig2 = fig2
+
+# Visualisierung der berechneten Verteilungen
+if 'fig2' in st.session_state:
+    st.pyplot(st.session_state.fig2)
 
 
 # Tabelle mit Perzentilen
