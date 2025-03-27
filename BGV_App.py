@@ -8,6 +8,8 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import requests
+from io import BytesIO
 from scipy import stats
 from PIL import Image # für das Logo
 
@@ -192,49 +194,67 @@ example_file_url = "https://github.com/pi-geotechnik/Blockverteilung/raw/main/ex
 
 # Auswahl der Einheit
 einheit = st.selectbox("Wählen Sie die Einheit der Eingabedaten:", ["Volumen in m³", "Masse in t (Dichte erforderlich)"])
+
 # Speichern der Auswahl im session_state
 st.session_state.einheit = einheit  # Speichert die ausgewählte Einheit
 
+
+# Falls m³ gewählt wurde, zeige die Option für eine Beispiel-Datei an
 if einheit == "Volumen in m³":
-    uploaded_file = st.file_uploader("Wählen Sie eine Textdatei mit m³-Werten aus", type=["txt"])
+    file_option = st.radio(
+        "Wählen Sie eine Option:",
+        ("Liste mit m³ hochladen", "Beispiel-Datei mit m³ verwenden")
+    )
+    
+    # Wenn der Benutzer die m³ Beispiel-Datei verwenden möchte
+    if file_option == "Beispiel-Datei mir m³ verwenden":
+        st.write("Sie haben die Beispiel-Datei für m³ ausgewählt. Diese wird nun als hochgeladene Datei behandelt.")
+        
+        # Beispiel-Datei aus GitHub laden
+        response = requests.get(example_file_url)
+        
+        if response.status_code == 200:
+            # Erstelle ein 'BytesIO'-Objekt aus der heruntergeladenen Datei, um sie wie eine hochgeladene Datei zu behandeln
+            example_file_content = response.content
+            uploaded_file = BytesIO(example_file_content)  # Dies ist die "hochgeladene" Beispiel-Datei
+            
+            # Nun kann die heruntergeladene Datei genauso weiterverarbeitet werden wie eine hochgeladene Datei
+            st.write("Die Beispiel-Datei wurde erfolgreich heruntergeladen.")
+
+        else:
+            st.error("Fehler beim Laden der Beispiel-Datei.")
+    
+    # Wenn der Benutzer "m³ hochladen" wählt
+    elif file_option == "Liste mit m³ hochladen":
+        uploaded_file = st.file_uploader("Wählen Sie eine m³-Datei zum Hochladen", type=["csv", "xlsx", "txt"])
+        
     if uploaded_file is not None:
         text = uploaded_file.read().decode("utf-8")
         st.text_area("Inhalt der Datei:", text, height=300)
+     
+    try:
+        # Text in Zahlen (m³) umwandeln
+        werte = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
         
-        # Wenn keine Datei hochgeladen wurde, zeige die Beispiel-Datei zum Herunterladen an
-        if uploaded_file is None:
-            st.write("Falls keine Datei hochgeladen wird, können Sie auch eine Beispiel-Datei herunterladen.")
-            st.markdown(f"[Beispiel-Datei herunterladen]({example_file_url})")
-        else:
-            # Datei wurde hochgeladen
-            st.write("Die hochgeladene Datei:", uploaded_file.name)
-
-        try:
-            # Text in Zahlen (m³) umwandeln
-            werte = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
+        # Sortieren der Werte in aufsteigender Reihenfolge
+        werte.sort()
             
-            # Sortieren der Werte in aufsteigender Reihenfolge
-            werte.sort()
-            # st.write("Die m³-Werte in der Datei:")
-            # st.write(werte)
+        # Anzahl der Werte ausgeben
+        st.write(f"Anzahl der Blöcke: {len(werte)}")
             
-            # Anzahl der Werte ausgeben
-            st.write(f"Anzahl der Blöcke: {len(werte)}")
+        # Berechnung der dritten Wurzel (Achsen in Metern)
+        m_achsen = [berechne_dritte_wurzel(val) for val in werte]
+        # st.write("Achsen in Metern:")
+        # st.write(m_achsen)
+        # Visualisierung der Histogramme
+        # visualisiere_histogramm_m3_und_m(m_achsen, werte)
+        upload_perz = berechne_perzentile(m_achsen, [0, 25, 50, 75, 95, 96, 97, 98, 99, 100])
             
-            # Berechnung der dritten Wurzel (Achsen in Metern)
-            m_achsen = [berechne_dritte_wurzel(val) for val in werte]
-            # st.write("Achsen in Metern:")
-            # st.write(m_achsen)
-
-            # Visualisierung der Histogramme
-            # visualisiere_histogramm_m3_und_m(m_achsen, werte)
-            upload_perz = berechne_perzentile(m_achsen, [0, 25, 50, 75, 95, 96, 97, 98, 99, 100])
+        # Speichere m_achsen in session_state für spätere Verwendung
+        st.session_state.m_achsen = m_achsen
             
-            # Speichere m_achsen in session_state für spätere Verwendung
-            st.session_state.m_achsen = m_achsen
-            
-        except Exception as e:
-            st.error(f"Fehler bei der Verarbeitung der Daten: {e}")
+    except Exception as e:
+        st.error(f"Fehler bei der Verarbeitung der Daten: {e}")
 
 
 # Datei-Upload für Masse in t (Dichte erforderlich)
