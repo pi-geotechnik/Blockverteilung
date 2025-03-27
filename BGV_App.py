@@ -314,11 +314,11 @@ if 'm_achsen' in st.session_state:
                 
                 df1 = pd.DataFrame({
                     "percentile": Perc_steps_short,
-                    "upload [m³]": upload_perz,
-                    "expon [m³]": L3s,
-                    "genexpon [m³]": L1s,
-                    "lognorm [m³]": L2s,
-                    "powerlaw [m³]": L4s
+                    "upload [m³]": upload_perz3,
+                    "expon [m³]": L3s3,
+                    "genexpon [m³]": L1s3,
+                    "lognorm [m³]": L2s3,
+                    "powerlaw [m³]": L4s3
                 })
                 st.write(df1)
             except Exception as e:
