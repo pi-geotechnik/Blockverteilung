@@ -110,29 +110,29 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
         a1, b1, c1, loc1, scale1 = stats.genexpon.fit(m_achsen)
         X1 = np.linspace(stats.genexpon.ppf(0.001, a1, b1, c1, loc=loc1, scale=scale1), 
                          stats.genexpon.ppf(0.999, a1, b1, c1, loc=loc1, scale=scale1), len(m_achsen))
-        ax1.plot(X1, stats.genexpon.pdf(X1, a1, b1, c1, loc=loc1, scale=scale1), 'green', lw=1.0, alpha=0.7, label='genexpon pdf')
-        ax2.plot(X1, stats.genexpon.cdf(X1, a1, b1, c1, loc=loc1, scale=scale1), 'green', lw=1.0, alpha=0.7, label='genexpon cdf')
+        ax1.plot(X1, stats.genexpon.pdf(X1, a1, b1, c1, loc=loc1, scale=scale1), '#800020', lw=1.0, alpha=0.7, label='genexpon pdf')
+        ax2.plot(X1, stats.genexpon.cdf(X1, a1, b1, c1, loc=loc1, scale=scale1), '#800020', lw=1.0, alpha=0.7, label='genexpon cdf')
 
     if 'lognorm' in ausgewählte_verteilungen:
         shape1, loc1, scale1 = stats.lognorm.fit(m_achsen, floc=0)
         X2 = np.linspace(stats.lognorm.ppf(0.001, shape1, loc=loc1, scale=scale1), 
                          stats.lognorm.ppf(0.999, shape1, loc=loc1, scale=scale1), len(m_achsen))
-        ax1.plot(X2, stats.lognorm.pdf(X2, shape1, loc=loc1, scale=scale1), 'blue', lw=1.0, alpha=0.7, label='lognorm pdf')
-        ax2.plot(X2, stats.lognorm.cdf(X2, shape1, loc=loc1, scale=scale1), 'blue', lw=1.0, alpha=0.7, label='lognorm cdf')
+        ax1.plot(X2, stats.lognorm.pdf(X2, shape1, loc=loc1, scale=scale1), '#00008B', lw=1.0, alpha=0.7, label='lognorm pdf')
+        ax2.plot(X2, stats.lognorm.cdf(X2, shape1, loc=loc1, scale=scale1), '#00008B', lw=1.0, alpha=0.7, label='lognorm cdf')
 
     if 'expon' in ausgewählte_verteilungen:
         loc2, scale2 = stats.expon.fit(m_achsen)
         X3 = np.linspace(stats.expon.ppf(0.001, loc=loc2, scale=scale2), 
                          stats.expon.ppf(0.999, loc=loc2, scale=scale2), len(m_achsen))
-        ax1.plot(X3, stats.expon.pdf(X3, loc=loc2, scale=scale2), 'maroon', lw=1.0, alpha=0.7, label='expon pdf')
-        ax2.plot(X3, stats.expon.cdf(X3, loc=loc2, scale=scale2), 'maroon', lw=1.0, alpha=0.7, label='expon cdf')
+        ax1.plot(X3, stats.expon.pdf(X3, loc=loc2, scale=scale2), '#333333', lw=1.0, alpha=0.7, label='expon pdf')
+        ax2.plot(X3, stats.expon.cdf(X3, loc=loc2, scale=scale2), '#333333', lw=1.0, alpha=0.7, label='expon cdf')
 
     if 'powerlaw' in ausgewählte_verteilungen:
         a3, loc3, scale3 = stats.powerlaw.fit(m_achsen)
         X4 = np.linspace(stats.powerlaw.ppf(0.001, a3, loc=loc3, scale=scale3), 
                          stats.powerlaw.ppf(0.999, a3, loc=loc3, scale=scale3), len(m_achsen))
-        ax1.plot(X4, stats.powerlaw.pdf(X4, a3, loc=loc3, scale=scale3), 'blue', lw=1.0, alpha=0.7, label='powerlaw pdf')
-        ax2.plot(X4, stats.powerlaw.cdf(X4, a3, loc=loc3, scale=scale3), 'blue', lw=1.0, alpha=0.7, label='powerlaw cdf')
+        ax1.plot(X4, stats.powerlaw.pdf(X4, a3, loc=loc3, scale=scale3), '#006400', lw=1.0, alpha=0.7, label='powerlaw pdf')
+        ax2.plot(X4, stats.powerlaw.cdf(X4, a3, loc=loc3, scale=scale3), '#006400', lw=1.0, alpha=0.7, label='powerlaw cdf')
 
     # CDF für m_achsen (kumulative Verteilung)
     steps = np.linspace(0.01, 1.00, num=100)
