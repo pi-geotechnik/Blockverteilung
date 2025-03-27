@@ -196,9 +196,15 @@ if einheit == "Volumen in m³":
         try:
             # Text in Zahlen (m³) umwandeln
             werte = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
+            
+            # Sortieren der Werte in aufsteigender Reihenfolge
+            werte.sort()
             # st.write("Die m³-Werte in der Datei:")
             # st.write(werte)
-
+            
+            # Anzahl der Werte ausgeben
+            st.write(f"Anzahl der m³-Werte: {len(werte)}")
+            
             # Berechnung der dritten Wurzel (Achsen in Metern)
             m_achsen = [berechne_dritte_wurzel(val) for val in werte]
             # st.write("Achsen in Metern:")
@@ -227,9 +233,18 @@ if einheit == "Masse in t (Dichte erforderlich)":
             tonnen = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
             # st.write("Die Tonnen-Werte in der Datei:")
             # st.write(werte)
-
+            
+            # Sortieren der Werte in aufsteigender Reihenfolge
+            tonnen.sort()
+            # st.write("Die Tonnen-Werte in der Datei:")
+            # st.write(tonnen)
+            
+            # Anzahl der Werte ausgeben
+            st.write(f"Anzahl der t-Werte: {len(tonnen)}")
+            
             # Eingabe der Dichte in kg/m³
             dichte_kg_m3 = st.number_input("Geben Sie die Dichte in kg/m³ ein:", min_value=0, value=2650, step=10)
+            
             # Umrechnung von Tonnen in m³
             werte_m3 = [val * 1000 / dichte_kg_m3 for val in tonnen]
             # st.write("Berechnete m³-Werte aus Tonnen:")
@@ -237,8 +252,8 @@ if einheit == "Masse in t (Dichte erforderlich)":
 
             # Berechnung der dritten Wurzel (Achsen in Metern)
             m_achsen = [berechne_dritte_wurzel(val) for val in werte_m3]
-            st.write("Achsen in Metern:")
-            st.write(m_achsen)
+            # st.write("Achsen in Metern:")
+            # st.write(m_achsen)
 
             # Visualisierung der Histogramme
             # visualisiere_histogramm_m3_und_m(m_achsen, werte_m3)
