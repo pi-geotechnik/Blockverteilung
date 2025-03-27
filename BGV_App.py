@@ -142,9 +142,9 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
     ax5.set_xscale('log')
     ax5.set_xlabel('Blockachse a [m] (log)', fontsize=12)
     ax5.set_ylabel('Kumulative Wahrscheinlichkeit F(a)', fontsize=12)
-
-    # Diagramm übergeben
-    return(fig)
+    
+    # Parameter und Diagramm übergeben
+    return fig, a1, b1, c1, loc1, scale1, shape1, loc1_lognorm, scale1_lognorm, loc2, scale2, a3, loc3, scale3
     
 # Function to calculate percentiles for a distribution
 def calculate_percentiles(distribution, percentiles, *params):
@@ -260,6 +260,12 @@ if 'fig2' in st.session_state:
 
 
 # Tabelle
+
+# Aufruf der Funktion zur Berechnung und Visualisierung
+params = passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen)
+
+# Extrahieren der Parameter
+_, a1, b1, c1, loc1, scale1, shape1, loc1_lognorm, scale1_lognorm, loc2, scale2, a3, loc3, scale3 = params
 
 # Define the percentiles you want to show
 Perc_steps_short = ['0', '25', '50', '75', '95', '96', '97', '98', '99', '100']
