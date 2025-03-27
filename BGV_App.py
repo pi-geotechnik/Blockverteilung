@@ -97,7 +97,7 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
 
     # Histogramm der m_achsen
     ax4.hist(m_achsen, color='tab:blue', density=True, bins='auto', histtype='stepfilled', alpha=0.3, 
-             label='Sample pdf')
+             label='upload pdf')
 
     # Kumulative Verteilungen und CDF Berechnungen
     if 'genexpon' in ausgewählte_verteilungen:
@@ -152,7 +152,7 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
     # CDF für m_achsen (kumulative Verteilung)
     steps = np.linspace(0.01, 1.00, num=100)
     percentiles_m_achsen = np.quantile(m_achsen, steps)
-    ax5.plot(percentiles_m_achsen, steps, lw=8.0, color='tab:blue', alpha=0.3, label='sample cdf')
+    ax5.plot(percentiles_m_achsen, steps, lw=8.0, color='tab:blue', alpha=0.3, label='upload cdf')
 
     # Achsen für das Diagramm
     ax4.legend(loc='best', frameon=False)
@@ -238,9 +238,7 @@ if einheit == "Masse in t (Dichte erforderlich)":
 
             # Visualisierung der Histogramme
             visualisiere_histogramm_m3_und_m(m_achsen, werte_m3)
-            perzentile = berechne_perzentile(m_achsen, [95, 96, 97, 98])
-            for p, perzentil in zip([95, 96, 97, 98], perzentile):
-                st.write(f"{p}. Perzentil der Blockverteilung: {perzentil:.2f} m")
+            upload_perz = berechne_perzentile(m_achsen, [0, 25, 50, 75, 95, 96, 97, 98, 99, 100])
 
         except Exception as e:
             st.error(f"Fehler bei der Verarbeitung der Daten: {e}")  
@@ -300,12 +298,12 @@ if 'm_achsen' in st.session_state:
                 L4s = calculate_percentiles(stats.powerlaw, percentiles, 
                                             st.session_state.a4, st.session_state.loc4, st.session_state.scale4)
                 df1 = pd.DataFrame({
-                    "Percentile": Perc_steps_short,
-                    "Upload [m]": upload_perz,
-                    "Genexpon [m]": L1s,
-                    "Lognorm [m]": L2s,
-                    "Expon [m]": L3s,
-                    "Powerlaw [m]": L4s
+                    "percentile": Perc_steps_short,
+                    "upload [m]": upload_perz,
+                    "expon [m]": L3s,
+                    "genexpon [m]": L1s,
+                    "lognorm [m]": L2s,
+                    "powerlaw [m]": L4s
                 })
                 st.write(df1)
             except Exception as e:
