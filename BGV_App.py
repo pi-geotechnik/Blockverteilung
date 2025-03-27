@@ -138,14 +138,6 @@ def berechne_perzentile_und_visualisierung(m_achsen):
                         percentiles_sample_seite[96], percentiles_sample_seite[97], percentiles_sample_seite[98], \
                         percentiles_sample_seite[99]
 
-    # Erstellen eines DataFrames
-    df = pd.DataFrame({
-        "Percentile": Perc_steps,
-        "Seite [m]": Perc_sample_seite,
-    })
-
-    # Zeige die Tabelle an
-    st.write(df)
 
     # Visualisierung der Ergebnisse
     fig, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, figsize=(18, 4))
@@ -181,8 +173,8 @@ def berechne_perzentile_und_visualisierung(m_achsen):
     st.pyplot(fig)
 
 # Streamlit App
-st.title("Blockgrößenverteilung und Wahrscheinlichkeitsfunktionen")
-st.header("Visualisierung der Wahrscheinlichkeitsdichte und Perzentile")
+st.header("Blockgrößenverteilung")
+st.subheader("Visualisierung der Wahrscheinlichkeitsdichte und kumulativen Wahrscheinlichkeit")
 
 # Beispielhafte Eingabedaten
 m_achsen = np.random.lognormal(mean=0, sigma=1, size=1000)  # Beispielhafte Daten für die Blockgrößen
