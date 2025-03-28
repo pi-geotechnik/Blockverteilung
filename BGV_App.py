@@ -252,9 +252,9 @@ if einheit == "Volumen in m³":
             m_achsen = [berechne_dritte_wurzel(val) for val in werte]
             # st.write("Achsen in Metern:")
             # st.write(m_achsen)
+            
             # Visualisierung der Histogramme
             # visualisiere_histogramm_m3_und_m(m_achsen, werte)
-            upload_perz = berechne_perzentile(m_achsen, [0, 25, 50, 75, 95, 96, 97, 98, 99, 100])
             
             # Speichere m_achsen in session_state für spätere Verwendung
             st.session_state.m_achsen = m_achsen
@@ -273,13 +273,9 @@ if einheit == "Masse in t (Dichte erforderlich)":
         try:
             # Text in Zahlen (Tonnen) umwandeln
             tonnen = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
-            # st.write("Die Tonnen-Werte in der Datei:")
-            # st.write(werte)
             
             # Sortieren der Werte in aufsteigender Reihenfolge
             tonnen.sort()
-            # st.write("Die Tonnen-Werte in der Datei:")
-            # st.write(tonnen)
             
             # Anzahl der Werte ausgeben
             st.write(f"Anzahl der Blöcke: {len(tonnen)}")
@@ -289,8 +285,6 @@ if einheit == "Masse in t (Dichte erforderlich)":
             
             # Umrechnung von Tonnen in m³
             werte_m3 = [val * 1000 / dichte_kg_m3 for val in tonnen]
-            # st.write("Berechnete m³-Werte aus Tonnen:")
-            # st.write(werte_m3_t)
 
             # Berechnung der dritten Wurzel (Achsen in Metern)
             m_achsen = [berechne_dritte_wurzel(val) for val in werte_m3]
@@ -299,7 +293,6 @@ if einheit == "Masse in t (Dichte erforderlich)":
 
             # Visualisierung der Histogramme
             # visualisiere_histogramm_m3_und_m(m_achsen, werte_m3)
-            upload_perz = berechne_perzentile(m_achsen, [0, 25, 50, 75, 95, 96, 97, 98, 99, 100])
             
             # Speichere m_achsen in session_state für spätere Verwendung
             st.session_state.m_achsen = m_achsen
@@ -311,7 +304,7 @@ if einheit == "Masse in t (Dichte erforderlich)":
 # Darstellung
 st.subheader("Visualisierung der Wahrscheinlichkeitsdichte und der kumulativen Wahrscheinlichkeit")
 
-# Berechnung und Visualisierung immer ausführen, ohne Button
+# Berechnung und Visualisierung
 if 'einheit' in st.session_state:
     if st.session_state.einheit == "Volumen in m³" and 'm_achsen' in st.session_state:
         # Aufruf der Funktion zur Berechnung und Visualisierung mit m_achsen
@@ -337,7 +330,7 @@ if 'einheit' in st.session_state:
         st.session_state.fig2 = fig2
     elif st.session_state.einheit == "Masse in t (Dichte erforderlich)" and 'm_achsen' in st.session_state:
         # Aufruf der Funktion zur Berechnung und Visualisierung mit m_achsen
-        fig2 = passe_verteilungen_an_und_visualisiere(st.session_state.m_achsen, ['genexpon', 'lognorm', 'expon', 'powerlaw'])
+        fig2 = passe_verteilungen_an_und_visualisiere(st.session_state.m_achsen, ['genexpon', 'expon', 'powerlaw'])
         st.session_state.fig2 = fig2  # Speichern von fig2 im session_state
 
 # Visualisierung der berechneten Verteilungen
@@ -345,7 +338,7 @@ if 'fig2' in st.session_state:
     st.pyplot(st.session_state.fig2)
 
 
-# Tabelle mit Perzentilen immer anzeigen, ohne Button
+# Tabelle mit Perzentilen 
 st.subheader("Tabellenvergleich der Perzentilen")
 
 if 'm_achsen' in st.session_state:
@@ -359,23 +352,24 @@ if 'm_achsen' in st.session_state:
             L1s = calculate_percentiles(stats.genexpon, percentiles, 
                                         st.session_state.a1, st.session_state.b1, st.session_state.c1, 
                                         st.session_state.loc1, st.session_state.scale1)
-            L2s = calculate_percentiles(stats.lognorm, percentiles, 
-                                        st.session_state.shape2, st.session_state.loc2, st.session_state.scale2)
+            #L2s = calculate_percentiles(stats.lognorm, percentiles, 
+            #                            st.session_state.shape2, st.session_state.loc2, st.session_state.scale2)
             L3s = calculate_percentiles(stats.expon, percentiles, 
                                         st.session_state.loc3, st.session_state.scale3)
             L4s = calculate_percentiles(stats.powerlaw, percentiles, 
                                         st.session_state.a4, st.session_state.loc4, st.session_state.scale4)
             
             # Sicherstellen, dass alle Perzentile als numpy-Array vorliegen
+            upload_perz = berechne_perzentile(m_achsen, [0, 25, 50, 75, 95, 96, 97, 98, 99, 100])
             upload_perz = np.array(upload_perz)
             L1s = np.array(L1s)
-            L2s = np.array(L2s)
+            #L2s = np.array(L2s)
             L3s = np.array(L3s)
             L4s = np.array(L4s)
 
             upload_perz3 = upload_perz**3
             L1s3 = L1s**3
-            L2s3 = L2s**3
+            #L2s3 = L2s**3
             L3s3 = L3s**3
             L4s3 = L4s**3
             
@@ -384,7 +378,6 @@ if 'm_achsen' in st.session_state:
                 "upload [m³]": upload_perz3,
                 "expon [m³]": L3s3,
                 "genexpon [m³]": L1s3,
-                "lognorm [m³]": L2s3,
                 "powerlaw [m³]": L4s3
             })
             st.write(df1)
