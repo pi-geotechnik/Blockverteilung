@@ -306,6 +306,11 @@ st.subheader("Visualisierung der Wahrscheinlichkeitsdichte und der kumulativen W
 
 # Berechnung und Visualisierung
 if 'einheit' in st.session_state:
+    # Falls die Einheit gewechselt wird, sollen die Figures gelöscht werden
+    if 'einheit' in st.session_state:
+        if (st.session_state.einheit == "Volumen in m³" and 'm_achsen' not in st.session_state) or \
+           (st.session_state.einheit == "Masse in t (Dichte erforderlich)" and 'm_achsen' not in st.session_state):
+            st.session_state.pop("fig1", None)  # Entfernt fig1, falls es existiert
     if st.session_state.einheit == "Volumen in m³" and 'm_achsen' in st.session_state:
         # Aufruf der Funktion zur Berechnung und Visualisierung mit m_achsen
         fig1 = berechne_perzentile_und_visualisierung(st.session_state.m_achsen)
@@ -325,6 +330,11 @@ st.subheader("Anpassung und Visualisierung von Wahrscheinlichkeitsfunktionen")
 
 # Alle Verteilungen werden automatisch berechnet und visualisiert
 if 'einheit' in st.session_state:
+    # Falls die Einheit gewechselt wird, sollen die Figures gelöscht werden
+    if 'einheit' in st.session_state:
+        if (st.session_state.einheit == "Volumen in m³" and 'm_achsen' not in st.session_state) or \
+           (st.session_state.einheit == "Masse in t (Dichte erforderlich)" and 'm_achsen' not in st.session_state):
+            st.session_state.pop("fig2", None)  # Entfernt fig2, falls es existiert
     if st.session_state.einheit == "Volumen in m³" and 'm_achsen' in st.session_state:
         fig2 = passe_verteilungen_an_und_visualisiere(st.session_state.m_achsen, ['genexpon', 'expon', 'powerlaw'])
         st.session_state.fig2 = fig2
