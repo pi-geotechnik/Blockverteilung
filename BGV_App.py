@@ -192,7 +192,6 @@ st.header("Blockgrößenverteilung")
 
 # URL der Beispiel-Datei auf GitHub
 example_file_1_url = "https://github.com/pi-geotechnik/Blockverteilung/raw/main/blocklist_dachsteinkalk_m3.txt"
-example_file_2_url = "https://github.com/pi-geotechnik/Blockverteilung/raw/main/blocklist_langau_paragneis_m3.txt" 
 example_file_3_url = "https://github.com/pi-geotechnik/Blockverteilung/raw/main/blocklist_mils_rauwacke_m3.txt" 
 example_file_4_url = "https://github.com/pi-geotechnik/Blockverteilung/raw/main/blocklist_rossatz_orthogneis_m3.txt" 
 example_file_5_url = "https://github.com/pi-geotechnik/Blockverteilung/raw/main/blocklist_vals_schiefer_m3.txt" 
@@ -264,48 +263,7 @@ if einheit == "Volumen in m³":
         else:
             st.error("Fehler beim Laden der Datei.")
             
-    # Button für die Auswahl der Beispiel-Datei 2 Paragneis
-    if st.button("Beispiel-Datei 'Paragneis' laden"):
-        # Beispiel-Datei aus GitHub laden
-        response = requests.get(example_file_2_url)
-        
-        if response.status_code == 200:
-            # Erstelle ein 'BytesIO'-Objekt aus der heruntergeladenen Datei, um sie wie eine hochgeladene Datei zu behandeln
-            example_file_content = response.content
-            uploaded_file = io.BytesIO(example_file_content)  # Dies ist die "hochgeladene" Beispiel-Datei
-            
-            # Speichern der Datei im session_state
-            st.session_state.uploaded_file = uploaded_file
-            #st.write(st.session_state.uploaded_file)
-            
-            # Zeige die erfolgreiche Meldung an
-            st.success("Die Beispiel-Datei 'Paragneis' wurde erfolgreich geladen.")
-            
-            # Verarbeite die Datei, als ob sie über den file_uploader hochgeladen wurde
-            file_content = uploaded_file.read().decode("utf-8")  # Beispiel: als Textdatei lesen
-            st.text_area("Inhalt der Datei:", file_content, height=200)  # Zeige den Inhalt der Datei als Text an
-            
-            try:
-                # Text in Zahlen (m³) umwandeln
-                werte_liste = [float(val.strip()) for val in file_content.splitlines() if val.strip().replace(".", "", 1).isdigit()]
-                
-                # Filtere nur Werte mit genau drei Dezimalstellen und entferne 0.00-Werte
-                werte = [wert for wert in werte_liste if wert >= 0.000]
-                
-                # Sortieren der Werte in aufsteigender Reihenfolge
-                werte.sort()
-                
-                # Anzahl der Werte ausgeben
-                st.write(f"Anzahl der Blöcke: {len(werte)}")
-                
-                # Berechnung der dritten Wurzel (Achsen in Metern)
-                m_achsen = [berechne_dritte_wurzel(val) for val in werte]
-                
-                # Speichern von m_achsen in session_state für spätere Verwendung
-                st.session_state.m_achsen = m_achsen
-                
-            except Exception as e:
-                st.error(f"Fehler bei der Verarbeitung der Daten: {e}")
+
         
         else:
             st.error("Fehler beim Laden der Datei.")
@@ -355,7 +313,6 @@ if einheit == "Volumen in m³":
         
         else:
             st.error("Fehler beim Laden der Datei.")
-    
     
     # Button für die Auswahl der Beispiel-Datei 4 Orthogneis
     if st.button("Beispiel-Datei 'Orthogneis' laden"):
@@ -485,13 +442,7 @@ if einheit == "Volumen in m³":
             st.error(f"Fehler bei der Verarbeitung der Daten: {e}")
 
       
-    # Wenn eine Datei im session_state gespeichert wurde, zeige sie an
-    #if 'uploaded_file' in st.session_state and st.session_state.uploaded_file is not None:
-    #    st.write("Aktuell hochgeladene Datei:", st.session_state.uploaded_file.name)
-    #    st.write("Wenn Sie die Beispiel-Datei laden wollen nachdem Sie bereits eine 'Eigene Datei mit m³-Werten' hochgeladen haben, müssen Sie Ihre Eigene Datei zuerst entfernen und dann die Beispiel-Datei laden!")
-    #else:
-    #    st.write("Keine Datei hochgeladen.")
-        
+       
 
 # Datei-Upload für Masse in t (Dichte erforderlich)
 if einheit == "Masse in t (Dichte erforderlich)":
