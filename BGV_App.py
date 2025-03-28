@@ -260,7 +260,7 @@ if einheit == "Volumen in m³":
             st.error("Fehler beim Laden der Datei. Überprüfen Sie die URL oder das Netzwerk.")
     
     # Falls der Benutzer eine Datei hochladen möchte
-    uploaded_file = st.file_uploader("Liste mit m³ hochladen", type=["txt"])
+    uploaded_file = st.file_uploader("Eigene Liste mit m³-Werten hochladen", type=["txt"])
     
     if uploaded_file is not None:
         # Datei verarbeiten wie oben
@@ -292,7 +292,7 @@ if einheit == "Volumen in m³":
 
 # Datei-Upload für Masse in t (Dichte erforderlich)
 if einheit == "Masse in t (Dichte erforderlich)":
-    uploaded_file = st.file_uploader("Wählen Sie eine Textdatei mit t-Werten aus", type=["txt"])
+    uploaded_file = st.file_uploader("Eigene Liste mit t-Werten hochladen", type=["txt"])
     if uploaded_file is not None:
         text = uploaded_file.read().decode("utf-8")
         st.text_area("Inhalt der Datei:", text, height=200)
@@ -329,7 +329,7 @@ if einheit == "Masse in t (Dichte erforderlich)":
 
 
 # Darstellung
-st.subheader("Visualisierung der Wahrscheinlichkeitsdichte und der kumulativen Wahrscheinlichkeit")
+st.subheader("Visualisierung der Wahrscheinlichkeitsverteilung")
 
 # Berechnung und Visualisierung
 if 'einheit' in st.session_state:
@@ -348,7 +348,7 @@ if 'fig1' in st.session_state:
 
 
 # Anpassung einer Wahrscheinlichkeitsfunktion
-st.subheader("Anpassung und Visualisierung von Wahrscheinlichkeitsfunktionen")
+st.subheader("Anpassung von Wahrscheinlichkeitsfunktionen")
 
 # Alle Verteilungen werden automatisch berechnet und visualisiert
 if 'einheit' in st.session_state:
@@ -407,7 +407,16 @@ if 'm_achsen' in st.session_state:
                 "genexpon [m³]": L1s3,
                 "powerlaw [m³]": L4s3
             })
-            st.write(df1)
+            # Entferne die Indexspalte und zeige die Tabelle ohne den Index
+            df1_no_index = df1.to_string(index=False)
+            # Zeige das DataFrame ohne Index
+            st.write(df1_no_index)
+            # CSS-Styling für bestimmte Zeilen (5.-8. Zeile fett drucken)
+            # Setze die Formatierung von Zeilen 5 bis 8 auf fett
+            styled_df = df1.style.apply(lambda x: ['font-weight: bold' if 5 <= i <= 8 else '' for i in range(len(x))], axis=1)
+            # Zeige das formatierte DataFrame
+            st.dataframe(styled_df)
+
         except Exception as e:
             if 'einheit' in st.session_state:
                 # Wenn sich die Einheit ändert (von m³ zu Tonnen oder umgekehrt)
