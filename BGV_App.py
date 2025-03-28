@@ -190,7 +190,7 @@ st.title("Willkommen bei pi!")
 st.header("Blockgrößenverteilung")
 
 # URL der Beispiel-Datei auf GitHub
-example_file_url = "https://github.com/pi-geotechnik/Blockverteilung/raw/main/example_blocks_m3.txt" 
+example_file_url = "https://github.com/pi-geotechnik/Blockverteilung/raw/main/Bloecke_Dachsteinkalk.txt" 
 
 # Auswahl der Einheit
 einheit = st.selectbox("Wählen Sie die Einheit der Eingabedaten:", ["Volumen in m³", "Masse in t (Dichte erforderlich)"])
@@ -212,49 +212,67 @@ if 'einheit' in st.session_state and st.session_state.einheit != einheit:
 st.session_state.einheit = einheit  # Speichert die ausgewählte Einheit
 
 
-# Falls m³ gewählt wurde, zeige die Option für eine Beispiel-Datei an
 if einheit == "Volumen in m³":
-    file_option = st.radio(
-        "Wählen Sie eine Option:",
-        ("Beispiel-Datei mit m³ verwenden (kommt bald)", "Liste mit m³ hochladen")
-    )
-    
-    uploaded_file = None
-    
-    # Wenn der Benutzer die m³ Beispiel-Datei verwenden möchte
-    if file_option == "Beispiel-Datei mir m³ verwenden":
-        st.write("Sie haben die Beispiel-Datei für m³ ausgewählt. Diese wird nun als hochgeladene Datei behandelt.")
-        
+    # Button für die Auswahl der Beispiel-Datei
+    if st.button("Beispiel-Datei 'Dachsteinkalk' verwenden"):
         # Beispiel-Datei aus GitHub laden
         response = requests.get(example_file_url)
         
         if response.status_code == 200:
             # Erstelle ein 'BytesIO'-Objekt aus der heruntergeladenen Datei, um sie wie eine hochgeladene Datei zu behandeln
             example_file_content = response.content
-            uploaded_file = BytesIO(example_file_content)  # Dies ist die "hochgeladene" Beispiel-Datei
+            uploaded_file = io.BytesIO(example_file_content)  # Dies ist die "hochgeladene" Beispiel-Datei
             
-            # Nun kann die heruntergeladene Datei genauso weiterverarbeitet werden wie eine hochgeladene Datei
-            st.write("Die Beispiel-Datei wurde erfolgreich heruntergeladen.")
+            # Speichern der Datei im session_state
+            st.session_state.uploaded_file = uploaded_file
             
+            # Zeige die erfolgreiche Meldung an
+            st.success("Die Beispiel-Datei 'Dachsteinkalk' wurde erfolgreich geladen.")
+            
+            # Verarbeite die Datei, als ob sie über den file_uploader hochgeladen wurde
+            file_content = uploaded_file.read().decode("utf-8")  # Beispiel: als Textdatei lesen
+            st.text_area("Inhalt der Datei:", file_content, height=200)  # Zeige den Inhalt der Datei als Text an
+            
+            try:
+                # Text in Zahlen (m³) umwandeln
+                werte_liste = [float(val.strip()) for val in file_content.splitlines() if val.strip().replace(".", "", 1).isdigit()]
+                
+                # Filtere nur Werte mit genau drei Dezimalstellen und entferne 0.00-Werte
+                werte = [wert for wert in werte_liste if wert >= 0.000]
+                
+                # Sortieren der Werte in aufsteigender Reihenfolge
+                werte.sort()
+                
+                # Anzahl der Werte ausgeben
+                st.write(f"Anzahl der Blöcke: {len(werte)}")
+                
+                # Berechnung der dritten Wurzel (Achsen in Metern)
+                m_achsen = [berechne_dritte_wurzel(val) for val in werte]
+                
+                # Speichern von m_achsen in session_state für spätere Verwendung
+                st.session_state.m_achsen = m_achsen
+                
+            except Exception as e:
+                st.error(f"Fehler bei der Verarbeitung der Daten: {e}")
+        
         else:
-            st.error("Fehler beim Laden der Beispiel-Datei.")
+            st.error("Fehler beim Laden der Datei. Überprüfen Sie die URL oder das Netzwerk.")
     
-    # Wenn der Benutzer "m³ hochladen" wählt
-    elif file_option == "Liste mit m³ hochladen":
-        uploaded_file = st.file_uploader("Wählen Sie eine m³-Datei zum Hochladen", type=["txt"])
+    # Falls der Benutzer eine Datei hochladen möchte
+    uploaded_file = st.file_uploader("Liste mit m³ hochladen", type=["txt"])
     
-    # Überprüfen, ob eine Datei hochgeladen wurde
     if uploaded_file is not None:
-        text = uploaded_file.read().decode("utf-8")
-        st.text_area("Inhalt der Datei:", text, height=200)
-     
+        # Datei verarbeiten wie oben
+        file_content = uploaded_file.read().decode("utf-8")
+        st.text_area("Inhalt der Datei:", file_content, height=200)
+        
         try:
             # Text in Zahlen (m³) umwandeln
-            werte_liste = [float(val.strip()) for val in text.splitlines() if val.strip().replace(".", "", 1).isdigit()]
-              
+            werte_liste = [float(val.strip()) for val in file_content.splitlines() if val.strip().replace(".", "", 1).isdigit()]
+            
             # Filtere nur Werte mit genau drei Dezimalstellen und entferne 0.00-Werte
             werte = [wert for wert in werte_liste if wert >= 0.000]
-                       
+            
             # Sortieren der Werte in aufsteigender Reihenfolge
             werte.sort()
             
@@ -263,13 +281,8 @@ if einheit == "Volumen in m³":
             
             # Berechnung der dritten Wurzel (Achsen in Metern)
             m_achsen = [berechne_dritte_wurzel(val) for val in werte]
-            # st.write("Achsen in Metern:")
-            # st.write(m_achsen)
             
-            # Visualisierung der Histogramme
-            # visualisiere_histogramm_m3_und_m(m_achsen, werte)
-            
-            # Speichere m_achsen in session_state für spätere Verwendung
+            # Speichern von m_achsen in session_state für spätere Verwendung
             st.session_state.m_achsen = m_achsen
             
         except Exception as e:
