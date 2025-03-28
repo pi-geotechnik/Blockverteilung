@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import requests
+import io
 from io import BytesIO
 from scipy import stats
 from PIL import Image # für das Logo
