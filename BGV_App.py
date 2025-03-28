@@ -218,7 +218,7 @@ if einheit == "Volumen in m³":
     if st.button("Beispiel-Datei 'Dachsteinkalk' laden"):
         # Entferne die hochgeladene Datei aus der session_state, falls vorhanden
         if "uploaded_file" in st.session_state:
-            del st.session_state.uploaded_file  # Löscht die hochgeladene Datei
+            del st.session_state.uploaded_file  # Löscht eine zuvor hochgeladene Datei
         # Beispiel-Datei aus GitHub laden
         response = requests.get(example_file_url)
         
@@ -226,17 +226,13 @@ if einheit == "Volumen in m³":
             # Erstelle ein 'BytesIO'-Objekt aus der heruntergeladenen Datei, um sie wie eine hochgeladene Datei zu behandeln
             example_file_content = response.content
             uploaded_file = io.BytesIO(example_file_content)  # Dies ist die "hochgeladene" Beispiel-Datei
-
-            # Zeige die erfolgreiche Meldung an
-            st.success("Die Beispiel-Datei 'Dachsteinkalk' wurde erfolgreich geladen.")
-            st.write(st.session_state.uploaded_file)
-            
-            if "uploaded_file" in st.session_state:
-                st.warning("Achtung: eine bereits zuvor hochgeladene 'Eigene Liste mit m³-Werten' muss entfernt (Klick auf 'x') und die Beispiel-Datei neu geladen werden!")
             
             # Speichern der Datei im session_state
             st.session_state.uploaded_file = uploaded_file
             st.write(st.session_state.uploaded_file)
+            
+            # Zeige die erfolgreiche Meldung an
+            st.success("Die Beispiel-Datei 'Dachsteinkalk' wurde erfolgreich geladen.")
             
             # Verarbeite die Datei, als ob sie über den file_uploader hochgeladen wurde
             file_content = uploaded_file.read().decode("utf-8")  # Beispiel: als Textdatei lesen
@@ -271,6 +267,9 @@ if einheit == "Volumen in m³":
     uploaded_file = st.file_uploader("Eigene Liste mit m³-Werten hochladen:", type=["txt"])
     
     if uploaded_file is not None:
+        # Entferne die hochgeladene Datei aus der session_state, falls vorhanden
+        if "uploaded_file" in st.session_state:
+            del st.session_state.uploaded_file  # Löscht eine zuvor hochgeladene Datei
         # Speichern der hochgeladenen Datei im session_state
         st.session_state.uploaded_file = uploaded_file
         st.write(st.session_state.uploaded_file)
