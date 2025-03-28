@@ -226,13 +226,15 @@ if einheit == "Volumen in m³":
             # Erstelle ein 'BytesIO'-Objekt aus der heruntergeladenen Datei, um sie wie eine hochgeladene Datei zu behandeln
             example_file_content = response.content
             uploaded_file = io.BytesIO(example_file_content)  # Dies ist die "hochgeladene" Beispiel-Datei
-            
-            # Speichern der Datei im session_state
-            st.session_state.uploaded_file = uploaded_file
+
             
             # Zeige die erfolgreiche Meldung an
             st.success("Die Beispiel-Datei 'Dachsteinkalk' wurde erfolgreich geladen.")
-            st.warning("Achtung: eine bereits zuvor hochgeladene 'Eigene Liste mit m³-Werten' muss entfernt (Klick auf 'x') und die Beispiel-Datei neu geladen werden!")
+            if "uploaded_file" in st.session_state:
+                st.warning("Achtung: eine bereits zuvor hochgeladene 'Eigene Liste mit m³-Werten' muss entfernt (Klick auf 'x') und die Beispiel-Datei neu geladen werden!")
+            
+            # Speichern der Datei im session_state
+            st.session_state.uploaded_file = uploaded_file
             
             # Verarbeite die Datei, als ob sie über den file_uploader hochgeladen wurde
             file_content = uploaded_file.read().decode("utf-8")  # Beispiel: als Textdatei lesen
