@@ -413,9 +413,9 @@ if 'm_achsen' in st.session_state:
             st.write(df1_no_index)
             # CSS-Styling für bestimmte Zeilen (5.-8. Zeile fett drucken)
             # Setze die Formatierung von Zeilen 5 bis 8 auf fett
-            styled_df = df1.style.apply(lambda x: ['font-weight: bold' if 5 <= i <= 8 else '' for i in range(len(x))], axis=1)
+            #styled_df = df1.style.apply(lambda x: ['font-weight: bold' if 5 <= i <= 8 else '' for i in range(len(x))], axis=1)
             # Zeige das formatierte DataFrame
-            st.dataframe(styled_df)
+            #st.dataframe(styled_df)
 
         except Exception as e:
             if 'einheit' in st.session_state:
