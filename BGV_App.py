@@ -427,4 +427,4 @@ if 'm_achsen' in st.session_state:
                 if 'm_achsen' not in st.session_state:
                     st.error("Blockliste erforderlich. Bitte auswählen oder hochladen!")
                 else:
-                    st.error(f"Fehler bei der Berechnung der Perzentilen: {e}")
+                    st.error(f"Bitte laden Sie die Beispiel-Datei neu.")
