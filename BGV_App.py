@@ -346,7 +346,7 @@ if 'm_achsen' in st.session_state:
     percentiles = [0, 25, 50, 75, 95, 96, 97, 98, 99, 100]
 
     # Sicherstellen, dass alle notwendigen Parameter gespeichert sind
-    if all(param in st.session_state for param in ['a1', 'b1', 'c1', 'loc1', 'scale1', 'shape2', 'loc2', 'scale2', 'loc3', 'scale3', 'a4', 'loc4', 'scale4']):
+    if all(param in st.session_state for param in ['a1', 'b1', 'c1', 'loc1', 'scale1', 'loc3', 'scale3', 'a4', 'loc4', 'scale4']): # 'shape2', 'loc2', 'scale2', 
         try:
             # Berechnung der Perzentile für jede Verteilung
             L1s = calculate_percentiles(stats.genexpon, percentiles, 
