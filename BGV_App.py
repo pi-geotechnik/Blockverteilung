@@ -264,7 +264,7 @@ if einheit == "Volumen in m³":
             st.error("Fehler beim Laden der Datei. Überprüfen Sie die URL oder das Netzwerk.")
     
     # Falls der Benutzer eine Datei hochladen möchte
-    uploaded_file = st.file_uploader("Eigene Liste mit m³-Werten hochladen", type=["txt"])
+    uploaded_file = st.file_uploader("Eigene Liste mit m³-Werten hochladen:", type=["txt"])
     
     if uploaded_file is not None:
         # Speichern der hochgeladenen Datei im session_state
@@ -298,7 +298,7 @@ if einheit == "Volumen in m³":
 
 # Datei-Upload für Masse in t (Dichte erforderlich)
 if einheit == "Masse in t (Dichte erforderlich)":
-    uploaded_file = st.file_uploader("Eigene Liste mit t-Werten hochladen", type=["txt"])
+    uploaded_file = st.file_uploader("Eigene Liste mit t-Werten hochladen:", type=["txt"])
     if uploaded_file is not None:
         text = uploaded_file.read().decode("utf-8")
         st.text_area("Inhalt der Datei:", text, height=200)
