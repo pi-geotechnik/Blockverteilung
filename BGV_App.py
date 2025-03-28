@@ -229,7 +229,7 @@ if einheit == "Volumen in m³":
             
             # Speichern der Datei im session_state
             st.session_state.uploaded_file = uploaded_file
-            st.write(st.session_state.uploaded_file)
+            #st.write(st.session_state.uploaded_file)
             
             # Zeige die erfolgreiche Meldung an
             st.success("Die Beispiel-Datei 'Dachsteinkalk' wurde erfolgreich geladen.")
@@ -274,7 +274,7 @@ if einheit == "Volumen in m³":
             del st.session_state.uploaded_file  # Löscht eine zuvor hochgeladene Datei
         # Speichern der hochgeladenen Datei im session_state
         st.session_state.uploaded_file = uploaded_file
-        st.write(st.session_state.uploaded_file)
+        #st.write(st.session_state.uploaded_file)
         # Datei verarbeiten wie oben
         file_content = uploaded_file.read().decode("utf-8")
         st.text_area("Inhalt der Datei:", file_content, height=200)
@@ -301,15 +301,11 @@ if einheit == "Volumen in m³":
         except Exception as e:
             st.error(f"Fehler bei der Verarbeitung der Daten: {e}")
 
-    if uploaded_file: 
-        # Wenn eine Datei hochgeladen wird, speichern wir sie in session_state
-        st.session_state.uploaded_file = uploaded_file
-        st.write("Datei erfolgreich hochgeladen!")
-        
+      
     # Wenn eine Datei im session_state gespeichert wurde, zeige sie an
     if "uploaded_file" in st.session_state:
         st.write("Aktuell hochgeladene Datei:", st.session_state.uploaded_file.name)
-
+        st.write("Wenn Sie die Beispiel-Datei laden wollen nachdem Sie bereits eine 'Eigene Liste mit m³-Werten' hochgeladen haben, müssen Sie Ihre Eigene Liste zuerst entfernen und dann die Beispiel-Datei laden!)
 
 # Datei-Upload für Masse in t (Dichte erforderlich)
 if einheit == "Masse in t (Dichte erforderlich)":
