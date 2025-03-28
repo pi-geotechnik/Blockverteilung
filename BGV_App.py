@@ -262,7 +262,7 @@ if einheit == "Volumen in m³":
             
     
     # Falls der Benutzer eine Datei hochladen möchte
-    uploaded_file = st.file_uploader("Eigene Liste mit m³-Werten hochladen:", type=["txt"])
+    uploaded_file = st.file_uploader("Eigene Datei mit m³-Werten hochladen:", type=["txt"])
     
     if uploaded_file is not None:
         # Speichern der hochgeladenen Datei im session_state
@@ -299,14 +299,14 @@ if einheit == "Volumen in m³":
     # Wenn eine Datei im session_state gespeichert wurde, zeige sie an
     #if 'uploaded_file' in st.session_state and st.session_state.uploaded_file is not None:
     #    st.write("Aktuell hochgeladene Datei:", st.session_state.uploaded_file.name)
-    #    st.write("Wenn Sie die Beispiel-Datei laden wollen nachdem Sie bereits eine 'Eigene Liste mit m³-Werten' hochgeladen haben, müssen Sie Ihre Eigene Liste zuerst entfernen und dann die Beispiel-Datei laden!")
+    #    st.write("Wenn Sie die Beispiel-Datei laden wollen nachdem Sie bereits eine 'Eigene Datei mit m³-Werten' hochgeladen haben, müssen Sie Ihre Eigene Datei zuerst entfernen und dann die Beispiel-Datei laden!")
     #else:
     #    st.write("Keine Datei hochgeladen.")
         
 
 # Datei-Upload für Masse in t (Dichte erforderlich)
 if einheit == "Masse in t (Dichte erforderlich)":
-    uploaded_file = st.file_uploader("Eigene Liste mit t-Werten hochladen:", type=["txt"])
+    uploaded_file = st.file_uploader("Eigene Datei mit t-Werten hochladen:", type=["txt"])
     if uploaded_file is not None:
         text = uploaded_file.read().decode("utf-8")
         st.text_area("Inhalt der Datei:", text, height=200)
