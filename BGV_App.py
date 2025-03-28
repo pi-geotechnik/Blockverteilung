@@ -232,6 +232,7 @@ if einheit == "Volumen in m³":
             
             # Zeige die erfolgreiche Meldung an
             st.success("Die Beispiel-Datei 'Dachsteinkalk' wurde erfolgreich geladen.")
+            st.warning("Achtung: Bereits zuvor hochgeladene 'Eigene Listen mit m³-Werten' müssen entfernt werden!")
             
             # Verarbeite die Datei, als ob sie über den file_uploader hochgeladen wurde
             file_content = uploaded_file.read().decode("utf-8")  # Beispiel: als Textdatei lesen
