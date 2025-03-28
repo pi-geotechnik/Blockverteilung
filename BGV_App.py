@@ -133,17 +133,17 @@ def passe_verteilungen_an_und_visualisiere(m_achsen, ausgewählte_verteilungen):
         st.session_state.loc1 = loc1
         st.session_state.scale1 = scale1
                 
-    if 'lognorm' in ausgewählte_verteilungen:
-        shape2, loc2, scale2 = stats.lognorm.fit(m_achsen, floc=0)
-        X2 = np.linspace(stats.lognorm.ppf(0.001, shape2, loc=loc2, scale=scale2), 
-                         stats.lognorm.ppf(0.999, shape2, loc=loc2, scale=scale2), len(m_achsen))
-        ax4.plot(X2, stats.lognorm.pdf(X2, shape2, loc=loc2, scale=scale2), '#00008B', lw=1.0, alpha=0.7, label='lognorm pdf')
-        ax5.plot(X2, stats.lognorm.cdf(X2, shape2, loc=loc2, scale=scale2), '#00008B', lw=1.0, alpha=0.7, label='lognorm cdf')
+    #if 'lognorm' in ausgewählte_verteilungen:
+    #    shape2, loc2, scale2 = stats.lognorm.fit(m_achsen, floc=0)
+    #    X2 = np.linspace(stats.lognorm.ppf(0.001, shape2, loc=loc2, scale=scale2), 
+    #                     stats.lognorm.ppf(0.999, shape2, loc=loc2, scale=scale2), len(m_achsen))
+    #    ax4.plot(X2, stats.lognorm.pdf(X2, shape2, loc=loc2, scale=scale2), '#00008B', lw=1.0, alpha=0.7, label='lognorm pdf')
+    #    ax5.plot(X2, stats.lognorm.cdf(X2, shape2, loc=loc2, scale=scale2), '#00008B', lw=1.0, alpha=0.7, label='lognorm cdf')
 
         # Speichern der Parameter in session_state
-        st.session_state.shape2 = shape2
-        st.session_state.loc2 = loc2
-        st.session_state.scale2 = scale2
+    #    st.session_state.shape2 = shape2
+    #    st.session_state.loc2 = loc2
+    #    st.session_state.scale2 = scale2
         
     if 'powerlaw' in ausgewählte_verteilungen:
         a4, loc4, scale4 = stats.powerlaw.fit(m_achsen)
@@ -333,7 +333,7 @@ st.subheader("Anpassung und Visualisierung von Wahrscheinlichkeitsfunktionen")
 # Alle Verteilungen werden automatisch berechnet und visualisiert
 if 'einheit' in st.session_state:
     if st.session_state.einheit == "Volumen in m³" and 'm_achsen' in st.session_state:
-        fig2 = passe_verteilungen_an_und_visualisiere(st.session_state.m_achsen, ['genexpon', 'lognorm', 'expon', 'powerlaw'])
+        fig2 = passe_verteilungen_an_und_visualisiere(st.session_state.m_achsen, ['genexpon', 'expon', 'powerlaw'])
         st.session_state.fig2 = fig2
     elif st.session_state.einheit == "Masse in t (Dichte erforderlich)" and 'm_achsen' in st.session_state:
         # Aufruf der Funktion zur Berechnung und Visualisierung mit m_achsen
