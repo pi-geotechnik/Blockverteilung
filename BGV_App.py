@@ -261,7 +261,9 @@ if einheit == "Volumen in m³":
                 st.error(f"Fehler bei der Verarbeitung der Daten: {e}")
         
         else:
-            st.error("Fehler beim Laden der Datei. Überprüfen Sie die URL oder das Netzwerk.")
+            st.error("Fehler beim Laden der Datei.")
+            
+  
     
     # Falls der Benutzer eine Datei hochladen möchte
     uploaded_file = st.file_uploader("Eigene Liste mit m³-Werten hochladen:", type=["txt"])
@@ -298,6 +300,15 @@ if einheit == "Volumen in m³":
             
         except Exception as e:
             st.error(f"Fehler bei der Verarbeitung der Daten: {e}")
+
+    if uploaded_file: 
+        # Wenn eine Datei hochgeladen wird, speichern wir sie in session_state
+        st.session_state.uploaded_file = uploaded_file
+        st.write("Datei erfolgreich hochgeladen!")
+        
+    # Wenn eine Datei im session_state gespeichert wurde, zeige sie an
+    if "uploaded_file" in st.session_state:
+        st.write("Aktuell hochgeladene Datei:", st.session_state.uploaded_file.name)
 
 
 # Datei-Upload für Masse in t (Dichte erforderlich)
