@@ -206,7 +206,7 @@ if 'einheit' in st.session_state and st.session_state.einheit != einheit:
     if 'fig2' in st.session_state:
         del st.session_state['fig2']
     # Optional: Anzeige einer Nachricht, dass m_achsen gelöscht wurde
-    st.warning("Bitte eine Blockdatei hochladen. Achtung: Bitte stellen Sie sicher, dass alle Zahlen in der hochgeladenen Textdatei den Punkt ('.') statt des Kommas (',') als Dezimaltrennzeichen verwenden!")
+    st.warning("Bitte laden Sie eine Blockdatei hoch. Achtung: Bitte stellen Sie sicher, dass alle Zahlen in der hochgeladenen Textdatei den Punkt ('.') statt des Kommas (',') als Dezimaltrennzeichen verwenden!")
     
 # Speichern der Auswahl im session_state
 st.session_state.einheit = einheit  # Speichert die ausgewählte Einheit
