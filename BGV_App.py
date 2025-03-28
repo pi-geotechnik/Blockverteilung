@@ -410,8 +410,10 @@ if 'm_achsen' in st.session_state:
             # CSS-Styling für bestimmte Zeilen (5.-8. Zeile fett drucken)
             # Setze die Formatierung von Zeilen 5 bis 8 auf fett
             styled_df = df1.style.apply(lambda x: ['font-weight: bold' if 5 <= i <= 8 else '' for i in range(len(x))], axis=1)
-            # Zeige das formatierte DataFrame
-            st.dataframe(styled_df)
+
+            # Entferne die Indexspalte und zeige den DataFrame ohne den Index
+            # Wir nutzen "st.dataframe" und stellen sicher, dass der Index nicht angezeigt wird
+            st.dataframe(styled_df.hide(axis="index"))
 
         except Exception as e:
             if 'einheit' in st.session_state:
