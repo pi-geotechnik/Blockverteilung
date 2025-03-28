@@ -216,9 +216,6 @@ st.session_state.einheit = einheit  # Speichert die ausgewählte Einheit
 if einheit == "Volumen in m³":
     # Button für die Auswahl der Beispiel-Datei
     if st.button("Beispiel-Datei 'Dachsteinkalk' laden"):
-        # Entferne die hochgeladene Datei aus der session_state, falls vorhanden
-        if "uploaded_file" in st.session_state:
-            del st.session_state.uploaded_file  # Löscht eine zuvor hochgeladene Datei
         # Beispiel-Datei aus GitHub laden
         response = requests.get(example_file_url)
         
@@ -263,19 +260,15 @@ if einheit == "Volumen in m³":
         else:
             st.error("Fehler beim Laden der Datei.")
             
-  
     
     # Falls der Benutzer eine Datei hochladen möchte
     uploaded_file = st.file_uploader("Eigene Liste mit m³-Werten hochladen:", type=["txt"])
     
     if uploaded_file is not None:
-        # Entferne die hochgeladene Datei aus der session_state, falls vorhanden
-        if "uploaded_file" in st.session_state:
-            del st.session_state.uploaded_file  # Löscht eine zuvor hochgeladene Datei
         # Speichern der hochgeladenen Datei im session_state
         st.session_state.uploaded_file = uploaded_file
         #st.write(st.session_state.uploaded_file)
-        # Datei verarbeiten wie oben
+
         file_content = uploaded_file.read().decode("utf-8")
         st.text_area("Inhalt der Datei:", file_content, height=200)
         
@@ -303,9 +296,12 @@ if einheit == "Volumen in m³":
 
       
     # Wenn eine Datei im session_state gespeichert wurde, zeige sie an
-    if "uploaded_file" in st.session_state:
+    if 'uploaded_file' in st.session_state and st.session_state.uploaded_file is not None:
         st.write("Aktuell hochgeladene Datei:", st.session_state.uploaded_file.name)
         st.write("Wenn Sie die Beispiel-Datei laden wollen nachdem Sie bereits eine 'Eigene Liste mit m³-Werten' hochgeladen haben, müssen Sie Ihre Eigene Liste zuerst entfernen und dann die Beispiel-Datei laden!")
+    else:
+        st.write("Keine Datei hochgeladen.")
+        
 
 # Datei-Upload für Masse in t (Dichte erforderlich)
 if einheit == "Masse in t (Dichte erforderlich)":
