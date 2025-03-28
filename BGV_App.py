@@ -215,7 +215,7 @@ st.session_state.einheit = einheit  # Speichert die ausgewählte Einheit
 
 if einheit == "Volumen in m³":
     # Button für die Auswahl der Beispiel-Datei
-    if st.button("Beispiel-Datei 'Dachsteinkalk' verwenden"):
+    if st.button("Beispiel-Datei 'Dachsteinkalk' hochladen"):
         # Entferne die hochgeladene Datei aus der session_state, falls vorhanden
         if "uploaded_file" in st.session_state:
             del st.session_state.uploaded_file  # Löscht die hochgeladene Datei
