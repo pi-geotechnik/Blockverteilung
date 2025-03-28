@@ -216,6 +216,9 @@ st.session_state.einheit = einheit  # Speichert die ausgewählte Einheit
 if einheit == "Volumen in m³":
     # Button für die Auswahl der Beispiel-Datei
     if st.button("Beispiel-Datei 'Dachsteinkalk' verwenden"):
+        # Entferne die hochgeladene Datei aus der session_state, falls vorhanden
+        if "uploaded_file" in st.session_state:
+            del st.session_state.uploaded_file  # Löscht die hochgeladene Datei
         # Beispiel-Datei aus GitHub laden
         response = requests.get(example_file_url)
         
@@ -263,6 +266,8 @@ if einheit == "Volumen in m³":
     uploaded_file = st.file_uploader("Eigene Liste mit m³-Werten hochladen", type=["txt"])
     
     if uploaded_file is not None:
+        # Speichern der hochgeladenen Datei im session_state
+        st.session_state.uploaded_file = uploaded_file
         # Datei verarbeiten wie oben
         file_content = uploaded_file.read().decode("utf-8")
         st.text_area("Inhalt der Datei:", file_content, height=200)
