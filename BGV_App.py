@@ -262,12 +262,7 @@ if einheit == "Volumen in m³":
         
         else:
             st.error("Fehler beim Laden der Datei.")
-            
-
-        
-        else:
-            st.error("Fehler beim Laden der Datei.")
-    
+   
     # Button für die Auswahl der Beispiel-Datei 3 Rauwacke
     if st.button("Beispiel-Datei 'Rauwacke' laden"):
         # Beispiel-Datei aus GitHub laden
