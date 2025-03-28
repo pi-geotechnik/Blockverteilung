@@ -296,11 +296,11 @@ if einheit == "Volumen in m³":
 
       
     # Wenn eine Datei im session_state gespeichert wurde, zeige sie an
-    if 'uploaded_file' in st.session_state and st.session_state.uploaded_file is not None:
-        st.write("Aktuell hochgeladene Datei:", st.session_state.uploaded_file.name)
-        st.write("Wenn Sie die Beispiel-Datei laden wollen nachdem Sie bereits eine 'Eigene Liste mit m³-Werten' hochgeladen haben, müssen Sie Ihre Eigene Liste zuerst entfernen und dann die Beispiel-Datei laden!")
-    else:
-        st.write("Keine Datei hochgeladen.")
+    #if 'uploaded_file' in st.session_state and st.session_state.uploaded_file is not None:
+    #    st.write("Aktuell hochgeladene Datei:", st.session_state.uploaded_file.name)
+    #    st.write("Wenn Sie die Beispiel-Datei laden wollen nachdem Sie bereits eine 'Eigene Liste mit m³-Werten' hochgeladen haben, müssen Sie Ihre Eigene Liste zuerst entfernen und dann die Beispiel-Datei laden!")
+    #else:
+    #    st.write("Keine Datei hochgeladen.")
         
 
 # Datei-Upload für Masse in t (Dichte erforderlich)
