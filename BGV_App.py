@@ -268,6 +268,7 @@ if einheit == "Volumen in m³":
         # Speichern der hochgeladenen Datei im session_state
         st.session_state.uploaded_file = uploaded_file
         #st.write(st.session_state.uploaded_file)
+        st.write("Dieses file muss gelöscht werden, bevor Sie die Beispiel-Datei 'Dachsteinkalk' laden.")
 
         file_content = uploaded_file.read().decode("utf-8")
         st.text_area("Inhalt der Datei:", file_content, height=200)
