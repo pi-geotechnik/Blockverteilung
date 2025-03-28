@@ -382,4 +382,7 @@ if 'm_achsen' in st.session_state:
             })
             st.write(df1)
         except Exception as e:
-            st.error(f"Fehler bei der Berechnung der Perzentile: {e}")
+            if 'm³' in st.session_state.get("einheit", ""):  # Falls die Einheit m³ ist
+                st.error("Blockliste erforderlich. Bitte auswählen oder hochladen!")
+            else:
+                st.error(f"Fehler bei der Berechnung der Perzentile: {e}")
