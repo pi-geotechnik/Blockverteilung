@@ -195,6 +195,19 @@ example_file_url = "https://github.com/pi-geotechnik/Blockverteilung/raw/main/ex
 # Auswahl der Einheit
 einheit = st.selectbox("Wählen Sie die Einheit der Eingabedaten:", ["Volumen in m³", "Masse in t (Dichte erforderlich)"])
 
+# Überprüfen, ob sich die Einheit geändert hat
+if 'einheit' in st.session_state and st.session_state.einheit != einheit:
+    # Löschen von m_achsen, falls es bereits existiert
+    if 'm_achsen' in st.session_state:
+        del st.session_state['m_achsen']
+    # Löschen von vorhandenen Figuren, falls sie im session_state existieren
+    if 'fig1' in st.session_state:
+        del st.session_state['fig1']
+    if 'fig2' in st.session_state:
+        del st.session_state['fig2']
+    # Optional: Anzeige einer Nachricht, dass m_achsen gelöscht wurde
+    st.warning("Die Einheit wurde geändert. Bitte eine Blockdatei hochladen.")
+    
 # Speichern der Auswahl im session_state
 st.session_state.einheit = einheit  # Speichert die ausgewählte Einheit
 
@@ -306,11 +319,6 @@ st.subheader("Visualisierung der Wahrscheinlichkeitsdichte und der kumulativen W
 
 # Berechnung und Visualisierung
 if 'einheit' in st.session_state:
-    # Falls die Einheit gewechselt wird, sollen die Figures gelöscht werden
-    if 'einheit' in st.session_state:
-        if (st.session_state.einheit == "Volumen in m³" and 'm_achsen' not in st.session_state) or \
-           (st.session_state.einheit == "Masse in t (Dichte erforderlich)" and 'm_achsen' not in st.session_state):
-            st.session_state.pop("fig1", None)  # Entfernt fig1, falls es existiert
     if st.session_state.einheit == "Volumen in m³" and 'm_achsen' in st.session_state:
         # Aufruf der Funktion zur Berechnung und Visualisierung mit m_achsen
         fig1 = berechne_perzentile_und_visualisierung(st.session_state.m_achsen)
@@ -330,11 +338,6 @@ st.subheader("Anpassung und Visualisierung von Wahrscheinlichkeitsfunktionen")
 
 # Alle Verteilungen werden automatisch berechnet und visualisiert
 if 'einheit' in st.session_state:
-    # Falls die Einheit gewechselt wird, sollen die Figures gelöscht werden
-    if 'einheit' in st.session_state:
-        if (st.session_state.einheit == "Volumen in m³" and 'm_achsen' not in st.session_state) or \
-           (st.session_state.einheit == "Masse in t (Dichte erforderlich)" and 'm_achsen' not in st.session_state):
-            st.session_state.pop("fig2", None)  # Entfernt fig2, falls es existiert
     if st.session_state.einheit == "Volumen in m³" and 'm_achsen' in st.session_state:
         fig2 = passe_verteilungen_an_und_visualisiere(st.session_state.m_achsen, ['genexpon', 'expon', 'powerlaw'])
         st.session_state.fig2 = fig2
@@ -397,4 +400,4 @@ if 'm_achsen' in st.session_state:
                 if 'm_achsen' not in st.session_state:
                     st.error("Blockliste erforderlich. Bitte auswählen oder hochladen!")
                 else:
-                    st.error(f"Fehler bei der Berechnung der Perzentile: {e}")
+                    st.error(f"Fehler bei der Berechnung der Perzentilen: {e}")
