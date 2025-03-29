@@ -1,8 +1,15 @@
-#!/usr/bin/env python
-# coding: utf-8
+# -*- coding: utf-8 -*-
+# --------------------------------------------------------------
+# BVG ...  a block size distribution code and app by Mariella Illeditsch
+# App for visualising a block size distribution and fitting a probability function
+# --------------------------------------------------------------
+#
+# Code and App version 1, Mar 2025
+# (c) Mariella Illeditsch, 2025
+# mariella.illeditsch@pi-geo.at
+#
+# --------------------------------------------------------------
 
-# App zur Darstellung einer Blockgrößenverteilung und Anpassung einer Wahrscheinlichkeitsfunktion
-# by Mariella Illeditsch
 
 import streamlit as st
 import matplotlib.pyplot as plt
@@ -189,6 +196,13 @@ st.image(logo, caption="https://pi-geo.at/", use_container_width=True)  # Zeige 
 
 st.title("Willkommen bei pi!")
 st.header("Blockgrößenverteilung")
+st.markdown("""
+    *A block distribution code by Mariella ILLEDITSCH, adapted for Streamlit by Mariella ILLEDITSCH*
+    
+    Version 1, Mar 2025
+    
+    This application visualizes block size distributions, fits distribution functions to them and returns blocklists of the fitted distribution for rockfall simulation (with THROW).
+""")
 
 # URL der Beispiel-Datei auf GitHub
 example_file_1_url = "https://github.com/pi-geotechnik/Blockverteilung/raw/main/blocklist_dachsteinkalk_m3.txt"
@@ -436,8 +450,6 @@ if einheit == "Volumen in m³":
         except Exception as e:
             st.error(f"Fehler bei der Verarbeitung der Daten: {e}")
 
-      
-       
 
 # Datei-Upload für Masse in t (Dichte erforderlich)
 if einheit == "Masse in t (Dichte erforderlich)":
