@@ -201,7 +201,7 @@ st.markdown("""
     
     Version 1, Mar 2025
     
-    This application visualizes block size distributions, fits distribution functions to them and returns blocklists of the fitted distribution for rockfall simulation (with THROW).
+    This application visualizes block size distributions, fits distribution functions to them and (coming soon) returns blocklists of the fitted distribution for rockfall simulation (with THROW).
 """)
 
 # URL der Beispiel-Datei auf GitHub
