@@ -190,12 +190,19 @@ def calculate_percentiles(distribution, percentiles, *params):
 
 # Streamlit App
 
+# Set page configuration
+st.set_page_config(
+    page_title="BGV Blockgrößenverteilung",
+    page_icon="🪨",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
 # Zeige das Logo zu Beginn der App
 logo = Image.open("pi-geotechnik-1-RGB-192-30-65.png")  # Lade das Bild
 st.image(logo, caption="https://pi-geo.at/", use_container_width=True)  # Zeige das Logo an
 
-st.title("Willkommen bei pi!")
-st.header("Blockgrößenverteilung")
+st.title("Blockgrößenverteilung")
 st.markdown("""
     *A block distribution code by Mariella ILLEDITSCH, adapted for Streamlit by Mariella ILLEDITSCH*
     
